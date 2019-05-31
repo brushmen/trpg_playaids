@@ -1,0 +1,257 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="a Javascript playaid page for Storybrewer's tabletop roleplaying game 'Our Mundane Supernatural Life'">
+<head>
+<title>Our Mundane Supernatural Life Playaid</title>
+<script type="text/javascript" src="scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.timer.js"></script>
+<script>
+var Clock = new (function() {
+    var $countdown,
+        $form, // Form used to change the countdown time
+        incrementTime = 70,
+        currentTime = 0,
+        updateTimer = function() {
+            $countdown.html(formatTime(currentTime));
+            if (currentTime == 0) {
+                Clock.Timer.stop();
+                timerComplete();
+                // when timer done, show other minute buttons
+                $("#minutebuttons").show()
+                // hide play/pause button
+                $("#playpause").hide();
+                Clock.resetCountdown();
+                return;
+            }
+            currentTime -= incrementTime / 10;
+            if (currentTime < 0) currentTime = 0;
+        },
+        timerComplete = function() {
+            //alert('Scene Done');
+            $countdown.html("Scene Done");
+        },
+        init = function() {
+            $countdown = $('#countdown');
+            Clock.Timer = $.timer(updateTimer, incrementTime, true);
+            $form = $('#ClockEntry');
+            $form.bind('submit', function() {
+                Clock.resetCountdown();
+                return false;
+            });
+        };
+    this.resetCountdown = function(min=0) {
+        var value = min * 60;
+        var newTime = parseInt(value) * 100;
+        if (newTime > 0) {currentTime = newTime;}
+        this.Timer.stop().once();
+        // when reseting timer, show play/pause button
+        $("#playpause").show();
+        // hide minute buttons
+        $("#minutebuttons").hide();
+    };
+    $(init);
+});
+
+// Common functions
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {str = '0' + str;}
+    return str;
+}
+function formatTime(time) {
+    var min = parseInt(time / 6000);
+    var sec = parseInt(time / 100) - (min * 60);
+    return (min > 0 ? pad(min, 2) : "00") + ":" + pad(sec, 2);
+}
+
+function sortCards() {
+    var cards = new Array();
+    var times = new Array();
+    var schedule = {};
+
+    $("textarea[name='card']").each(function(){       
+        cards.push($(this).val());       
+    });
+    $("input[name='time']").each(function(){  
+        times.push(fixTimeValue(($(this).val())));
+    });
+
+    // need a fresh copy of the times array
+    var sortedTime = times.slice();
+    var orderedCards = new Array();
+
+    sortedTime.sort(function(a,b) {return a-b});
+
+    var i, j;
+    // length of cards and times should be the same
+    var len = times.length;
+    for (i = 0; i < len; i++) {
+        for (j = 0; j < len; j++) {
+            if (sortedTime[i] == times[j]) {
+                orderedCards.push(cards[j]);
+                break;
+            }
+        }
+    }
+
+    for (i = 0; i < len; i++) {
+        $("#time"+(i+1).toString()).val(sortedTime[i]);
+        $("#card"+(i+1).toString()).val(orderedCards[i]);
+    }
+}
+
+function fixTimeValue(time) {
+    var num;
+
+    if (time.match(/\d+/)) {
+        num = time.match(/\d+/)[0]
+    }
+    else {
+        num = 0;
+    }
+
+    if (Number(num) > 0 && Number(num) < 24) {
+        num = Number(num)*100;
+    }
+
+    if ((Number(num) > 100 && Number(num) < 1200) &&
+        (time.endsWith("p") || time.endsWith("pm") ||
+         time.endsWith("P") || time.endsWith("PM"))) {
+        num = Number(num) + 1200; //military time
+    }
+
+    return Number(num);
+}
+
+function checkDuplicate() {
+    var times = new Array();
+
+    $("input[name='time']").each(function(){  
+        times.push(fixTimeValue(($(this).val())));
+    });
+
+    if (hasDuplicates(times)) {
+        alert("Warning: Two time entries appear to be the same. Try to avoid duplicated time.");
+    }
+}
+
+function hasDuplicates(array) {
+    var valuesSoFar = Object.create(null);
+    for (var i = 0; i < array.length; ++i) {
+        var value = array[i];
+        if (value in valuesSoFar) {
+            if (value)
+                return true;
+        }
+        valuesSoFar[value] = true;
+    }
+    return false;
+}
+
+$(document).on("click",".submit",sortCards);
+</script>
+<style>
+body {
+    background-color: #e5dae2;
+}
+#scenetimer {
+    width: 300px;
+    padding: 5px;
+    text-align: center;
+    border: 1px green solid;
+    background-color: #b4c6da;
+}
+
+#countdown {
+    margin: 2px 0 10px 0;
+    font-size: 20pt;
+}
+
+#playpause {
+    margin: 2px 0 2px 0;
+}
+
+#minutebuttons {
+    margin: 2px 0 2px 0;
+}
+textarea[name="card"] {
+    width: 700px;
+    height: 51px;
+    padding: 1px 1em;
+    vertical-align: middle;
+}
+#details textarea {
+    width: 300px;
+    font-size: 18pt;
+}
+
+input[type="text"] {
+    width: 50px;
+}
+</style>
+</head>
+<body>
+<center>
+<table>
+<tr>
+<td valign="top">
+<div id="schedule">
+<input type="text" name="time" id="time1" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card1" placeholder="card 1"></textarea><br/>
+<input type="text" name="time" id="time2" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card2" placeholder="card 2"></textarea><br/>
+<input type="text" name="time" id="time3" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card3" placeholder="card 3"></textarea><br/>
+<input type="text" name="time" id="time4" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card4" placeholder="card 4"></textarea><br/>
+<input type="text" name="time" id="time5" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card5" placeholder="card 5"></textarea><br/>
+<input type="text" name="time" id="time6" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card6" placeholder="card 6"></textarea><br/>
+<input type="text" name="time" id="time7" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card7" placeholder="card 7"></textarea><br/>
+<input type="text" name="time" id="time8" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card8" placeholder="card 8"></textarea><br/>
+<input type="text" name="time" id="time9" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card9" placeholder="card 9"></textarea><br/>
+<input type="text" name="time" id="time10" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card10" placeholder="card 10"></textarea><br/>
+<input type="text" name="time" id="time11" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card11" placeholder="card 11"></textarea><br/>
+<input type="text" name="time" id="time12" placeholder="HHMM" onblur="checkDuplicate();" />
+<textarea name="card" id="card12" placeholder="card 12"></textarea><br/>
+<center><a href="#" class="submit" target="_self">sort cards</a></center>
+</div>
+</td>
+<td valign="top">
+<div id="scenetimer">
+<div id="countdown">Scene Timer</div>
+<form id="ClockEntry">
+    <div id="playpause" style="display: none">
+        <input type='button' value='▶|▮▮' onclick='Clock.Timer.toggle();' />
+    </div>
+    <div id="minutebuttons">
+        <input type="button" onclick="Clock.resetCountdown(2);" value="2" />
+        <input type="button" onclick="Clock.resetCountdown(3);" value="3" />
+        <input type="button" onclick="Clock.resetCountdown(4);" value="4" />
+        <input type="button" onclick="Clock.resetCountdown(5);" value="5" />
+    </div>
+</form>
+</div>
+<br/>
+<div id="details">
+<textarea name="relationship" placeholder="relationship"></textarea><br/>
+<textarea name="supernatural" placeholder="how supernatural" style="height: 100px"></textarea><br/>
+<textarea name="sname" placeholder="supernatural's name"></textarea><br/>
+<textarea name="sproblem" placeholder="supernatural trouble" style="height: 110px"></textarea><br/>
+<textarea name="mname" placeholder="mundane's name"></textarea><br/>
+<textarea name="mproblem" placeholder="mundane trouble" style="height: 110px"></textarea><br/>
+</div>
+</td>
+</tr>
+</table>
+</center>
+</body>
+</html>
