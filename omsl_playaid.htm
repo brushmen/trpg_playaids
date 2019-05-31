@@ -106,7 +106,8 @@ function fixTimeValue(time) {
     var num;
 
     if (time.match(/\d+/)) {
-        num = time.match(/\d+/)[0]
+        // if there is a number in the string
+        num = time.match(/\d+/)[0];
     }
     else {
         num = 0;
@@ -116,7 +117,7 @@ function fixTimeValue(time) {
         num = Number(num)*100;
     }
 
-    if ((Number(num) > 100 && Number(num) < 1200) &&
+    if ((Number(num) >= 100 && Number(num) < 1200) &&
         (time.endsWith("p") || time.endsWith("pm") ||
          time.endsWith("P") || time.endsWith("PM"))) {
         num = Number(num) + 1200; //military time
