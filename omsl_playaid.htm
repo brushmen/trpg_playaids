@@ -44,12 +44,22 @@ var Clock = new (function() {
     this.resetCountdown = function(min=0) {
         var value = min * 60;
         var newTime = parseInt(value) * 100;
-        if (newTime > 0) {currentTime = newTime;}
-        this.Timer.stop().once();
-        // when reseting timer, show play/pause button
-        $("#playpause").show();
-        // hide minute buttons
-        $("#minutebuttons").hide();
+        currentTime = newTime;
+        if (newTime > 0) {            
+            this.Timer.stop().once();
+            // when reseting timer, show play/pause button
+            $("#playpause").show();
+            // hide minute buttons
+            $("#minutebuttons").hide();
+        }
+        else {
+            Clock.Timer.stop();
+            timerComplete();
+            // when timer done, show other minute buttons
+            $("#minutebuttons").show()
+            // hide play/pause button
+            $("#playpause").hide();
+        }
     };
     $(init);
 });
@@ -232,6 +242,7 @@ input[type="text"] {
 <form id="ClockEntry">
     <div id="playpause" style="display: none">
         <input type='button' value='▶|▮▮' onclick='Clock.Timer.toggle();' />
+        <input type='button' value='■' onclick='Clock.resetCountdown();' />
     </div>
     <div id="minutebuttons">
         <input type="button" onclick="Clock.resetCountdown(2);" value="2" />
