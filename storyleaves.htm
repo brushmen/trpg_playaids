@@ -4,139 +4,8 @@
     <meta charset="utf-8">
     <meta name="description" content="a Javascript version of Jamie Fristrom's single player RPG titled 'Storyleaves'">
     <meta name="author" content="brushmen">
-<title>Storyleaves</title>
-<style>
-body {
-    font-size: 110%;
-}
-
-#setup {
-    width: 100%;
-}
-
-#table {
-    float: left;
-    text-align: center;
-    width: 800px;
-    height: 600px;
-    overflow: auto;
-    border: 1px solid black;
-}
-#hand {
-    float: left;
-    width: 800px;
-    height: 200px;
-    overflow: auto;
-}
-
-#sidebar1 {
-    width: 250px;
-    height: 370px;
-    overflow: auto;
-    text-align: center;
-    border: 1px solid #cccccc;
-}
-
-#progress {
-    color: green;
-}
-#conditions {
-    color: red;
-}
-
-#sidebar2 {
-    float: right;
-    width: 400px;
-    height: 700px;
-    overflow: auto;
-    background-color: #ccffff;
-}
-#sidebar2 textarea {
-    width: 350px;
-    height: 600px;
-    padding: 10px;
-    margin: 0.5em;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border: none;
-    font-size: 150%;
-    resize: none;
-}
-
-#pfacet, #bfacet, #pbshared, #afacet, #apshared, #abshared, #protagonist, #beloved, #antagonist
-{
-    display: inline-block;
-    width: 6em;
-    margin: 0.2em;
-    border: 1px solid black;
-    text-align: center;
-}
-
-#pfacet a:active, #bfacet a:active, #pbshared a:active,
-#afacet a:active, #apshared a:active, #abshared a:active,
-#deck a:active, #discard a:active, #hand a:active,
-#protagonist a:active, #beloved a:active, #antagonist a:active
-{
-    background-color: yellow;
-}
-#pfacet a:focus, #bfacet a:focus, #pbshared a:focus,
-#afacet a:focus, #apshared a:focus, #abshared a:focus,
-#deck a:focus, #discard a:focus, #hand a:focus,
-#protagonist a:focus, #beloved a:focus, #antagonist a:focus
-{
-    color: red;
-}
-
-#bottomrow {
-    float: left;
-}
-
-#deck, #discard, #hand {
-    display: inline-block;
-    margin-top: 0.2em;
-    padding: 0.2em;
-    text-align: center;
-}
-
-#deck {
-    border: 1px solid black;
-}
-
-#discard {
-    width: 6em;
-    border: 1px solid #cccccc;
-    background-color: #cccccc;
-}
-
-#hand {
-    border: 1px solid green;
-}
-
-#gamelog {
-    clear: left;
-    color: orange;
-}
-
-#hint {
-    clear: left;
-    display: inline-block;
-    color: orange;
-}
-
-.card {
-    display: inline-block;
-    width: 6em;
-    margin: 0.5em;
-    border: 1px solid black;
-}
-
-.card:active {
-    background-color: yellow;
-}
-
-
-</style>
+    <title>Storyleaves</title>
+    <script type="text/javascript" src="scripts/jquery.min.js"></script>
 <script>
 ////  CARDS FOR THE STORY DECK ///////////
 var cards = [
@@ -1738,7 +1607,7 @@ function moveCard(card, from, to) {
 }
 
 function cardType(card) {
-    return card.substring(0, card.indexOf(":"));
+    return card.substring(0, card.indexOf(":")).toLowerCase();
 }
 
 function cardDesc(card) {
@@ -2162,9 +2031,57 @@ function gameOverListener() {
     }
 }
 
+// if user paste in a custom list of cards
+// reset the game with the new cards instead
+function useNewCards() {
+    var list = $("#writeup").val().split("\n");
+    var passCheck = true;
+
+    if (list.length > 0 && list[0]) {
+        // list doesn't contain just a single newline
+        // check if the card format is correct
+        for (var i = 0; i < list.length; i++) {
+          // trim beginning and ending white space
+          list[i] = list[i].trim();
+          if (!cardFormatOK(list[i])) {
+            passCheck = false;
+            break;
+          }
+        }
+    }
+    else {
+        passCheck = false;
+    }
+
+    if (passCheck) {
+        cards = list;
+        newSetup();
+        updateTable();
+
+        // hide link and clear textarea
+        $("#writeup").val("");
+        $("#writeup").attr("placeholder","premise, goals, story");
+        $(".submit").hide();
+    }
+    else {
+        alert("Please double-check if all cards are formatted correctly.");
+    }
+}
+
+function cardFormatOK(card) {
+    var c = cardType(card);
+    var result = false;
+
+    if (c == "character" || c == "event" ||
+        c == "item" || c == "place" ||
+        c == "aspect" || c == "detail") {
+        result = true;
+    }
+    return result;
+}
+
 /////// MAIN /////////////////
-var deck_size = cards.length;
-var num_of_reshuffle_cards = Math.ceil(deck_size / 18);
+var num_of_reshuffle_cards = Math.ceil(cards.length / 18);
 
 var table = new Array();
 var resources = new Array();
@@ -2198,42 +2115,218 @@ var antagAttacked = false;
 var attackCardPicked = false;
 var targetCardPicked = false;
 
-// step 0: prepare the initial deck
+newSetup();
 
-cards = shuffle(cards);
+function newSetup() {
+    num_of_reshuffle_cards = Math.ceil(cards.length / 18);
+    table = new Array();
+    resources = new Array();
+    discard = new Array();
+    hand = new Array();
 
-// give each card a value
-for (var c = 0; c < deck_size; c++) {
-    cards[c] = cards[c] + " (" + (c+1) + ")";
-}
+    phase = "setup";
+    roundnumber = 0;
+    focus = "";
+    protagonist = "";
+    beloved = "";
+    antagonist = "";
+    pfacet = "";
+    bfacet = "";
+    pbshared = "";
+    afacet = "";
+    apshared = "";
+    abshared = "";
 
-// reshuffle again to keep things different each time
-cards = shuffle(cards);
+    color = "black";
+    goalProgress = 0;
+    conditions = 0;
+    protagMove = "";
+    protagCard = "";
+    protagCardValue = 0;
+    antagCard = "";
+    antagCardValue = 0;
+    antagAttacked = false;
+    attackCardPicked = false;
+    targetCardPicked = false;
 
-// step 1: draw from deck until 5 character cards drawn,
-// but make sure at least 6 resources cards are drawn as well
+    // step 0: prepare the initial deck
 
-var num_of_character_cards = 0;
-var num_of_cards = 0;
+    cards = shuffle(cards);
 
-for (var i = 0; i < deck_size; i++) {
-
-    var card = cards.shift();
-    table.push(card);
-
-    if (card.search("character") == 0) {
-        num_of_character_cards += 1;
+    // give each card a value
+    for (var c = 0; c < cards.length; c++) {
+        cards[c] = cards[c] + " (" + (c+1) + ")";
     }
 
-    num_of_cards += 1;
+    // reshuffle again to keep things different each time
+    cards = shuffle(cards);
 
-    if (num_of_character_cards >= 5 &&
-        num_of_cards >= 16) {
-        break;   
+    // step 1: draw from deck until 5 character cards drawn,
+    // but make sure at least 6 resources cards are drawn as well
+
+    var num_of_character_cards = 0;
+    var num_of_cards = 0;
+
+    for (var i = 0; i < cards.length; i++) {
+
+        var card = cards.shift();
+        table.push(card);
+
+        if (card.search("character") == 0) {
+            num_of_character_cards += 1;
+        }
+
+        num_of_cards += 1;
+
+        if (num_of_character_cards >= 5 &&
+            num_of_cards >= 16) {
+            break;   
+        }
     }
 }
+
+$(document).on("click",".submit",useNewCards);
 </script>
+<style>
+body {
+    width: 100%;
+    margin: 0;
+    font-size: 62.5%; /* 1em = 10px */
+    font-family: tahoma, sans-serif;
+}
 
+#setup {
+    width: 100%;
+}
+
+#table {
+    text-align: center;
+    width: 800px;
+    height: 600px;
+    overflow: auto;
+    border: 3px outset #cccccc;
+    background-color: mintcream;
+}
+#hand {
+    float: left;
+    width: 800px;
+    height: 200px;
+    overflow: auto;
+}
+
+#sidebar1 {
+    width: 250px;
+    height: 450px;
+    overflow: auto;
+    text-align: center;
+    border: 1px solid #cccccc;
+}
+
+#progress {
+    color: green;
+}
+#conditions {
+    color: red;
+}
+
+#sidebar2 {
+    width: 400px;
+    height: 700px;
+    overflow: auto;
+    background-color: #ccffff;
+}
+#sidebar2 textarea {
+    width: 350px;
+    height: 600px;
+    padding: 10px;
+    margin: 0.5em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border: none;
+    font-size: 3em;
+    resize: none;
+}
+
+#pfacet, #bfacet, #pbshared, #afacet, #apshared, #abshared, #protagonist, #beloved, #antagonist
+{
+    display: inline-block;
+    width: 6em;
+    margin: 0.2em;
+    border: 1px solid #cccccc;
+    text-align: center;
+    font-size: 2em;
+}
+#pfacet .card, #bfacet .card, #pbshared .card, #afacet .card, #apshared .card, #abshared .card, #protagonist .card, #beloved .card, #antagonist .card
+{
+    font-size: 0.8em;
+}
+
+#pfacet a:active, #bfacet a:active, #pbshared a:active,
+#afacet a:active, #apshared a:active, #abshared a:active,
+#deck a:active, #discard a:active, #hand a:active,
+#protagonist a:active, #beloved a:active, #antagonist a:active
+{
+    background-color: yellow;
+}
+#pfacet a:focus, #bfacet a:focus, #pbshared a:focus,
+#afacet a:focus, #apshared a:focus, #abshared a:focus,
+#deck a:focus, #discard a:focus, #hand a:focus,
+#protagonist a:focus, #beloved a:focus, #antagonist a:focus
+{
+    color: red;
+}
+
+#deck, #discard, #hand {
+    display: inline-block;
+    margin-top: 0.2em;
+    padding: 0.2em;
+    text-align: center;
+}
+
+#deck {
+    border: 1px solid black;
+    font-size: 1.5em;
+}
+
+#discard {
+    width: 6em;
+    border: 1px solid #cccccc;
+    background-color: #cccccc;
+}
+
+#hand {
+    border: 2px dashed green;
+    font-size: 1em;
+}
+
+#gamelog {
+    clear: left;
+    color: orange;
+    font-size: 1.5em;
+    width: 100%;
+    height: 150px;
+    overflow: auto;
+}
+
+#hint {
+    clear: left;
+    display: inline-block;
+    color: orange;
+    font-size: 1.5em;
+}
+
+.card {
+    display: inline-block;
+    width: 6em;
+    margin: 0.5em;
+    border: 1px solid black;
+    font-size: 1.5em;
+}
+.card:active {
+    background-color: yellow;
+}
+</style>
 </head>
 <body>
 <div id="setup">
@@ -2246,12 +2339,11 @@ for (var i = 0; i < deck_size; i++) {
             // For IE 8 and earlier versions
             x.attachEvent("onclick", setupListener);
         }
-        </script>
-    <div id="sidebar2">
-        <textarea id="writeup" placeholder="premise, goals, story..."></textarea>
-        <div style="text-align: right; font-size: 60%">
-        <a href="http://gamedevblog.typepad.com/Storyleaves.pdf" >based on Jamie Fristrom's solo RPG</a></div>
-    </div>
+    </script>
+    <table width="100%">
+    <tr><td>
+    <table>
+    <tr><td colspan="2">
     <div id="resources">
         <div id="pfacet"><a href="#" onclick="setFocus('pfacet')">Protagonist Facet</a></div>
         <div id="bfacet"><a href="#" onclick="setFocus('bfacet')">Beloved Facet</a></div>
@@ -2260,18 +2352,20 @@ for (var i = 0; i < deck_size; i++) {
         <div id="apshared"><a href="#" onclick="setFocus('apshared')">Shared between A/P</a></div>
         <div id="abshared"><a href="#" onclick="setFocus('abshared')">Shared between A/B</a></div>
     </div>
-
+    </td></tr>
+    <tr><td>
     <div id="table">
     <script>updateTable();</script>
     </div>
     <div id="hand" style="display: none">Hand</div>
-
+    </td><td>
     <div id="sidebar1">
         <div id="protagonist"><a href="#" onclick="setFocus('protagonist')">Protagonist</a></div>
         <div id="beloved"><a href="#" onclick="setFocus('beloved')">Beloved</a></div>
         <div id="antagonist"><a href="#" onclick="setFocus('antagonist')">Antagonist</a></div>
     </div>
-
+    </td></tr>
+    <tr><td colspan="2">
     <div id="bottomrow">
         <div id="deck"><a href="#" onclick="setFocus('deck')">Deck</a></div>
         <div id="discard" style="display: none"><a href="#">Discarded</a></div>
@@ -2286,8 +2380,19 @@ for (var i = 0; i < deck_size; i++) {
         <button id="attackantagonist" style="display: none" onclick="attackAntagonist()">Attack Antagonist</button>
         <button id="givein" style="display: none" onclick="giveIn()">Give In</button>
         <br>
-        <div id="gamelog" style="width: 100%; height: 150px; overflow: auto"></div>
+        <div id="gamelog"></div>
     </div>
+    </td></tr>
+    </table>
+    </td>
+    <td valign="top" align="right">
+    <div id="sidebar2">
+        <textarea id="writeup" placeholder="premise, goals, story&#10;&#10;or paste in your custom card list, preferrably with at least 5 characters and at least 9 cards (then click link below), formated like...&#10;&#10;character: person&#10;place: location&#10;event: event&#10;item: thing&#10;aspect: aspect&#10;detail: detail"></textarea>
+        <center><a style="font-size: 2em" href="#" class="submit" target="_self">use pasted-in cards</a></center>
+    </div>
+    <a href="http://gamedevblog.typepad.com/Storyleaves.pdf" >Jamie Fristrom's solo RPG</a>
+    </td></tr>
+    </table>
 </div>
 </body>
 </html>
