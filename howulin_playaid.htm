@@ -1,0 +1,379 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="a Javascript playaid page for Storybrewer's tabletop roleplaying game 'Our Mundane Supernatural Life'">
+<title>Hearts of Wulin Playaid</title>
+<script>
+function toggleShow(e,id) {
+    var div = document.getElementById(id);
+
+    if (div.style.display === "none") {
+        div.style.display = "block";
+        e.innerHTML = "hide";
+    } else {
+        div.style.display = "none";
+        e.innerHTML = "show";
+    }
+}
+</script>
+<style>
+td {
+    padding: 3px;
+}
+
+.playbook {
+    border-width: 2px;
+    border-style: solid;
+}
+.playbook input[name="player"] {
+    width: 150px;
+}
+.playbook input[name="name"] {
+    width: 150px;
+    font-size: 14pt;
+    font-weight: bolder;
+}
+.playbook input[name="pronoun"] {
+    width: 70px;
+}
+
+#aware {
+    border-color: red;
+}
+
+#bravo {
+    border-color: orange;
+}
+#loyal {
+    border-color: yellow;
+}
+#outsider {
+    border-color: green;
+}
+#student {
+    border-color: cyan;
+}
+#unorthodox {
+    border-color: blue;
+}
+
+.earth {
+    color: goldenrod;
+}
+.fire {
+    color: red;
+}
+.metal {
+    color: olive;
+}
+.water {
+    color: lightskyblue;
+}
+.wood {
+    color: sienna;
+}
+
+select {
+    font-size: 12pt;
+}
+
+textarea {
+    width: 230px;
+    height: 80px;
+    font-size: 14pt;
+}
+textarea[name="entanglement_g"] {
+    background-color: aliceblue;
+}
+textarea[name="entanglement_r"] {
+    background-color: mistyrose;
+}
+
+a:link, a:active, a:visited {
+    color: lightgrey;
+}
+
+.toggle {
+    margin-top: 10px;
+    font-size: 14pt;
+}
+</style>
+</head>
+<body>
+<table>
+<tr>
+<td><div class="playbook" id="aware">
+<input type="text" name="player" placeholder="player" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<input type="text" name="name" placeholder="AWARE" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<select name="role">
+<option value="" disabled="disabled" selected="selected">role</option>
+<option value="master">Master</option>
+<option value="scholar">Scholar</option>
+<option value="travelingsifu">Traveling Sifu</option>
+</select>
+<br/>
+<select name="faction">
+<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
+<option value="ox">Ox-Pilgrim Escort Bureau</option>
+<option value="meteor">Meteor Grace Clan</option>
+<option value="" disabled="disabled">-- ambiguous --</option>
+<option value="eagle">Eagle Doctrine School</option>
+<option value="iron">Iron Prosperity Delegates</option>
+<option value="" disabled="disabled">-- destroyed --</option>
+<option value="frost">Frost Hearth Palace</option>
+<option value="" disabled="disabled">-- unrighteous --</option>
+<option value="venom">Many Venoms Sect</option>
+<option value="holy">Holy Society</option>
+</select>
+<br/><br/>
+<table>
+<tr><td><input type="radio" name="style_a" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_a" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_a" /></td><td><span class="metal" title="Control, Calculation, Reflection | Unsatisfied, Inflexible, Scared">Metal</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_a" /></td><td><span class="water" title="Awareness, Wisdom, Flexibility |
+Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_a" /></td><td><span class="wood" title="Patience, Growth, Curiosity |
+Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
+<tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
+</table>
+<br/>
+<textarea name="npc" placeholder="NPCs"></textarea><br/>
+<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
+<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+</div>
+<center><div class="toggle"><a href="#" onclick="toggleShow(this,'aware');">hide</a> (aware)</div></center>
+</td>
+<td><div class="playbook" id="bravo">
+<input type="text" name="player" placeholder="player" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<input type="text" name="name" placeholder="BRAVO" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<select name="role">
+<option value="" disabled="disabled" selected="selected">role</option>
+<option value="favoredeldest">Favored Eldest</option>
+<option value="gallivant">Gallivant</option>
+<option value="thief">Thief</option>
+</select>
+<br/>
+<select name="faction" placeholder="faction">
+<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
+<option value="ox">Ox-Pilgrim Escort Bureau</option>
+<option value="meteor">Meteor Grace Clan</option>
+<option value="" disabled="disabled">-- ambiguous --</option>
+<option value="eagle">Eagle Doctrine School</option>
+<option value="iron">Iron Prosperity Delegates</option>
+<option value="" disabled="disabled">-- destroyed --</option>
+<option value="frost">Frost Hearth Palace</option>
+<option value="" disabled="disabled">-- unrighteous --</option>
+<option value="venom">Many Venoms Sect</option>
+<option value="holy">Holy Society</option>
+</select>
+<br/><br/>
+<table>
+<tr><td><input type="radio" name="style_b" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_b" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_b" /></td><td><span class="metal" title="Control, Calculation, Reflection | Unsatisfied, Inflexible, Scared">Metal</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_b" /></td><td><span class="water" title="Awareness, Wisdom, Flexibility |
+Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_b" /></td><td><span class="wood" title="Patience, Growth, Curiosity |
+Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
+<tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
+</table>
+<br/>
+<textarea name="npc" placeholder="NPCs"></textarea><br/>
+<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
+<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+</div>
+<center><div class="toggle"><a href="#" onclick="toggleShow(this,'bravo');">hide</a> (bravo)</div></center>
+</td>
+<td><div class="playbook" id="loyal">
+<input type="text" name="player" placeholder="player" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<input type="text" name="name" placeholder="LOYAL" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<select name="role">
+<option value="" disabled="disabled" selected="selected">role</option>
+<option value="devotedchild">Devoted Child</option>
+<option value="official">Official</option>
+<option value="swordsman">Swordsman</option>
+</select>
+<br/>
+<select name="faction" placeholder="faction">
+<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
+<option value="ox">Ox-Pilgrim Escort Bureau</option>
+<option value="meteor">Meteor Grace Clan</option>
+<option value="" disabled="disabled">-- ambiguous --</option>
+<option value="eagle">Eagle Doctrine School</option>
+<option value="iron">Iron Prosperity Delegates</option>
+<option value="" disabled="disabled">-- destroyed --</option>
+<option value="frost">Frost Hearth Palace</option>
+<option value="" disabled="disabled">-- unrighteous --</option>
+<option value="venom">Many Venoms Sect</option>
+<option value="holy">Holy Society</option>
+</select>
+<br/><br/>
+<table>
+<tr><td><input type="radio" name="style_l" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_l" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_l" /></td><td><span class="metal" title="Control, Calculation, Reflection | Unsatisfied, Inflexible, Scared">Metal</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_l" /></td><td><span class="water" title="Awareness, Wisdom, Flexibility |
+Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_l" /></td><td><span class="wood" title="Patience, Growth, Curiosity |
+Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
+<tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
+</table>
+<br/>
+<textarea name="npc" placeholder="NPCs"></textarea><br/>
+<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
+<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+</div>
+<center><div class="toggle"><a href="#" onclick="toggleShow(this,'loyal');">hide</a> (loyal)</div></center>
+</td>
+<td><div class="playbook" id="outsider">
+<input type="text" name="player" placeholder="player" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<input type="text" name="name" placeholder="OUTSIDER" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<select name="role">
+<option value="" disabled="disabled" selected="selected">role</option>
+<option value="rebel">Rebel</option>
+<option value="trickster">Trickster</option>
+<option value="wanderer">Wanderer</option>
+</select>
+<br/>
+<select name="faction" placeholder="faction">
+<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
+<option value="ox">Ox-Pilgrim Escort Bureau</option>
+<option value="meteor">Meteor Grace Clan</option>
+<option value="" disabled="disabled">-- ambiguous --</option>
+<option value="eagle">Eagle Doctrine School</option>
+<option value="iron">Iron Prosperity Delegates</option>
+<option value="" disabled="disabled">-- destroyed --</option>
+<option value="frost">Frost Hearth Palace</option>
+<option value="" disabled="disabled">-- unrighteous --</option>
+<option value="venom">Many Venoms Sect</option>
+<option value="holy">Holy Society</option>
+</select>
+<br/><br/>
+<table>
+<tr><td><input type="radio" name="style_o" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_o" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_o" /></td><td><span class="metal" title="Control, Calculation, Reflection | Unsatisfied, Inflexible, Scared">Metal</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_o" /></td><td><span class="water" title="Awareness, Wisdom, Flexibility |
+Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_o" /></td><td><span class="wood" title="Patience, Growth, Curiosity |
+Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
+<tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
+</table>
+<br/>
+<textarea name="npc" placeholder="NPCs"></textarea><br/>
+<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
+<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+</div>
+<center><div class="toggle"><a href="#" onclick="toggleShow(this,'outsider');">hide</a> (outsider)</div></center>
+</td>
+<td><div class="playbook" id="student">
+<input type="text" name="player" placeholder="player" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<input type="text" name="name" placeholder="STUDENT" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<select name="role">
+<option value="" disabled="disabled" selected="selected">role</option>
+<option value="hopefulapprentice">Hopeful Apprentice</option>
+<option value="wanderingmonk">Wandering Monk</option>
+<option value="youngersibling">Younger Sibling</option>
+</select>
+<br/>
+<select name="faction" placeholder="faction">
+<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
+<option value="ox">Ox-Pilgrim Escort Bureau</option>
+<option value="meteor">Meteor Grace Clan</option>
+<option value="" disabled="disabled">-- ambiguous --</option>
+<option value="eagle">Eagle Doctrine School</option>
+<option value="iron">Iron Prosperity Delegates</option>
+<option value="" disabled="disabled">-- destroyed --</option>
+<option value="frost">Frost Hearth Palace</option>
+<option value="" disabled="disabled">-- unrighteous --</option>
+<option value="venom">Many Venoms Sect</option>
+<option value="holy">Holy Society</option>
+</select>
+<br/><br/>
+<table>
+<tr><td><input type="radio" name="style_s" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_s" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_s" /></td><td><span class="metal" title="Control, Calculation, Reflection | Unsatisfied, Inflexible, Scared">Metal</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_s" /></td><td><span class="water" title="Awareness, Wisdom, Flexibility |
+Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_s" /></td><td><span class="wood" title="Patience, Growth, Curiosity |
+Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
+<tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
+</table>
+<br/>
+<textarea name="npc" placeholder="NPCs"></textarea><br/>
+<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
+<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+</div>
+<center><div class="toggle"><a href="#" onclick="toggleShow(this,'student');">hide</a> (student)</div></center>
+</td>
+<td><div class="playbook" id="unorthodox">
+<input type="text" name="player" placeholder="player" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<input type="text" name="name" placeholder="UNORTHODOX" />
+<input type="text" name="pronoun" placeholder="pronoun" />
+<br/>
+<select name="role">
+<option value="" disabled="disabled" selected="selected">role</option>
+<option value="accidental">Accidental</option>
+<option value="hidden">Hidden</option>
+<option value="prodigy">Prodigy</option>
+</select>
+<br/>
+<select name="faction" placeholder="faction">
+<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
+<option value="ox">Ox-Pilgrim Escort Bureau</option>
+<option value="meteor">Meteor Grace Clan</option>
+<option value="" disabled="disabled">-- ambiguous --</option>
+<option value="eagle">Eagle Doctrine School</option>
+<option value="iron">Iron Prosperity Delegates</option>
+<option value="" disabled="disabled">-- destroyed --</option>
+<option value="frost">Frost Hearth Palace</option>
+<option value="" disabled="disabled">-- unrighteous --</option>
+<option value="venom">Many Venoms Sect</option>
+<option value="holy">Holy Society</option>
+</select>
+<br/><br/>
+<table>
+<tr><td><input type="radio" name="style_u" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_u" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_u" /></td><td><span class="metal" title="Control, Calculation, Reflection | Unsatisfied, Inflexible, Scared">Metal</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_u" /></td><td><span class="water" title="Awareness, Wisdom, Flexibility |
+Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></td></tr>
+<tr><td><input type="radio" name="style_u" /></td><td><span class="wood" title="Patience, Growth, Curiosity |
+Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
+<tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
+</table>
+<br/>
+<textarea name="npc" placeholder="NPCs"></textarea><br/>
+<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
+<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+</div>
+<center><div class="toggle"><a href="#" onclick="toggleShow(this,'unorthodox');">hide</a> (unorthodox)</div></center>
+</td>
+</tr>
+</table>
+</body>
+</html>
