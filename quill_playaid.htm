@@ -227,10 +227,6 @@
       font-size: 62.5%; /* 1em = 10px */
       font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     }
-    #main {
-      float: left;
-      width: 70%;
-    }
 
     #letter {
       margin: 20px 20px 20px 60px;
@@ -264,27 +260,6 @@
       height: 100px;
     }
 
-    #b0, #b1, #b2, #b3, #b4, #b5, #b6 {
-      display: inline-block;
-      float: right;
-      width: 40%;
-    }
-    #b1, #b2, #b3, #b4, #b5 {
-      height: 150px;
-    }
-    #b0 {
-      margin-top: 15px;
-      height: 70px;
-    }
-    #b6 {
-      height: 100px;
-    }
-
-    #side {
-      float: left;
-      width: auto;
-    }
-
     #inkpot {
       width: 300px;
       height: 90%;
@@ -294,6 +269,7 @@
       font-weight: bolder;
       position: fixed;
       top: 50%;
+      right: 5%;
       z-index: 100;
       margin-top: -350px;
     }
@@ -301,11 +277,11 @@
 </head>
 
 <body>
-  <div id="main">
-    <div id="letter">
-      <div class="block">
-          <textarea id="p0" placeholder="Salutation..."></textarea>
-          <div id="b0">
+  <table id="letter">
+    <tr><td><textarea id="p0" placeholder="Salutation..."></textarea></td>
+        <td width="410">
+          <table>
+          <tr><td colspan="3">
           <select id="attributes">
             <option value="p1l2h3">Penmanship 1, Language 2, Heart 3</option>
             <option value="p1l3h2">Penmanship 1, Language 3, Heart 2</option>
@@ -314,70 +290,71 @@
             <option value="p3l1h2">Penmanship 3, Language 1, Heart 2</option>
             <option value="p3l2h1">Penmanship 3, Language 2, Heart 1</option>
           </select>
+          </td></tr>
+          <tr><td>
           <select id="bonus">
             <option value="">No Bonus</option>
             <option value="p">+1 Penmanship</option>
             <option value="l">+1 Language</option>
             <option value="h">+1 Heart</option>
           </select>
+          </td><td>
           <select id="skill">
             <option value="">No Skill</option>
             <option value="p">+1 Penmanship</option>
             <option value="l">+1 Language</option>
             <option value="h">+1 Heart</option>
           </select>
+          </td><td>
           <button id="useskill" type="button" onclick="useSkill()">use skill</button>
-          </div>
-      </div>
-      <div class="block">
-          <textarea id="p1" placeholder="Paragraph 1..."></textarea>
+          </td></tr>
+          </table>
+        </td></tr>
+    <tr><td><textarea id="p1" placeholder="Paragraph 1..."></textarea></td>
+    <td>
           <div id="b1">
               <button type="button" onclick="test('b1', true)">try FLOURISH</button>
               <button type="button" onclick="test('b1', false)">no flourish</button>
           </div>
-      </div>
-      <div class="block">
-        <textarea id="p2" placeholder="Paragraph 2..."></textarea>
+      </td></tr>
+    <tr><td><textarea id="p2" placeholder="Paragraph 2..."></textarea></td>
+    <td>
         <div id="b2">
             <button type="button" onclick="test('b2', true)">try FLOURISH</button>
             <button type="button" onclick="test('b2', false)">no flourish</button>
         </div>
-      </div>
-      <div class="block">
-        <textarea id="p3" placeholder="Paragraph 3..."></textarea>
+      </td></tr>
+      <tr><td><textarea id="p3" placeholder="Paragraph 3..."></textarea></td>
+      <td>
         <div id="b3">
             <button type="button" onclick="test('b3', true)">try FLOURISH</button>
             <button type="button" onclick="test('b3', false)">no flourish</button>
         </div>
-      </div>
-      <div class="block">
-        <textarea id="p4" placeholder="Paragraph 4..."></textarea>
+      </td></tr>
+      <tr><td><textarea id="p4" placeholder="Paragraph 4..."></textarea></td>
+      <td>
         <div id="b4">
             <button type="button" onclick="test('b4', true)">try FLOURISH</button>
             <button type="button" onclick="test('b4', false)">no flourish</button>
         </div>
-      </div>
-      <div class="block">
-        <textarea id="p5" placeholder="Paragraph 5..."></textarea>
+      </td></tr>
+      <tr><td><textarea id="p5" placeholder="Paragraph 5..."></textarea></td>
+      <td>
         <div id="b5">
             <button type="button" onclick="test('b5', true)">try FLOURISH</button>
             <button type="button" onclick="test('b5', false)">no flourish</button>
         </div>
-      </div>
-      <div class="block">
-        <textarea id="p6" placeholder="Closing..."></textarea>
+      </td></tr>
+      <tr><td><textarea id="p6" placeholder="Closing..."></textarea></td>
+    <td>
         <div id="b6"></div>
-      </div>
-    </div>
+    </td></tr>
+    </table>
 
-  </div>
-
-  <div id="side">
     <textarea id="inkpot" placeholder="INKPOT: paste word lists here in the format of Inferior/Superior Inferior/Superior ..."></textarea>
   </div>
 
   <div style="clear: both; text-align: center; margin-bottom: 20px">
     <a href="https://www.drivethrurpg.com/product/170400/Quill-A-LetterWriting-Roleplaying-Game-for-a-Single-Player" target="new">Quill, a solo RPG by Scott Malthouse</a>
-</div>
 </body>
 </html>
