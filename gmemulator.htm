@@ -742,7 +742,10 @@ function resolveroll(iExYes, iYes, iExNo) {
         $("#dice_result").html(iRoll);
         $("#answer").html(sAnswer);
 
-        sLog = "Question: " + sQuestion  + "\n" + "(Roll) Answer: (" + iRoll + ") " + sAnswer + "\n" + "Event: " + sEvent;
+        sLog = "Question: " + sQuestion  + "\n" + "(Roll) Answer: (" + iRoll + ") " + sAnswer;
+        if (sEvent != "None") {
+            sLog += "\n" + "Event: " + sEvent;
+        }
     }
     else {
         alert("Please enter a question.");
