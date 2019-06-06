@@ -125,14 +125,12 @@ function shuffle(array) {
 }
 
 function reshuffleFate() {
-    fates = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ];
-    fates = shuffle(fates);
+    fates = shuffle(fillArrayWithNumbers(12));
     updateFateDeck();
 }
 
 function reshuffleResolution() {
-    resolutions = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ];
-    resolutions = shuffle(resolutions);
+    resolutions = shuffle(fillArrayWithNumbers(16));
     updateResolutionDeck();
 }
 
