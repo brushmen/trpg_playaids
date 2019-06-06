@@ -1,0 +1,213 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="a Javascript playaid page for Sadia Bies&#39;s tabletop roleplaying game titled &#39;Fading Signal&#39;">
+<title>Fading Signal Playaid</title>
+<script type="text/javascript" src="scripts/jquery.min.js"></script>
+<script type="text/javascript" src="scripts/jquery.timer.js"></script>
+<script>
+var Clock = new (function() {
+    var $countdown,
+        $form, // Form used to change the countdown time
+        incrementTime = 70,
+        currentTime = 720000, // 2 hours
+        updateTimer = function() {
+            $countdown.html(formatTime(currentTime));
+            if (currentTime == 0) {
+                Clock.Timer.stop();
+                timerComplete();
+                Clock.resetCountdown();
+                return;
+            }
+            currentTime -= incrementTime / 10;
+            if (currentTime < 0) currentTime = 0;
+        },
+        timerComplete = function() {
+            $countdown.html("Battery Depleted");
+            flatline();
+        },
+        init = function() {
+            $countdown = $('#countdown');
+            Clock.Timer = $.timer(updateTimer, incrementTime, true);
+            $form = $('#ClockEntry');
+            $form.bind('submit', function() {
+                Clock.resetCountdown();
+                return false;
+            });
+        };
+    this.resetCountdown = function(sec=0) {
+        if (sec < 0) {
+            currentTime += parseInt(sec) * 100;
+            if (currentTime <= 0) {
+                Clock.Timer.stop();
+                timerComplete();
+            }
+        }
+    };
+    $(init);
+});
+
+// Common functions
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {str = '0' + str;}
+    return str;
+}
+function formatTime(time) {
+    var hour = parseInt(time / 360000);
+    var min = parseInt(time / 6000) - (hour * 60);
+    var sec = parseInt(time / 100) - (min * 60) - (hour * 3600);
+    return (hour > 0 ? pad(hour, 2) : "00") + ":" + (min > 0 ? pad(min, 2) : "00") + ":" + pad(sec, 2);
+}
+
+var flatlined = false;
+var showPulse = false;
+
+function toggleHeartPulse() {
+    var e;
+
+    showPulse = !showPulse;
+
+    if (!flatlined) {
+        e = document.getElementById("beating");
+        e.style.display = "block";
+        document.getElementById("flatline").style.display = "none";
+    }
+    else {
+        e = document.getElementById("flatline");
+        e.style.display = "block";
+        document.getElementById("beating").style.display = "none";
+    }
+    if (e.style.visibility == "hidden") {
+        e.style.visibility = "visible";
+        document.getElementById("pulsetoggle").innerHTML = "<a href='#' onclick='toggleHeartPulse();'>hide pulse</a>";
+    }
+    else {
+        e.style.visibility = "hidden";
+        document.getElementById("pulsetoggle").innerHTML = "<a href='#' onclick='toggleHeartPulse();'>show pulse</a>";
+    }
+}
+
+function flatline() {
+    var e = document.getElementById("beating");
+
+    e.style.display = "none";
+    e = document.getElementById("flatline");
+    if (showPulse) {
+        e.style.visibility = "visible";
+    }
+    e.style.display = "block";
+    flatlined = true;
+}
+</script>
+<style>
+body {
+    background-color: black;
+    color: lightgreen;
+    font-family: mono, terminal, tahoma, sans-serif;
+}
+a, a:active, a:link, a:visited {
+    color: lightblue;
+}
+#countdown, #batterydrain {
+    text-align: center;
+    margin: 0px auto;
+    width: 500px;
+    font-size: 3em;
+}
+#batterydrain input[type="button"] {
+    margin: 0px;
+}
+.heart-rate {
+  max-width: 180px;
+  height: 143px;
+  position: relative;
+  margin:0px auto;
+  top:50px;
+  overflow:hidden;
+}
+
+.fade-in {
+  position: absolute;
+  width: 100%;
+  height:100%;
+  background-color: black;
+  top: 0;
+  right: 0;
+  animation: heartRateIn 4s linear infinite;
+}
+
+.fade-out {
+  position: absolute;
+  width: 120%;
+  height: 100%;
+  top: 0;
+  left: -120%;
+  animation: heartRateOut 4s linear infinite;
+/* use rgba(255, 255, 255 ...) for white version */
+  background: rgba(0, 0, 0, 1);
+  background: -moz-linear-gradient(left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+  background: -webkit-linear-gradient(left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+  background: -o-linear-gradient(left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+  background: -ms-linear-gradient(left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0) 100%);
+}
+
+@keyframes heartRateIn {
+  0% {
+    width: 100%;
+  }
+  50% {
+    width: 0%;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes heartRateOut {
+  0% {
+    left: -120%;
+  }
+  30% {
+    left: -120%;
+  }
+  100% {
+    left: 0;
+  }
+}
+</style>
+</head>
+<body>
+<div id="countdown">Battery Life</div>
+<form id="ClockEntry">
+    <div id="batterydrain">
+        <input type="button" onclick="Clock.resetCountdown(-900);" value="Reactivate Mecha" />
+        <input type="button" onclick="Clock.resetCountdown(-900);" value="Fire Weapons" />
+        <input type="button" onclick="Clock.resetCountdown(-10);" value="Increased Heart Rate" />
+        <input type="button" onclick="Clock.resetCountdown(-7200);" value="Video Chat" /><br/>
+        <input type="button" onclick="Clock.resetCountdown(-60);" value="1min Action" />
+        <input type="button" onclick="Clock.resetCountdown(-300);" value="5min Action" /><br/>
+        <input type="button" onclick="Clock.resetCountdown(-600);" value="10min Action" />
+        <input type="button" onclick="Clock.resetCountdown(-1200);" value="20min Action" />
+    </div>
+</form>
+</div>
+
+<div class="heart-rate" id="beating" style="display: block; visibility: hidden;">
+  <svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="150" height="73" viewBox="0 0 150 73" enable-background="new 0 0 150 73" xml:space="preserve">
+    <polyline fill="none" stroke="green" stroke-width="3" stroke-miterlimit="10" points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486"
+    />
+  </svg>
+  <div class="fade-in"></div>
+  <div class="fade-out"></div>
+</div>
+<div class="heart-rate" id="flatline" style="display: none; visibility: hidden;">
+    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="150" height="73" viewBox="0 0 150 73" enable-background="new 0 0 150 73" xml:space="preserve">
+    <line x1="0" y1="45" x2="150" y2="45" stroke="green" stroke-width="3"/>
+  </svg>
+  <div class="fade-in"></div>
+  <div class="fade-out"></div>
+</div>
+<div class="heart-rate" id="pulsetoggle"><a href="#" onclick="toggleHeartPulse();">show pulse</a>
+</div>
+</body>
+</html>
