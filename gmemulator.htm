@@ -1,0 +1,1470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from http://f1.grp.yahoofs.com/v1/wMOGT27t4WkTRTSVCKqyGpsVnw2xYnfeZqkSOYAvZjhnvJkQriSV7vD0m0V4m9HwxaX0hbKpTzSe1jX2szudOTKXdztHhFDjknnfb05pdlA/Applications/mythic-gm-emulator.htm -->
+<!-- http://solorpggamer.blogspot.com/2012/04/member-from-mythic-yahoo-group-created.html -->
+<html><head><title>Mythic GM Emulator</title>
+<meta content="text/html; charset=windows-1252" http-equiv="Content-Type">
+<script type="text/javascript" src="scripts/jquery.min.js"></script>
+<script>
+function impossible() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+     case 1 :
+         iExYes = 0;
+         iYes = -20;
+         iExNo = 77;
+         break;
+     case 2 :
+         iExYes = 0;
+        iYes = 0;
+        iExNo = 81;
+         break;
+     case 3 :
+         iExYes = 0;
+         iYes = 0;
+         iExNo = 81;
+         break;
+     case 4 :
+         iExYes = 1;
+         iYes = 5;
+         iExNo = 82;
+         break;
+     case 5 :
+         iExYes = 1;
+         iYes = 5;
+         iExNo = 82;
+         break;
+     case 6 :
+         iExYes = 2;
+         iYes = 10;
+         iExNo = 83;
+         break;
+     case 7 :
+         iExYes = 3;
+         iYes = 15;
+         iExNo = 84;
+         break;
+     case 8 :
+         iExYes = 5;
+         iYes = 25;
+         iExNo = 86;
+         break;
+     case 9 :
+         iExYes = 10;
+         iYes = 50;
+         iExNo = 91;
+         break;
+     default :
+         break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function noway() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 0;
+            iYes = 0;
+            iExNo = 81;
+            break;
+        case 2 :
+            iExYes = 1;
+            iYes = 5;
+            iExNo = 82;
+            break;
+        case 3 :
+            iExYes = 1;
+            iYes = 5;
+            iExNo = 82;
+            break;
+        case 4 :
+            iExYes = 2;
+            iYes = 10;
+            iExNo = 83;
+            break;
+        case 5 :
+            iExYes = 3;
+            iYes = 15;
+            iExNo = 84;
+            break;
+        case 6 :
+            iExYes = 5;
+            iYes = 25;
+            iExNo = 86;
+            break;
+        case 7 :
+            iExYes = 7;
+            iYes = 35;
+            iExNo = 88;
+            break;
+        case 8 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 9 :
+            iExYes = 15;
+            iYes = 75;
+            iExNo = 96;
+            break;
+        default :
+        break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function veryunlikely() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 1;
+            iYes = 5;
+            iExNo = 82;
+            break;
+        case 2 :
+            iExYes = 1;
+            iYes = 5;
+            iExNo = 82;
+            break;
+        case 3 :
+            iExYes = 2;
+            iYes = 10;
+            iExNo = 83;
+            break;
+        case 4 :
+            iExYes = 3;
+            iYes = 15;
+            iExNo = 84;
+            break;
+        case 5 :
+            iExYes = 5;
+            iYes = 25;
+            iExNo = 86;
+            break;
+        case 6 :
+            iExYes = 9;
+            iYes = 45;
+            iExNo = 90;
+            break;
+        case 7 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 8 :
+            iExYes = 13;
+            iYes = 65;
+            iExNo = 94;
+            break;
+        case 9 :
+            iExYes = 16;
+            iYes = 85;
+            iExNo = 97;
+            break;
+        default :
+        break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function unlikely() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 1;
+            iYes = 5;
+            iExNo = 82;
+            break;
+        case 2 :
+            iExYes = 2;
+            iYes = 10;
+            iExNo = 83;
+            break;
+        case 3 :
+            iExYes = 3;
+            iYes = 15;
+            iExNo = 84;
+            break;
+        case 4 :
+            iExYes = 4;
+            iYes = 20;
+            iExNo = 85;
+            break;
+        case 5 :
+            iExYes = 7;
+            iYes = 35;
+            iExNo = 88;
+            break;
+        case 6 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 7:
+            iExYes = 11;
+            iYes = 55;
+            iExNo = 92;
+            break;
+        case 8 :
+            iExYes = 15;
+            iYes = 75;
+            iExNo = 96;
+            break;
+        case 9 :
+            iExYes = 18;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        default :
+        break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function fiftyfifty() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 2;
+            iYes = 10;
+            iExNo = 83;
+            break;
+        case 2 :
+            iExYes = 3;
+            iYes = 15;
+            iExNo = 84;
+            break;
+        case 3 :
+            iExYes = 5;
+            iYes = 25;
+            iExNo = 86;
+            break;
+        case 4 :
+            iExYes = 7;
+            iYes = 35;
+            iExNo = 88;
+            break;
+        case 5 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 6 :
+            iExYes = 13;
+            iYes = 65;
+            iExNo = 94;
+            break;
+        case 7 :
+            iExYes = 15;
+            iYes = 75;
+            iExNo = 96;
+            break;
+        case 8 :
+            iExYes = 16;
+            iYes = 85;
+            iExNo = 97;
+            break;
+        case 9 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        default :
+            break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function somewhatlikely() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 4;
+            iYes = 20;
+            iExNo = 85;
+            break;
+        case 2 :
+            iExYes = 5;
+            iYes = 25;
+            iExNo = 86;
+            break;
+        case 3 :
+            iExYes = 9;
+            iYes = 45;
+            iExNo = 90;
+            break;
+        case 4 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 5 :
+            iExYes = 13;
+            iYes = 65;
+            iExNo = 94;
+            break;
+        case 6 :
+            iExYes = 16;
+            iYes = 80;
+            iExNo = 97;
+            break;
+        case 7 :
+            iExYes = 16;
+            iYes = 85;
+            iExNo = 97;
+            break;
+        case 8 :
+            iExYes = 18;
+            iYes = 90;
+            iExNo = 99;
+            break;
+        case 9 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        default :
+            break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function likely() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 5;
+            iYes = 25;
+            iExNo = 86;
+            break;
+        case 2 :
+            iExYes = 7;
+            iYes = 35;
+            iExNo = 88;
+            break;
+        case 3 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 4 :
+            iExYes = 11;
+            iYes = 55;
+            iExNo = 92;
+            break;
+        case 5 :
+            iExYes = 15;
+            iYes = 75;
+            iExNo = 96;
+            break;
+        case 6 :
+            iExYes = 16;
+            iYes = 85;
+            iExNo = 97;
+            break;
+        case 7 :
+            iExYes = 18;
+            iYes = 90;
+            iExNo = 99;
+            break;
+        case 8 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 9 :
+            iExYes = 20;
+            iYes = 100;
+            iExNo = 0;
+            break;
+        default :
+            break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function verylikely() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 9;
+            iYes = 45;
+            iExNo = 90;
+            break;
+        case 2 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 3 :
+            iExYes = 13;
+            iYes = 65;
+            iExNo = 94;
+            break;
+        case 4 :
+            iExYes = 15;
+            iYes = 75;
+            iExNo = 96;
+            break;
+        case 5 :
+            iExYes = 16;
+            iYes = 85;
+            iExNo = 97;
+            break;
+        case 6 :
+            iExYes = 18;
+            iYes = 90;
+            iExNo = 99;
+            break;
+        case 7 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 8 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 9 :
+            iExYes = 21;
+            iYes = 105;
+            iExNo = 0;
+            break;
+        default :
+            break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function nearsurething() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 10;
+            iYes = 50;
+            iExNo = 91;
+            break;
+        case 2 :
+            iExYes = 11;
+            iYes = 55;
+            iExNo = 92;
+            break;
+        case 3 :
+            iExYes = 15;
+            iYes = 75;
+            iExNo = 96;
+            break;
+        case 4 :
+            iExYes = 16;
+            iYes = 80;
+            iExNo = 97;
+            break;
+        case 5 :
+            iExYes = 18;
+            iYes = 90;
+            iExNo = 99;
+            break;
+        case 6 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 7 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 8 :
+            iExYes = 20;
+            iYes = 100;
+            iExNo = 0;
+            break;
+        case 9 :
+            iExYes = 23;
+            iYes = 115;
+            iExNo = 0;
+            break;
+        default :
+            break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function surething() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 11;
+            iYes = 55;
+            iExNo = 92;
+            break;
+        case 2 :
+            iExYes = 13;
+            iYes = 65;
+            iExNo = 94;
+            break;
+        case 3 :
+            iExYes = 16;
+            iYes = 80;
+            iExNo = 97;
+            break;
+        case 4 :
+            iExYes = 16;
+            iYes = 85;
+            iExNo = 97;
+            break;
+        case 5 :
+            iExYes = 18;
+            iYes = 90;
+            iExNo = 99;
+            break;
+        case 6 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 7 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 8 :
+            iExYes = 22;
+            iYes = 110;
+            iExNo = 0;
+            break;
+        case 9 :
+            iExYes = 25;
+            iYes = 125;
+            iExNo = 0;
+            break;
+        default :
+            break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function hastobe() {
+    var iExYes = 0;
+    var iYes = 0;
+    var iExNo = 0;
+    var iChaos = 0;
+
+    //Get Chaos Factor
+    iChaos = document.chaos.chaosfactor.selectedIndex+1;
+
+    //Determine odds
+    switch (iChaos)
+    {
+        case 1 :
+            iExYes = 16;
+            iYes = 80;
+            iExNo = 97;
+            break;
+        case 2 :
+            iExYes = 16;
+            iYes = 85;
+            iExNo = 97;
+            break;
+        case 3 :
+            iExYes = 18;
+            iYes = 90;
+            iExNo = 99;
+         break;
+        case 4 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 5 :
+            iExYes = 19;
+            iYes = 95;
+            iExNo = 100;
+            break;
+        case 6 :
+            iExYes = 20;
+            iYes = 100;
+            iExNo = 0;
+            break;
+        case 7 :
+            iExYes = 20;
+            iYes = 100;
+            iExNo = 0;
+            break;
+        case 8 :
+            iExYes = 26;
+            iYes = 130;
+            iExNo = 0;
+            break;
+        case 9 :
+            iExYes = 26;
+            iYes = 145;
+            iExNo = 0;
+            break;
+        default :
+            break;
+    }
+
+    //Call function to determine outcome
+    resolveroll(iExYes, iYes, iExNo);
+}
+
+function resolveroll(iExYes, iYes, iExNo) {
+    var iRoll = 0;
+    var sAnswer = "";
+    var sDescription = "";
+    var sQuestion="";
+    var sLog = "";
+
+    sQuestion = $("#questionarea").val();
+
+    // only roll and answer if there is a question
+    if (sQuestion != "") {
+        $("#questionarea").val(""); // clear question area
+        iRoll= Math.ceil(Math.random()*100);
+        sAnswer = getanswer(iExYes, iYes, iExNo, iRoll);
+        sEvent = determineevent(iRoll);
+        if (sEvent != "None") {
+            $("#event").html(sEvent);
+        }
+        //Populate the spans on the page
+        $("#dice_result").html(iRoll);
+        $("#answer").html(sAnswer);
+
+        sLog = "Question: " + sQuestion  + "\n" + "(Roll) Answer: (" + iRoll + ") " + sAnswer + "\n" + "Event: " + sEvent;
+    }
+    else {
+        alert("Please enter a question.");
+    }
+
+    updateLog(sLog);
+}
+
+function getanswer(iExYes, iYes, iExNo, iRoll) {
+    var sAnswer = "";
+
+    if(iRoll <= iExYes) {
+        sAnswer = "Exceptional Yes";
+    }
+    else if(iRoll <= iYes) {
+        sAnswer = "Yes";
+    }
+    else if(iRoll >= iExNo) {
+        sAnswer = "Exceptional No";
+    }
+    else {
+        sAnswer = "No";
+    }
+
+    return sAnswer;
+}
+
+function determineevent(iRoll) {
+    var sFocus = "";
+    var sAction = "";
+    var sSubject = "";
+    var sEvent = "";
+
+    switch (iRoll)
+    {
+      case 11 :
+      case 22 :
+      case 33 :
+      case 44 :
+      case 55 :
+      case 66 :
+      case 77 :
+      case 88 :
+      case 99 :
+          if(Math.floor(iRoll/10) <= document.chaos.chaosfactor.selectedIndex+1)
+          {
+            sFocus = determinefocus();
+            sAction = determineaction();
+            sSubject = determinesubject();
+          }
+          break;
+        default :
+          break;
+    }
+
+    if(sFocus == "") {
+        sEvent = "None";
+    }
+    else {
+        sEvent = "(" + sFocus + ") " + sAction + " " + sSubject;
+    }
+
+    return sEvent;
+}
+
+
+function determinefocus()
+{
+    var iFocusRoll = 0;
+    var sFocus = "";
+
+    iFocusRoll= Math.ceil(Math.random()*100);
+
+    if(iFocusRoll <= 7) {
+        sFocus = "Remote event";
+    }
+    else if (iFocusRoll <= 28) {
+        sFocus = "NPC action";}
+    else if (iFocusRoll <= 35) {
+        sFocus = "Introduce a new NPC";
+    }
+    else if (iFocusRoll <= 45) {
+        sFocus = "Move toward a thread";
+    }
+    else if (iFocusRoll <= 52) {
+        sFocus = "Move away from a thread";
+    }
+    else if (iFocusRoll <= 55) {
+        sFocus = "Close a thread";
+    }
+    else if (iFocusRoll <= 67) {
+        sFocus = "PC negative";
+    }
+    else if (iFocusRoll <= 75) {
+        sFocus = "PC positive";
+    }
+    else if (iFocusRoll <= 83) {
+        sFocus = "Ambiguous event";
+    }
+    else if (iFocusRoll <= 92) {
+        sFocus = "NPC negative";
+    }
+    else if (iFocusRoll <= 100) {
+        sFocus = "NPC positive";
+    }
+
+    return sFocus;
+}
+
+function determineaction() {
+    var iActionRoll = 0;
+    var sAction = "";
+
+    iActionRoll = Math.ceil(Math.random()*100);
+
+    switch (iActionRoll)
+    {
+      case 1 : sAction = "Attainment"; break;
+      case 2 : sAction = "Starting"; break;
+      case 3 : sAction = "Neglect"; break;
+      case 4 : sAction = "Fight"; break;
+      case 5 : sAction = "Recruit"; break;
+      case 6 : sAction = "Triumph"; break;
+      case 7 : sAction = "Violate"; break;
+      case 8 : sAction = "Oppose"; break;
+      case 9 : sAction = "Malice"; break;
+      case 10: sAction = "Communicate"; break;
+      case 11: sAction = "Persecute"; break;
+      case 12: sAction = "Increase"; break;
+      case 13: sAction = "Decrease"; break;
+      case 14: sAction = "Abandon"; break;
+      case 15: sAction = "Gratify"; break;
+      case 16: sAction = "Inquire"; break;
+      case 17: sAction = "Antagonise"; break;
+      case 18: sAction = "Move"; break;
+      case 19: sAction = "Waste"; break;
+      case 20: sAction = "Truce"; break;
+      case 21: sAction = "Release"; break;
+      case 22: sAction = "Befriend"; break;
+      case 23: sAction = "Judge"; break;
+      case 24: sAction = "Desert"; break;
+      case 25: sAction = "Dominate"; break;
+      case 26: sAction = "Procrastinate"; break;
+      case 27: sAction = "Praise"; break;
+      case 28: sAction = "Separate"; break;
+      case 29: sAction = "Take"; break;
+      case 30: sAction = "Break"; break;
+      case 31: sAction = "Heal"; break;
+      case 32: sAction = "Delay"; break;
+      case 33: sAction = "Stop"; break;
+      case 34: sAction = "Lie"; break;
+      case 35: sAction = "Return"; break;
+      case 36: sAction = "Immitate"; break;
+      case 37: sAction = "Struggle"; break;
+      case 38: sAction = "Inform"; break;
+      case 39: sAction = "Bestow"; break;
+      case 40: sAction = "Postpone"; break;
+      case 41: sAction = "Expose"; break;
+      case 42: sAction = "Haggle"; break;
+      case 43: sAction = "Imprison"; break;
+      case 44: sAction = "Release"; break;
+      case 45: sAction = "Celebrate"; break;
+      case 46: sAction = "Develop"; break;
+      case 47: sAction = "Travel"; break;
+      case 48: sAction = "Block"; break;
+      case 49: sAction = "Harm"; break;
+      case 50: sAction = "Debase"; break;
+      case 51: sAction = "Overindulge"; break;
+      case 52: sAction = "Adjourn"; break;
+      case 53: sAction = "Adversity"; break;
+      case 54: sAction = "Kill"; break;
+      case 55: sAction = "Disrupt"; break;
+      case 56: sAction = "Usurp"; break;
+      case 57: sAction = "Create"; break;
+      case 58: sAction = "Betray"; break;
+      case 59: sAction = "Agree"; break;
+      case 60: sAction = "Abuse"; break;
+      case 61: sAction = "Oppress"; break;
+      case 62: sAction = "Inspect"; break;
+      case 63: sAction = "Ambush"; break;
+      case 64: sAction = "Spy"; break;
+      case 65: sAction = "Attach"; break;
+      case 66: sAction = "Carry"; break;
+      case 67: sAction = "Open"; break;
+      case 68: sAction = "Carelessness"; break;
+      case 69: sAction = "Ruin"; break;
+      case 70: sAction = "Extravagance"; break;
+      case 71: sAction = "Trick"; break;
+      case 72: sAction = "Arrive"; break;
+      case 73: sAction = "Propose"; break;
+      case 74: sAction = "Divide"; break;
+      case 75: sAction = "Refuse"; break;
+      case 76: sAction = "Mistrust"; break;
+      case 77: sAction = "Deceive"; break;
+      case 78: sAction = "Cruelty"; break;
+      case 79: sAction = "Intolerance"; break;
+      case 80: sAction = "Trust"; break;
+      case 81: sAction = "Excitement"; break;
+      case 82: sAction = "Activity"; break;
+      case 83: sAction = "Assist"; break;
+      case 84: sAction = "Care"; break;
+      case 85: sAction = "Negligence"; break;
+      case 86: sAction = "Passion"; break;
+      case 87: sAction = "Work hard"; break;
+      case 88: sAction = "Control"; break;
+      case 89: sAction = "Attract"; break;
+      case 90: sAction = "Failure"; break;
+      case 91: sAction = "Pursue"; break;
+      case 92: sAction = "Vengeance"; break;
+      case 93: sAction = "Proceedings"; break;
+      case 94: sAction = "Dispute"; break;
+      case 95: sAction = "Punish"; break;
+      case 96: sAction = "Guide"; break;
+      case 97: sAction = "Transform"; break;
+      case 98: sAction = "Overthrow"; break;
+      case 99: sAction = "Oppress"; break;
+      case 100: sAction = "Change"; break;
+      default: break;
+    }
+    return sAction;
+}
+
+function determinesubject() {
+    var iSubjectRoll = 0;
+    var sSubject = "";
+
+    iSubjectRoll = Math.ceil(Math.random()*100);
+
+    switch (iSubjectRoll) {
+      case 1 : sSubject = "Goals"; break;
+      case 2 : sSubject = "Dreams"; break;
+      case 3 : sSubject = "Environment"; break;
+      case 4 : sSubject = "Outside"; break;
+      case 5 : sSubject = "Inside"; break;
+      case 6 : sSubject = "Reality"; break;
+      case 7 : sSubject = "Allies"; break;
+      case 8 : sSubject = "Enemies"; break;
+      case 9 : sSubject = "Evil"; break;
+      case 10: sSubject = "Good"; break;
+      case 11: sSubject = "Emotions"; break;
+      case 12: sSubject = "Opposition"; break;
+      case 13: sSubject = "War"; break;
+      case 14: sSubject = "Peace"; break;
+      case 15: sSubject = "The innocent"; break;
+      case 16: sSubject = "Love"; break;
+      case 17: sSubject = "The spiritual"; break;
+      case 18: sSubject = "The intellectual"; break;
+      case 19: sSubject = "New ideas"; break;
+      case 20: sSubject = "Joy"; break;
+      case 21: sSubject = "Messages"; break;
+      case 22: sSubject = "Energy"; break;
+      case 23: sSubject = "Balance"; break;
+      case 24: sSubject = "Tension"; break;
+      case 25: sSubject = "Friendship"; break;
+      case 26: sSubject = "The physical"; break;
+      case 27: sSubject = "A project"; break;
+      case 28: sSubject = "Pleasures"; break;
+      case 29: sSubject = "Pain"; break;
+      case 30: sSubject = "Possessions"; break;
+      case 31: sSubject = "Benefits"; break;
+      case 32: sSubject = "Plans"; break;
+      case 33: sSubject = "Lies"; break;
+      case 34: sSubject = "Expectations"; break;
+      case 35: sSubject = "Legal matters"; break;
+      case 36: sSubject = "Bureaucracy"; break;
+      case 37: sSubject = "Business"; break;
+      case 38: sSubject = "A path"; break;
+      case 39: sSubject = "News"; break;
+      case 40: sSubject = "Exterior factors"; break;
+      case 41: sSubject = "Advice"; break;
+      case 42: sSubject = "A plot"; break;
+      case 43: sSubject = "Competition"; break;
+      case 44: sSubject = "Prison"; break;
+      case 45: sSubject = "Illness"; break;
+      case 46: sSubject = "Food"; break;
+      case 47: sSubject = "Attention"; break;
+      case 48: sSubject = "Success"; break;
+      case 49: sSubject = "Failure"; break;
+      case 50: sSubject = "Travel"; break;
+      case 51: sSubject = "Jealousy"; break;
+      case 52: sSubject = "Dispute"; break;
+      case 53: sSubject = "Home"; break;
+      case 54: sSubject = "Investment"; break;
+      case 55: sSubject = "Suffering"; break;
+      case 56: sSubject = "Wishes"; break;
+      case 57: sSubject = "Tactics"; break;
+      case 58: sSubject = "Stalemate"; break;
+      case 59: sSubject = "Randomness"; break;
+      case 60: sSubject = "Misfortune"; break;
+      case 61: sSubject = "Death"; break;
+      case 62: sSubject = "Disruption"; break;
+      case 63: sSubject = "Power"; break;
+      case 64: sSubject = "A burden"; break;
+      case 65: sSubject = "Intrigues"; break;
+      case 66: sSubject = "Fears"; break;
+      case 67: sSubject = "Ambush"; break;
+      case 68: sSubject = "Rumor"; break;
+      case 69: sSubject = "Wounds"; break;
+      case 70: sSubject = "Extravagance"; break;
+      case 71: sSubject = "A representative"; break;
+      case 72: sSubject = "Adversities"; break;
+      case 73: sSubject = "Opulence"; break;
+      case 74: sSubject = "Liberty"; break;
+      case 75: sSubject = "Military"; break;
+      case 76: sSubject = "The mundane"; break;
+      case 77: sSubject = "Trials"; break;
+      case 78: sSubject = "Masses"; break;
+      case 79: sSubject = "Vehicle"; break;
+      case 80: sSubject = "Art"; break;
+      case 81: sSubject = "Victory"; break;
+      case 82: sSubject = "Dispute"; break;
+      case 83: sSubject = "Riches"; break;
+      case 84: sSubject = "Status quo"; break;
+      case 85: sSubject = "Technology"; break;
+      case 86: sSubject = "Hope"; break;
+      case 87: sSubject = "Magic"; break;
+      case 88: sSubject = "Illusions"; break;
+      case 89: sSubject = "Portals"; break;
+      case 90: sSubject = "Danger"; break;
+      case 91: sSubject = "Weapons"; break;
+      case 92: sSubject = "Animals"; break;
+      case 93: sSubject = "Weather"; break;
+      case 94: sSubject = "Elements"; break;
+      case 95: sSubject = "Nature"; break;
+      case 96: sSubject = "The public"; break;
+      case 97: sSubject = "Leadership"; break;
+      case 98: sSubject = "Fame"; break;
+      case 99: sSubject = "Anger"; break;
+      case 100: sSubject = "Information"; break;
+    }
+    return sSubject;
+}
+
+
+function determineadverb() {
+    var iActionRoll = 0;
+    var sAction = "";
+
+    iActionRoll = Math.ceil(Math.random()*100);
+
+    switch (iActionRoll)
+    {
+      case 1 : sAction = "abnormally"; break;
+      case 2 : sAction = "adventurously"; break;
+      case 3 : sAction = "aggressively"; break;
+      case 4 : sAction = "angrily"; break;
+      case 5 : sAction = "anxiously"; break;
+      case 6 : sAction = "awkwardly"; break;
+      case 7 : sAction = "beautifully"; break;
+      case 8 : sAction = "bleakly"; break;
+      case 9 : sAction = "boldly"; break;
+      case 10 : sAction = "bravely"; break;
+      case 11 : sAction = "busily"; break;
+      case 12 : sAction = "calmly"; break;
+      case 13 : sAction = "carefully"; break;
+      case 14 : sAction = "carelessly"; break;
+      case 15 : sAction = "cautiously"; break;
+      case 16 : sAction = "ceaselessly"; break;
+      case 17 : sAction = "cheerfully"; break;
+      case 18 : sAction = "combatively"; break;
+      case 19 : sAction = "coolly"; break;
+      case 20 : sAction = "crazily"; break;
+      case 21 : sAction = "curiously"; break;
+      case 22 : sAction = "daintily"; break;
+      case 23 : sAction = "dangerously"; break;
+      case 24 : sAction = "defiantly"; break;
+      case 25 : sAction = "deliberately"; break;
+      case 26 : sAction = "delightfully"; break;
+      case 27 : sAction = "dimly"; break;
+      case 28 : sAction = "efficiently"; break;
+      case 29 : sAction = "energetically"; break;
+      case 30 : sAction = "enormously"; break;
+      case 31 : sAction = "enthusiastically"; break;
+      case 32 : sAction = "excitedly"; break;
+      case 33 : sAction = "fearfully"; break;
+      case 34 : sAction = "ferociously"; break;
+      case 35 : sAction = "fiercely"; break;
+      case 36 : sAction = "foolishly"; break;
+      case 37 : sAction = "fortunately"; break;
+      case 38 : sAction = "frantically"; break;
+      case 39 : sAction = "freely"; break;
+      case 40 : sAction = "frighteningly"; break;
+      case 41 : sAction = "fully"; break;
+      case 42 : sAction = "generously"; break;
+      case 43 : sAction = "gently"; break;
+      case 44 : sAction = "gladly"; break;
+      case 45 : sAction = "gracefully"; break;
+      case 46 : sAction = "gratefully"; break;
+      case 47 : sAction = "happily"; break;
+      case 48 : sAction = "hastily"; break;
+      case 49 : sAction = "healthily"; break;
+      case 50 : sAction = "helpfully"; break;
+      case 51 : sAction = "helplessly"; break;
+      case 52 : sAction = "hopelessly"; break;
+      case 53 : sAction = "innocently"; break;
+      case 54 : sAction = "intensely"; break;
+      case 55 : sAction = "interestingly"; break;
+      case 56 : sAction = "irritatingly"; break;
+      case 57 : sAction = "jovially"; break;
+      case 58 : sAction = "joyfully"; break;
+      case 59 : sAction = "judgementally"; break;
+      case 60 : sAction = "kindly"; break;
+      case 61 : sAction = "kookily"; break;
+      case 62 : sAction = "lazily"; break;
+      case 63 : sAction = "lightly"; break;
+      case 64 : sAction = "loosely"; break;
+      case 65 : sAction = "loudly"; break;
+      case 66 : sAction = "lovingly"; break;
+      case 67 : sAction = "loyally"; break;
+      case 68 : sAction = "majestically"; break;
+      case 69 : sAction = "meaningfully"; break;
+      case 70 : sAction = "mechanically"; break;
+      case 71 : sAction = "miserably"; break;
+      case 72 : sAction = "mockingly"; break;
+      case 73 : sAction = "mysteriously"; break;
+      case 74 : sAction = "naturally"; break;
+      case 75 : sAction = "neatly"; break;
+      case 76 : sAction = "nicely"; break;
+      case 77 : sAction = "oddly"; break;
+      case 78 : sAction = "offensively"; break;
+      case 79 : sAction = "officially"; break;
+      case 80 : sAction = "partially"; break;
+      case 81 : sAction = "peacefully"; break;
+      case 82 : sAction = "perfectly"; break;
+      case 83 : sAction = "playfully"; break;
+      case 84 : sAction = "politely"; break;
+      case 85 : sAction = "positively"; break;
+      case 86 : sAction = "powerfully"; break;
+      case 87 : sAction = "quaintly"; break;
+      case 88 : sAction = "quarrelsomely"; break;
+      case 89 : sAction = "quietly"; break;
+      case 90 : sAction = "roughly"; break;
+      case 91 : sAction = "rudely"; break;
+      case 92 : sAction = "ruthlessly"; break;
+      case 93 : sAction = "slowly"; break;
+      case 94 : sAction = "softly"; break;
+      case 95 : sAction = "swiftly"; break;
+      case 96 : sAction = "threateningly"; break;
+      case 97 : sAction = "very"; break;
+      case 98 : sAction = "violently"; break;
+      case 99 : sAction = "wildly"; break;
+      case 100 : sAction = "yieldingly"; break;
+      default: break;
+    }
+
+    return sAction;   
+}
+
+function determineadjective() {
+    var iActionRoll = 0;
+    var sAction = "";
+
+    iActionRoll = Math.ceil(Math.random()*100);
+
+    switch (iActionRoll) {
+      case 1 : sAction = "abandoned"; break;
+      case 2 : sAction = "abnormal"; break;
+      case 3 : sAction = "amusing"; break;
+      case 4 : sAction = "ancient"; break;
+      case 5 : sAction = "aromatic"; break;
+      case 6 : sAction = "average"; break;
+      case 7 : sAction = "beautiful"; break;
+      case 8 : sAction = "bizarre"; break;
+      case 9 : sAction = "classy"; break;
+      case 10 : sAction = "clean"; break;
+      case 11 : sAction = "cold"; break;
+      case 12 : sAction = "colorful"; break;
+      case 13 : sAction = "creepy"; break;
+      case 14 : sAction = "cute"; break;
+      case 15 : sAction = "damaged"; break;
+      case 16 : sAction = "dark"; break;
+      case 17 : sAction = "defeated"; break;
+      case 18 : sAction = "delicate"; break;
+      case 19 : sAction = "delightful"; break;
+      case 20 : sAction = "dirty"; break;
+      case 21 : sAction = "disagreeable"; break;
+      case 22 : sAction = "disgusting"; break;
+      case 23 : sAction = "drab"; break;
+      case 24 : sAction = "dry"; break;
+      case 25 : sAction = "dull"; break;
+      case 26 : sAction = "empty"; break;
+      case 27 : sAction = "enormous"; break;
+      case 28 : sAction = "exotic"; break;
+      case 29 : sAction = "faded"; break;
+      case 30 : sAction = "familiar"; break;
+      case 31 : sAction = "fancy"; break;
+      case 32 : sAction = "fat"; break;
+      case 33 : sAction = "feeble"; break;
+      case 34 : sAction = "feminine"; break;
+      case 35 : sAction = "festive"; break;
+      case 36 : sAction = "flawless"; break;
+      case 37 : sAction = "fresh"; break;
+      case 38 : sAction = "full"; break;
+      case 39 : sAction = "glorious"; break;
+      case 40 : sAction = "good"; break;
+      case 41 : sAction = "graceful"; break;
+      case 42 : sAction = "hard"; break;
+      case 43 : sAction = "harsh"; break;
+      case 44 : sAction = "healthy"; break;
+      case 45 : sAction = "heavy"; break;
+      case 46 : sAction = "historical"; break;
+      case 47 : sAction = "horrible"; break;
+      case 48 : sAction = "important"; break;
+      case 49 : sAction = "interesting"; break;
+      case 50 : sAction = "juvenile"; break;
+      case 51 : sAction = "lacking"; break;
+      case 52 : sAction = "lame"; break;
+      case 53 : sAction = "large"; break;
+      case 54 : sAction = "lavish"; break;
+      case 55 : sAction = "lean"; break;
+      case 56 : sAction = "less"; break;
+      case 57 : sAction = "lethal"; break;
+      case 58 : sAction = "lonely"; break;
+      case 59 : sAction = "lovely"; break;
+      case 60 : sAction = "macabre"; break;
+      case 61 : sAction = "magnificent"; break;
+      case 62 : sAction = "masculine"; break;
+      case 63 : sAction = "mature"; break;
+      case 64 : sAction = "messy"; break;
+      case 65 : sAction = "mighty"; break;
+      case 66 : sAction = "military"; break;
+      case 67 : sAction = "modern"; break;
+      case 68 : sAction = "extravagant"; break;
+      case 69 : sAction = "mundane"; break;
+      case 70 : sAction = "mysterious"; break;
+      case 71 : sAction = "natural"; break;
+      case 72 : sAction = "nondescript"; break;
+      case 73 : sAction = "odd"; break;
+      case 74 : sAction = "pale"; break;
+      case 75 : sAction = "petite"; break;
+      case 76 : sAction = "poor"; break;
+      case 77 : sAction = "powerful"; break;
+      case 78 : sAction = "quaint"; break;
+      case 79 : sAction = "rare"; break;
+      case 80 : sAction = "reassuring"; break;
+      case 81 : sAction = "remarkable"; break;
+      case 82 : sAction = "rotten"; break;
+      case 83 : sAction = "rough"; break;
+      case 84 : sAction = "ruined"; break;
+      case 85 : sAction = "rustic"; break;
+      case 86 : sAction = "scary"; break;
+      case 87 : sAction = "simple"; break;
+      case 88 : sAction = "small"; break;
+      case 89 : sAction = "smelly"; break;
+      case 90 : sAction = "smooth"; break;
+      case 91 : sAction = "soft"; break;
+      case 92 : sAction = "strong"; break;
+      case 93 : sAction = "tranquil"; break;
+      case 94 : sAction = "ugly"; break;
+      case 95 : sAction = "valuable"; break;
+      case 96 : sAction = "warlike"; break;
+      case 97 : sAction = "warm"; break;
+      case 98 : sAction = "watery"; break;
+      case 99 : sAction = "weak"; break;
+      case 100 : sAction = "young"; break;
+      default: break;
+    }
+    return sAction;                       
+}
+
+function randomevent() {
+    var sFocus = "";
+    var sAction = "";
+    var sSubject = "";
+    var sEvent = "";
+    var sLog = "";
+
+    sFocus = determinefocus();
+    sAction = determineaction();
+    sSubject = determinesubject();
+    sEvent = "(" + sFocus + ") " + sAction + " " + sSubject;
+
+    $("#event").html(sEvent);
+    updateLog("Event: " + sEvent);
+}
+
+function randomdescription() {
+    var sAction = "";
+    var sSubject = "";
+    var sEvent = "";
+
+    sAction = determineadverb();
+    sSubject = determineadjective();
+    sEvent = "Description: " + sAction + " " + sSubject;
+
+    $("#description").html(sEvent);
+    updateLog(sEvent);
+}
+
+function updateLog(text) {
+    if ($("#logarea").val() != "") {
+        text = $("#logarea").val() + "\n" + text;
+    }
+    $("#logarea").val(text);
+}
+
+function clearAll() {
+    $("#scene_setup").html("");
+    $("#dice_result").html("");
+    $("#answer").html("");
+    $("#event").html("");
+    $("#description").html("");
+    $("#questionarea").val("");
+    $("#logarea").val("");
+}
+
+function scenesetup() {
+    var sSetup = "";
+    var iSetupRoll = 0;
+
+    iSetupRoll = Math.ceil(Math.random()*10);
+
+    if(iSetupRoll <= document.chaos.chaosfactor.selectedIndex+1) {
+        if (iSetupRoll % 2 == 0) {
+            sSetup = "Interupt Scene";
+        }
+        else {
+            sSetup = "Altered Scene";
+        }
+    }
+    else {
+        sSetup = "Scene Unaltered";
+    }
+
+    $("#scene_setup").html(sSetup);
+
+    updateLog(sSetup);
+}
+</script>
+<style>
+body {
+    background-color: aliceblue;
+    font-size: 62.5%; /* 1em = 10px */
+    font-family: Sans-Serif;
+}
+#main {
+    margin: 5px auto;
+    font-size: 1.6em;
+}
+
+.odds
+{
+    border: 2px solid navy;
+    padding: 0.1em;
+    line-height: 1.7em;
+    text-decoration: none;
+}
+
+.boxed
+{
+    background-color: #cce6ff;
+    padding: 0.1em;
+    line-height: 14pt;
+    margin-bottom: 2px;
+}
+
+textarea {
+    font-size: 1.6em;
+}
+
+#questionarea {
+    width: 500px;
+    height: 90px;
+}
+
+#logarea {
+    width: 500px;
+    height: 500px;
+}
+</style>
+</head>
+<body>
+<table id="main">
+    <tr>
+    <td width="200" valign="top">
+          <b>Odds</b><br><a href="javascript: impossible();" class="odds">Impossible</a><br><a href="javascript: noway();" class="odds">No way</a><br><a href="javascript: veryunlikely();" class="odds">Very unlikely</a><br><a href="javascript: unlikely();" class="odds">Unlikely</a><br><a href="javascript: fiftyfifty();" class="odds">50/50</a><br><a href="javascript: somewhatlikely();" class="odds">Somewhat likely</a><br><a href="javascript: likely();" class="odds">Likely</a><br><a href="javascript: verylikely();" class="odds">Very likely</a><br><a href="javascript: nearsurething();" class="odds">Near sure thing</a><br><a href="javascript: surething();" class="odds">A sure thing</a><br><a href="javascript: hastobe();" class="odds">Has to be</a>
+      </td>
+
+      <td width="250" valign="top">
+      <table><tr><td valign="top"><b>Chaos:</b>&nbsp;&nbsp;</td>
+      <td>
+          <form name="chaos">
+            <select name="chaosfactor">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option selected="selected">5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+            </select>
+          </form>
+            </td></tr></table><br/>
+          
+          <b><a href="javascript: scenesetup();">Scene Setup</a></b>
+            <div id="scene_setup" class="boxed"></div>
+            
+            <b>Dice Result</b>
+            <div id="dice_result" class="boxed"></div>
+            
+            <b>Answer</b>
+            <div id="answer" class="boxed"></div>
+        
+            <b><a href="javascript: randomevent();">Event</a></b>
+            <div id="event" class="boxed"></div>
+        
+            <b><a href="javascript: randomdescription();">Description</a></b>
+            <div id="description" class="boxed"></div>
+            <div style="text-align: center">
+            <br/>
+            <input type="button" onclick="clearAll();" value="Clear All"/></div>
+            </td>
+            <td align="right">
+            <b>Fate Question:</b><br><textarea id="questionarea"></textarea>
+<br>
+            <b>Session Log:</b><br><textarea id="logarea"></textarea>
+            <br/>
+            <a style="font-size: 0.7em" href="https://www.drivethrurpg.com/product/20798/Mythic-Game-Master-Emulator">Word Mill's <i>Mythic GM Emulator</i></a>
+            </td>
+        </tr>
+        </table>
+
+</body></html>
