@@ -111,7 +111,13 @@ a, a:active, a:link, a:visited {
     text-align: center;
     margin: 0px auto;
     width: 500px;
+}
+#countdown {
     font-size: 3em;
+}
+#batterydrain {
+    line-height: 2em;
+
 }
 #batterydrain input[type="button"] {
     margin: 0px;
@@ -184,10 +190,13 @@ a, a:active, a:link, a:visited {
         <input type="button" onclick="Clock.resetCountdown(-900);" value="Fire Weapons" />
         <input type="button" onclick="Clock.resetCountdown(-10);" value="Increased Heart Rate" />
         <input type="button" onclick="Clock.resetCountdown(-7200);" value="Video Chat" /><br/>
-        <input type="button" onclick="Clock.resetCountdown(-60);" value="1min Action" />
-        <input type="button" onclick="Clock.resetCountdown(-300);" value="5min Action" /><br/>
-        <input type="button" onclick="Clock.resetCountdown(-600);" value="10min Action" />
-        <input type="button" onclick="Clock.resetCountdown(-1200);" value="20min Action" />
+        <div style="font-size: 14pt">Other Actions
+        </div>
+        <input type="button" onclick="Clock.resetCountdown(-30);" value="30sec" />
+        <input type="button" onclick="Clock.resetCountdown(-60);" value="1min" />
+        <input type="button" onclick="Clock.resetCountdown(-300);" value="5min" /><br/>
+        <input type="button" onclick="Clock.resetCountdown(-600);" value="10min" />
+        <input type="button" onclick="Clock.resetCountdown(-1200);" value="20min" />
     </div>
 </form>
 </div>
