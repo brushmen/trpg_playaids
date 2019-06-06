@@ -93,13 +93,18 @@ var resolution_text = [
     "NO, and... someone or something dear to you is harmed, lost or destroyed."
 ];
 
-var fates = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ];
-var resolutions = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ];
+var fates = fillArrayWithNumbers(12);
+var resolutions = fillArrayWithNumbers(16);
 
 fates = shuffle(fates);
 resolutions = shuffle(resolutions);
 
 // functions //////////////////
+function fillArrayWithNumbers(n) {
+  var arr = Array.apply(null, Array(n));
+  return arr.map(function (x, i) { return i });
+}
+
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -208,7 +213,7 @@ On <b>anyone's turn</b>, including your own, you <i>CAN</i>...<br>
     <div id="resolutionbutton"><a href="http://brushmen.com/trpg/archipelago_playaid.htm#" onclick="drawResolution()">RESOLUTION</a> (8/16)</div>
     <textarea class="textbox" placeholder="destiny points for each player character"></textarea>
 <br/>
-<div style="text-align: right;font-size: 0.8em">Matthijs Holter's <a href="https://norwegianstyle.wordpress.com/2012/09/20/archipelago-iii/" target="new">Archipelago III</a></div>
+<div style="text-align: right;font-size: 0.8em">Matthijs Holter's <a href="https://norwegianstyle.wordpress.com/2012/09/20/archipelago-iii/" target="_new"><i>Archipelago III</i></a></div>
 </td></tr>
 </table>
 <script>
