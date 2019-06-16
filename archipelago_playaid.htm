@@ -3,61 +3,7 @@
     <meta name="description" content="a Javascript playaid page for Matthijs Holter&#39;s game, &#39;Archipelago III&#39;">
     <meta name="author" content="brushmen">
 <title>Archipelago III Playaid</title>
-<style>
-body {
-    font-size: 62.5%; /* 1em = 10px */
-    font-family: Sans-Serif;
-}
 
-#setup {
-    width: 100%;
-}
-
-#leftsidebar {
-    width: 400px;
-    float: left;
-    font-size: 1.5em; /* 15px */
-}
-
-#rightsidebar {
-    width: 300px;
-    float: right;
-    font-size: 1.3em;
-}
-
-#main {
-    width: 800px;
-    float: left;
-    /*border: 1px navy solid;*/
-}
-
-#card {
-    margin: 0.5em 0 0 3em;
-}
-.fate, .resolution {
-    width: 600px;
-    padding: 1em;
-    font-size: 2.5em;
-    text-align: center;
-}
-
-#fatebutton, #resolutionbutton {
-    padding: 1em;
-}
-#fatebutton, .fate {
-    background-color: #bee1f3;
-}
-#resolutionbutton, .resolution {
-    background-color: #fbeeb3;
-}
-
-.textbox {
-    margin: 5px 0 0 0;
-    width: 300px;
-    height: 530px;
-    font-size: 1.5em;
-}
-</style>
 <script>
 var fate_text = [
     "Somebody important to this character faces trouble because of the element you own - severe illness, bankruptcy, doubt in their faith or similar.",
@@ -178,7 +124,39 @@ function updateResolutionDeck() {
     }
 }
 </script>
+<style>
+body {
+    font-size: 62.5%; /* 1em = 10px */
+    font-family: Sans-Serif;
+}
 
+#card {
+    margin: 0.5em 0 0 3em;
+}
+.fate, .resolution {
+    width: 600px;
+    padding: 1em;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+#fatebutton, #resolutionbutton {
+    padding: 1em;
+}
+#fatebutton, .fate {
+    background-color: #bee1f3;
+}
+#resolutionbutton, .resolution {
+    background-color: #fbeeb3;
+}
+
+.textbox {
+    margin: 5px 0 0 0;
+    width: 300px;
+    height: 530px;
+    font-size: 1.5em;
+}
+</style>
 </head>
 <body>
 <table width="100%">
@@ -207,8 +185,8 @@ On <b>anyone's turn</b>, including your own, you <i>CAN</i>...<br>
 <br/><br/>
 
 </td><td width="300" valign="top">
-    <div id="fatebutton"><a href="#" onclick="drawFate()">FATE</a> (5/12)</div>
-    <div id="resolutionbutton"><a href="#" onclick="drawResolution()">RESOLUTION</a> (8/16)</div>
+    <div id="fatebutton"><a href="#" onclick="drawFate()">FATE</a> (12/12)</div>
+    <div id="resolutionbutton"><a href="#" onclick="drawResolution()">RESOLUTION</a> (16/16)</div>
     <textarea class="textbox" placeholder="destiny points for each player character"></textarea>
 <br/>
 <div style="text-align: right;font-size: 0.8em">Matthijs Holter's <a href="https://norwegianstyle.wordpress.com/2012/09/20/archipelago-iii/" target="new"><i>Archipelago III</i></a></div>
