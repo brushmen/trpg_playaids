@@ -2035,6 +2035,7 @@ function gameOverListener() {
 // reset the game with the new cards instead
 function useNewCards() {
     var list = $("#writeup").val().split("\n");
+    var str = "";
     var passCheck = true;
 
     if (list.length > 0 && list[0]) {
@@ -2047,6 +2048,10 @@ function useNewCards() {
             passCheck = false;
             break;
           }
+          // reformat card text to make it wrap
+          str = list[i];
+          list[i] = cardType(str) + ": " +
+                    str.substring(str.indexOf(":")+1).trim();
         }
     }
     else {
