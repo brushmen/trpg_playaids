@@ -1,0 +1,235 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="description" content="a Javascript playaid page for Jess Go&#39;s tabletop roleplaying game &#39;Our Lady&#39;">
+    <meta name="author" content="brushmen">
+<title>Our Lady Playaid</title>
+
+<script>
+var spring_text = [
+    "What form did She first take when She appeared? How did this amaze you?",
+    "What gifts did She give you? Why had you never seen anything like it?",
+    "What does She do that makes you feel stronger? How are you bettered from meeting Her?",
+    "How is She beautiful? Why does She make you want to be more like Her?",
+    "Who saw Her first? What brought you to Her?",
+    "What prayers does She teach you? How does She ask you to show adoration?",
+    "What good news does She bring? Are you allowed to share it?",
+    "What does She ask you to do every day? What good will come of it?",
+    "How many times has She visited you? What was different every time?"
+];
+
+var summer_text = [
+    "The gifts She gave you persist, how? What do you think it means?",
+    "What miracles does She say are to come? Is there a price?",
+    "She performs a miracle that a few others see, what was it? How does this help your cause?",
+    "She performs a miracle that a few others see, what was it? How does this hinder your cause?",
+    "Who now believes you? How does this embolden you?",
+    "Who doesn't believe you? How do they threaten you?",
+    "People start to present you with gifts, what are they? What do you do with them?",
+    "People ask you to share the Lady's words with them, what do you say? How does it help them?",
+    "What physical form does your worship take? What do you love about it?"
+];
+
+var fall_text = [
+    "The gifts She gave you have changed, how? What do you think it means?",
+    "She has not shown Herself to you in a while. How does this pain you?",
+    "People have begun calling you by new names. What are they?",
+    "People stop and stare at you in the streets. Is it with admiration or fear? Do you enjoy it?",
+    "People ask for your help. What are you able to do now you weren’t before?",
+    "She appears to just the three of you again. What new request does She make? Is it too much?",
+    "An outside authority questions you. Do you explain what you’ve seen, or lie? What comes of it?",
+    "What questions do you have for Her? Does She answer them?",
+    "What physical form does your worship take? What do you hate about it?"
+];
+
+var winter_text = [
+    "You know She will return soon. Are you afraid?",
+    "You know She will return soon. Did She speak of taking any of you with Her?",
+    "She told you a secret She did not tell the others. What was it?",
+    "Her return is drawing near but Her final miracle hasn’t happened yet. Do you still believe?",
+    "Do you try to escape your fate? How?",
+    "Many people believe you now but someone close to you still does not. How does this hurt?",
+    "What sacrifice do you make for Her? Do you gain anything in return?",
+    "You do something you claim was in Her name. Would She approve? Do the others know?",
+    "SHE HAS RETURNED"
+];
+
+var springs = shuffle(fillArrayWithNumbers(9));
+var summers = shuffle(fillArrayWithNumbers(9));
+var falls = shuffle(fillArrayWithNumbers(9));
+var winters = shuffle(fillArrayWithNumbers(9));
+
+// functions //////////////////
+function fillArrayWithNumbers(n) {
+  var arr = Array.apply(null, Array(n));
+  return arr.map(function (x, i) { return i });
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+function reshuffle(season="spring") {
+    if (season == "spring") {
+        springs = shuffle(fillArrayWithNumbers(9));
+    } else if (season == "summer") {
+        summers = shuffle(fillArrayWithNumbers(9));
+    } else if (season == "fall") {
+        falls = shuffle(fillArrayWithNumbers(9));
+    } else {
+        winters = shuffle(fillArrayWithNumbers(9));
+    }
+    updateDeck(season);
+}
+
+function drawCard(season="spring") {
+    var x = document.getElementById("card");
+    var text = "";
+
+    if (season == "spring") {
+        text = spring_text[springs[0]];
+        // remove card from deck
+        springs.shift();
+    } else if (season == "summer") {
+        text = summer_text[summers[0]];
+        summers.shift();
+    } else if (season == "fall") {
+        text = fall_text[falls[0]];
+        falls.shift();
+    } else {
+        text = winter_text[winters[0]];
+        winters.shift();
+    }
+    
+    // display card in main area
+    x.innerHTML = "<div class='" + season + "'>" + text + "</div>";
+
+    updateDeck(season);
+}
+
+function updateDeck(season="spring") {
+    var x = document.getElementById(season + "button");
+    var text = "";
+
+    if (season == "spring") {
+        if (springs.length > 0) {
+            text = "<a href=\"#\" onclick=\"drawCard('spring')\">SPRING</a> (" + springs.length + "/9)";
+        } else {
+            text = "SPRING (" + springs.length + "/" + "<a href=\"#\" onclick=\"reshuffle('spring')\">9</a>)";
+        }
+
+        text += " is when you three are first visited.";
+
+    } else if (season == "summer") {
+        if (summers.length > 0) {
+            text = "<a href=\"#\" onclick=\"drawCard('summer')\">SUMMER</a> (" + summers.length + "/9)";
+        } else {
+            text = "SUMMER (" + summers.length + "/" + "<a href=\"#\" onclick=\"reshuffle('summer')\">9</a>)";
+        }
+
+        text += " is when the visitation is revealed.";
+
+    } else if (season == "fall") {
+        if (falls.length > 0) {
+            text = "<a href=\"#\" onclick=\"drawCard('fall')\">FALL</a> (" + falls.length + "/9)";
+        } else {
+            text = "FALL (" + falls.length + "/" + "<a href=\"#\" onclick=\"reshuffle('fall')\">9</a>)";
+        }
+
+        text += " is the season of change. How will you handle it?";
+
+    } else {
+        if (winters.length > 0) {
+            text = "<a href=\"#\" onclick=\"drawCard('winter')\">WINTER</a> (" + winters.length + "/9)";
+        } else {
+            text = "WINTER (" + winters.length + "/" + "<a href=\"#\" onclick=\"reshuffle('winter')\">9</a>)";
+        }
+
+        text += " is when Our Lady said She would return and deliver Her final miracle. If the card SHE HAS RETURNED is not drawn after everyone has had their turns, you must make a decision. In you story does She return, or not?";
+    }
+
+    x.innerHTML = text;
+}
+</script>
+<style>
+body {
+    font-size: 62.5%; /* 1em = 10px */
+    font-family: Sans-Serif;
+}
+
+#card {
+    margin: 0.5em 1em 0 3em;
+}
+
+.spring, .summer, .fall, .winter {
+    width: 600px;
+    padding: 1em;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+#springbutton, #summerbutton,
+#fallbutton, #winterbutton {
+    padding: 1em;
+}
+
+#springbutton, .spring {
+    background-color: #ffb2ee;
+}
+
+#summerbutton, .summer {
+    background-color: #dcc2ff;
+}
+
+#fallbutton, .fall {
+    background-color: #ffcd9a;
+}
+
+#winterbutton, .winter {
+    background-color: #c9daf8;
+}
+</style>
+</head>
+<body>
+<table width="100%">
+<tr><td width="400" valign="top">
+Interpret each card individually; discuss and build a rich world together. Answer the question on your turn. Ask questions of the other players when they have finished their prompt.<br/><br/>
+Use the classic setting of the tale of Our Lady, or make up your own.<br/><br/>
+Start in the Spring when The Lady first visits and continue through Summer, Fall, and Winter until you draw the SHE HAS RETURNED card. Then determine how you think your story would end. You've built this story together and you should end it together.<br/><br/>
+Make the game as long or as short as you want simply by changing how many prompt cards you use per season (2 cards per person each season is recommended).<br/><br/>
+<div style="font-size: 0.8em">Jess Go's <a href="https://go-jg.itch.io/our-lady" target="new"><i>Our Lady</i></a></div>
+</td>
+<td valign="top">
+
+    <div id="card"><div style="width: 600px; text-align: left; font-size: 1.6em">Stories of visitation and prophecy exist all throughout the world of legend and lore. This is a three player game that encompasses a year in the life of three children who have been visited by a divine spirit. What would you do? Who would you tell? Who would believe you? Are you ready for when She returns?</div>
+    </div>
+<br/><br/>
+
+</td><td width="300" valign="top">
+    <div id="springbutton"><a href="#" onclick="drawCard('spring')">SPRING</a> (9/9) is when you three are first visited. It's something just between you. Everything is new and exciting. It’s breathtaking, dramatic, intoxicating.</div>
+    <div id="summerbutton"><a href="#" onclick="drawCard('summer')">SUMMER</a> (9/9) is when the visitation is revealed. Some people may have even seen miracles of The Lady for themselves. This is a time of wonder and revelation, gifts and worship.</div>
+    <div id="fallbutton"><a href="#" onclick="drawCard('fall')">FALL</a> (9/9) is the season of change. How will you handle it?</div>
+    <div id="winterbutton"><a href="#" onclick="drawCard('winter')">WINTER</a> (9/9) is when Our Lady said She would return and deliver Her final miracle. The game ends as soon as someone draws the SHE HAS RETURNED card. If it is not drawn after everyone has had their turns, you must make a decision. In you story does She return, or not?</div>
+</td></tr>
+</table>
+<script>
+// begin script ////////////
+updateFateDeck();
+updateResolutionDeck();
+</script>
+
+</body></html>
