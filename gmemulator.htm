@@ -1342,14 +1342,21 @@ function updateLog(text) {
     $("#logarea").val(text);
 }
 
-function clearAll() {
+function clearUI(type="all") {
+
     $("#scene_setup").html("");
     $("#dice_result").html("");
     $("#answer").html("");
     $("#event").html("");
     $("#description").html("");
     $("#questionarea").val("");
-    $("#logarea").val("");
+    // reset chaos factor to 5
+    $("#chaosfactor").val(5);
+
+    if (type == "all") {
+        $("#logarea").val("");
+        $("#notes").val("");
+    }
 }
 
 function scenesetup() {
@@ -1360,7 +1367,7 @@ function scenesetup() {
 
     if(iSetupRoll <= document.chaos.chaosfactor.selectedIndex+1) {
         if (iSetupRoll % 2 == 0) {
-            sSetup = "Interupt Scene";
+            sSetup = "Interrupt Scene";
         }
         else {
             sSetup = "Altered Scene";
@@ -1402,6 +1409,50 @@ body {
     margin-bottom: 2px;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 400px;
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px 0 10px 20px;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -70px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 10%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.clearbutton {
+    width: 150px;
+    white-space: normal;
+}
+
 textarea {
     font-size: 1.6em;
 }
@@ -1415,6 +1466,11 @@ textarea {
     width: 500px;
     height: 500px;
 }
+
+#notes {
+    width: 400px;
+    height: 620px;
+}
 </style>
 </head>
 <body>
@@ -1425,10 +1481,10 @@ textarea {
       </td>
 
       <td width="250" valign="top">
-      <table><tr><td valign="top"><b>Chaos:</b>&nbsp;&nbsp;</td>
+      <table><tr><td valign="top"><b><div class="tooltip">Chaos:<span class="tooltiptext">increase by 1 if scene ends poorly for protagonist; decrease by 1 if scene ends well for them</span></div></b>&nbsp;&nbsp;</td>
       <td>
           <form name="chaos">
-            <select name="chaosfactor">
+            <select id="chaosfactor" name="chaosfactor">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -1458,15 +1514,19 @@ textarea {
             <div id="description" class="boxed"></div>
             <div style="text-align: center">
             <br/>
-            <input type="button" onclick="clearAll();" value="Clear All"/></div>
+            <input type="button" class="clearbutton" onclick="clearUI('basic');" value="Clear all except Log and Notes"/><br/><br/>
+            <input type="button" class="clearbutton" onclick="clearUI('all');" value="CLEAR ALL"/></div>
             </td>
-            <td align="right">
+            <td align="center">
             <b>Fate Question:</b><br><textarea id="questionarea"></textarea>
 <br>
             <b>Session Log:</b><br><textarea id="logarea"></textarea>
             <br/>
             <a style="font-size: 0.7em" href="https://www.drivethrurpg.com/product/20798/Mythic-Game-Master-Emulator">Word Mill's <i>Mythic GM Emulator</i></a>
             </td>
+        <td class="height:100%" align="center" valign="top">
+        <b>Notes:</b><br><textarea id="notes"></textarea>
+        </td>
         </tr>
         </table>
 
