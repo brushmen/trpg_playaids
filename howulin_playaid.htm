@@ -5,6 +5,153 @@
     <meta name="description" content="a Javascript playaid page for Lowell Francis's tabletop roleplaying game 'Hearts of Wulin'">
 <title>Hearts of Wulin Playaid</title>
 <script>
+var r_ent = [
+    "I cannot choose between [ ] and [ ].",
+    "I disguised myself to get close to [ ], but [ ], their lover, suspects and hates me.",
+    "I disguised myself to get close to [ ], but [ ], their lover, is falling for me.",
+    "I fled from [ ] because of the heartache, but [ ], their lover, has called me back to honor a debt.",
+    "I know [ ] desires me, but [ ], who I pine for, loves them.",
+    "I lost to [ ] in order to maintain the affections of [ ].",
+    "I love [ ], who I overlooked for too long; now they love [ ].",
+    "I love [ ], but [ ] --a leader of my faction-- has forbidden it.",
+    "I love [ ], but my family member [ ] is their sworn enemy.",
+    "I love [ ], but my teacher, [ ], killed someone dear to them.",
+    "I love [ ], but their family member, [ ], is a villain.",
+    "I love [ ], but my family member, [ ], is a legendary villain.",
+    "I love [ ], but their family member, [ ], has sworn revenge against me.",
+    "I love [ ], but I have sworn revenge against their family member, [ ].",
+    "I love [ ], but their sibling, [ ], considers me beneath them.",
+    "I love [ ], but they are engaged to [ ], who I respect.",
+    "I love [ ], but I know a dark secret about, [ ], who they adore.",
+    "I love [ ], but they are wed to [ ], who I serve.",
+    "I love [ ], but they are wed to [ ], my sibling.",
+    "I am wed to [ ], but I know they actually pine for [ ].",
+    "I pursue [ ] despite knowing that my friend, [ ], pines for them.",
+    "I rejected [ ], but [ ] --who I desire-- loves them.",
+    "I still pursue [ ], who rejected me, despite the interference of [ ], who holds an unrequited love.",
+    "My friend [ ] and I vie for the attention of [ ] despite their indifference to both of us.",
+    "There is mutual unrequited love between [ ] and I because of my duty to [ ].",
+    "[ ] advised me not to pursue [ ], but secretly woo'd them.",
+    "My teacher, [ ], and I share an unspoken love because of the shame it would bring to [ ].",
+    "[ ] has become jealous of the attention [ ] pays to me instead of them.",
+    "I am engaged to [ ], but have fallen in love with their sibling, [ ].",
+    "I love [ ] from an enemy clan, and [ ] blackmails me about my passion.",
+    "I love [ ] but I cannot tell them the truth about what happened to their lover [ ].",
+    "I love [ ], but their duty to [ ] draws them away.",
+    "[ ] openly pursues me, but to avoid a scandal I've hidden my relationship with [ ].",
+    "I humiliated myself in front of [ ], who I desire, and [ ] will let no one forget it.",
+    "A prophecy has kept [ ] and I apart and [ ] is determined to keep it that way.",
+    "[ ] and I love one another, but that will change if they learn of my history with [ ].",
+    "I brought my lover [ ]'s sibling [ ] to justice.",
+    "I have been promised to [ ] and [ ] wants to get rid of me for that.",
+    "I have been promised to the awful [ ], but I find their friend [ ] much more interesting.",
+    "[ ] has disguised themselves to pursue me, but my friend [ ] has begun to resent them.",
+    "I love [ ] but [ ], has seduced their family with wealth, status, and power."
+];
+
+var g_ent = [
+    "My sibling [ ] disparages me, and my parent, [ ], won't condemn them for some reason.",
+    "My rival [ ] speaks ill of me, but my mentor [ ] strangely ignores the situation.",
+    "[ ], my rival, knows about the bad actions I did to the family of my friend, [ ].",
+    "Local authority [ ] hints they know of my shady dealings against my mentor [ ] and their family.",
+    "[ ], my rival, has sworn to kill me, but I have promised [ ] that I will not harm them.",
+    "I brought my sworn ally [ ]'s sibling [ ] to justice.",
+    "I suspect my friend [ ]'s parent is the villain [ ].",
+    "I allowed my friend [ ]'s sibling [ ] to escape justice.",
+    "[ ], an authority of my faction, has ordered me to undercut [ ], who I respect.",
+    "[ ], my clan leader, has told me to spy on my comrade, [ ].",
+    "My teacher, [ ], has passed me over in favor of [ ], my rival.",
+    "I have discovered my friend, [ ], has hidden their true power from me but told [ ], another friend.",
+    "I have discovered my sibling [ ] has been in contact with [ ] from an enemy clan.",
+    "I have discovered my friend [ ] has been consorting with [ ] from an enemy clan.",
+    "I have hidden my true identity from [ ] because of my past with [ ].",
+    "I found that [ ] has hidden their true identity from everyone because of their past with [ ].",
+    "I've learned my friend [ ] has been betrayed by their teacher [ ] but they will never believe me.",
+    "I've learned my friend [ ] has been lied to by their parent [ ], but they will never believe me.",
+    "I have promised my teacher, [ ], that I will destroy the family of my friend, [ ].",
+    "I have promised my sibling, [ ], that I will destroy my friend, [ ].",
+    "I have hidden [ ], who is wanted by my friend [ ] for their crimes.",
+    "I have hidden [ ], who is a threat to my respected clan senior, [ ]",
+    "I discovered my sibling [ ] has been learning techniques from [ ], master of an enemy clan.",
+    "I learned my friend [ ] studied secrets with [ ], a heretical master.",
+    "I promised my friend [ ] that I would aid the troublemaker [ ].",
+    "I promised my sibling [ ] that I would help my rival [ ].",
+    "I owe loyalty to my elder sibling, [ ], despite how they treat their spouse, [ ].",
+    "I remain loyal to my master, [ ], despite how they treat my younger sibling, [ ].",
+    "I rejected [ ] and now they have sworn vengeance against me and my friend, [ ].",
+    "I suspect [ ] of evil, but [ ], who I respect, believes in them.",
+    "My friend [ ], suspects [ ] of evil, but I remain steadfastly loyal.",
+    "I swore to [ ] that I would protect [ ], but they would be offended if they knew.",
+    "I took part in a crime against [ ], my friend [ ]'s sibling.",
+    "I took part in a crime against [ ], my sibling [ ]'s lover.",
+    "[ ] has chosen me as heir, but [ ], who I've known all my life, resents it.",
+    "My senior, [ ], treats me badly, but I give them loyalty despite [ ]'s disapproval.",
+    "[ ] chose my long-time friend, [ ], as heir and I resent it.",
+    "My clan senior, [ ], suspects that my friend [ ] works against our faction.",
+    "My friend, [ ], is an agent for [ ] of an enemy clan, but I do not know it.",
+    "My spouse, [ ], secretly works for [ ] of an enemy clan, but I do not know it.",
+    "My master, [ ], has secretly trained me as part of a revenge plot against my friend, [ ].",
+    "My master, [ ], has trained my sibling [ ] as part of a revenge plot against my family.",
+    "My friend, [ ], has rejected my sibling [ ]'s declarations of love.",
+    "My sibling, [ ], has rejected my friend [ ]'s declarations of love.",
+    "My friend, [ ], has been exiled from my school, but my teacher [ ], will not tell me why.",
+    "My sibling, [ ], has been sent away from our family by my parent, [ ], without explanation.",
+    "I believe my parent, [ ], has been seduced with evil intent by [ ].",
+    "I believe my sibling [ ], has seduced [ ] for evil ends.",
+    "My teacher, [ ], disapproves of me, and my friend [ ], agrees with them.",
+    "My parent, [ ], disapproves of me, and my sibling [ ] won't stand up to them.",
+    "My peer, [ ], and I defeated the powerful [ ], but only I gained credit and now they resent it.",
+    "My sibling, [ ], and I were separated at birth and [ ] raised them to destroy my clan.",
+    "My sibling [ ] loves our clan enemy,  [ ].",
+    "My sibling [ ] has fallen in love with my rival, [ ].",
+    "My parent, [ ], abandoned me to be raised by [ ], but now they're returned.",
+    "[ ] and I both seek revenge against [ ], but must be the one to strike the killing blow.",
+    "I have learned about my elder sibling [ ]'s affair with [ ] which may doom our family.",
+    "My friend, [ ], hates [ ], but refuses to tell me why.",
+    "My friend, [ ], has lied to our teacher, [ ], but will not explain why.",
+    "An enemy, [ ], has come to me to change their ways, but I know my friend, [ ], will never believe them."
+];
+
+var generals = fillArrayWithNumbers(g_ent.length);
+var romantics = fillArrayWithNumbers(r_ent.length);
+
+function fillArrayWithNumbers(n) {
+  var arr = Array.apply(null, Array(n));
+  return arr.map(function (x, i) { return i });
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+function randomEntanglement(type="gl",playbook="a") {
+    var e = document.getElementById("entanglement_" + type + "_" + playbook);
+
+    if (type == "g") {
+        generals = shuffle(generals);
+        e.innerHTML = g_ent[generals[0]];
+
+    } else {
+        romantics = shuffle(romantics);
+        e.innerHTML = r_ent[romantics[0]];
+    }
+}
+
 function toggleShow(e,id) {
     var div = document.getElementById(id);
 
@@ -83,11 +230,19 @@ textarea {
     height: 80px;
     font-size: 14pt;
 }
-textarea[name="entanglement_g"] {
+#entanglement_g_a,#entanglement_g_b,
+#entanglement_g_l, #entanglement_g_o,
+#entanglement_g_s, #entanglement_g_u {
     background-color: aliceblue;
+    height: 110px;
+    font-size: 13.5pt;
 }
-textarea[name="entanglement_r"] {
+#entanglement_r_a, #entanglement_r_b,
+#entanglement_r_l, #entanglement_r_o,
+#entanglement_r_s, #entanglement_r_u {
     background-color: mistyrose;
+    height: 110px;
+    font-size: 13.5pt;
 }
 
 .toggle a:link, .toggle a:active, .toggle a:visited {
@@ -116,21 +271,14 @@ textarea[name="entanglement_r"] {
 <option value="scholar">Scholar</option>
 <option value="travelingsifu">Traveling Sifu</option>
 </select>
-<br/>
-<select name="faction">
-<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
-<option value="ox">Ox-Pilgrim Escort Bureau</option>
-<option value="meteor">Meteor Grace Clan</option>
-<option value="" disabled="disabled">-- ambiguous --</option>
-<option value="eagle">Eagle Doctrine School</option>
-<option value="iron">Iron Prosperity Delegates</option>
-<option value="" disabled="disabled">-- destroyed --</option>
-<option value="frost">Frost Hearth Palace</option>
-<option value="" disabled="disabled">-- unrighteous --</option>
-<option value="venom">Many Venoms Sect</option>
-<option value="holy">Holy Society</option>
-</select>
-<br/><br/>
+<center>
+<input type="text" id="faction" size="23" placeholder="faction" /><br/>
+<select name="factiontype">
+<option value="" selected="selected">righteous faction</option>
+<option value="">ambiguous faction</option>
+<option value="">destroyed faction</option>
+<option value="">unrighteous faction</option>
+</select></center>
 <table>
 <tr><td><input type="radio" name="style_a" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
 <tr><td><input type="radio" name="style_a" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
@@ -141,10 +289,11 @@ Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></t
 Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
 <tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
 </table>
-<br/>
 <textarea name="npc" placeholder="NPCs"></textarea><br/>
-<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
-<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+<input type="button" id="random_ge_a" value="general entanglement" onclick="randomEntanglement('g','a');" /><br/>
+<textarea id="entanglement_g_a" placeholder="General Entanglement"></textarea><br/>
+<input type="button" id="random_re_a" value="romantic entanglement" onclick="randomEntanglement('r','a');" /><br/>
+<textarea id="entanglement_r_a" placeholder="Romantic Entanglement"></textarea>
 </div>
 <center><div class="toggle"><a href="#" onclick="toggleShow(this,'aware');">hide</a> (aware)</div></center>
 </td>
@@ -161,21 +310,14 @@ Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></
 <option value="gallivant">Gallivant</option>
 <option value="thief">Thief</option>
 </select>
-<br/>
-<select name="faction" placeholder="faction">
-<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
-<option value="ox">Ox-Pilgrim Escort Bureau</option>
-<option value="meteor">Meteor Grace Clan</option>
-<option value="" disabled="disabled">-- ambiguous --</option>
-<option value="eagle">Eagle Doctrine School</option>
-<option value="iron">Iron Prosperity Delegates</option>
-<option value="" disabled="disabled">-- destroyed --</option>
-<option value="frost">Frost Hearth Palace</option>
-<option value="" disabled="disabled">-- unrighteous --</option>
-<option value="venom">Many Venoms Sect</option>
-<option value="holy">Holy Society</option>
-</select>
-<br/><br/>
+<center>
+<input type="text" id="faction" size="23" placeholder="faction" /><br/>
+<select name="factiontype">
+<option value="" selected="selected">righteous faction</option>
+<option value="">ambiguous faction</option>
+<option value="">destroyed faction</option>
+<option value="">unrighteous faction</option>
+</select></center>
 <table>
 <tr><td><input type="radio" name="style_b" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
 <tr><td><input type="radio" name="style_b" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
@@ -186,10 +328,11 @@ Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></t
 Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
 <tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
 </table>
-<br/>
 <textarea name="npc" placeholder="NPCs"></textarea><br/>
-<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
-<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+<input type="button" id="random_ge_b" value="general entanglement" onclick="randomEntanglement('g','b');" /><br/>
+<textarea id="entanglement_g_b" placeholder="General Entanglement"></textarea><br/>
+<input type="button" id="random_re_b" value="romantic entanglement" onclick="randomEntanglement('r','b');" /><br/>
+<textarea id="entanglement_r_b" placeholder="Romantic Entanglement"></textarea>
 </div>
 <center><div class="toggle"><a href="#" onclick="toggleShow(this,'bravo');">hide</a> (bravo)</div></center>
 </td>
@@ -206,21 +349,14 @@ Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></
 <option value="official">Official</option>
 <option value="swordsman">Swordsman</option>
 </select>
-<br/>
-<select name="faction" placeholder="faction">
-<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
-<option value="ox">Ox-Pilgrim Escort Bureau</option>
-<option value="meteor">Meteor Grace Clan</option>
-<option value="" disabled="disabled">-- ambiguous --</option>
-<option value="eagle">Eagle Doctrine School</option>
-<option value="iron">Iron Prosperity Delegates</option>
-<option value="" disabled="disabled">-- destroyed --</option>
-<option value="frost">Frost Hearth Palace</option>
-<option value="" disabled="disabled">-- unrighteous --</option>
-<option value="venom">Many Venoms Sect</option>
-<option value="holy">Holy Society</option>
-</select>
-<br/><br/>
+<center>
+<input type="text" id="faction" size="23" placeholder="faction" /><br/>
+<select name="factiontype">
+<option value="" selected="selected">righteous faction</option>
+<option value="">ambiguous faction</option>
+<option value="">destroyed faction</option>
+<option value="">unrighteous faction</option>
+</select></center>
 <table>
 <tr><td><input type="radio" name="style_l" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
 <tr><td><input type="radio" name="style_l" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
@@ -231,10 +367,11 @@ Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></t
 Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
 <tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
 </table>
-<br/>
 <textarea name="npc" placeholder="NPCs"></textarea><br/>
-<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
-<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+<input type="button" id="random_ge_l" value="general entanglement" onclick="randomEntanglement('g','l');" /><br/>
+<textarea id="entanglement_g_l" placeholder="General Entanglement"></textarea><br/>
+<input type="button" id="random_re_l" value="romantic entanglement" onclick="randomEntanglement('r','l');" /><br/>
+<textarea id="entanglement_r_l" placeholder="Romantic Entanglement"></textarea>
 </div>
 <center><div class="toggle"><a href="#" onclick="toggleShow(this,'loyal');">hide</a> (loyal)</div></center>
 </td>
@@ -251,21 +388,14 @@ Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></
 <option value="trickster">Trickster</option>
 <option value="wanderer">Wanderer</option>
 </select>
-<br/>
-<select name="faction" placeholder="faction">
-<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
-<option value="ox">Ox-Pilgrim Escort Bureau</option>
-<option value="meteor">Meteor Grace Clan</option>
-<option value="" disabled="disabled">-- ambiguous --</option>
-<option value="eagle">Eagle Doctrine School</option>
-<option value="iron">Iron Prosperity Delegates</option>
-<option value="" disabled="disabled">-- destroyed --</option>
-<option value="frost">Frost Hearth Palace</option>
-<option value="" disabled="disabled">-- unrighteous --</option>
-<option value="venom">Many Venoms Sect</option>
-<option value="holy">Holy Society</option>
-</select>
-<br/><br/>
+<center>
+<input type="text" id="faction" size="23" placeholder="faction" /><br/>
+<select name="factiontype">
+<option value="" selected="selected">righteous faction</option>
+<option value="">ambiguous faction</option>
+<option value="">destroyed faction</option>
+<option value="">unrighteous faction</option>
+</select></center>
 <table>
 <tr><td><input type="radio" name="style_o" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
 <tr><td><input type="radio" name="style_o" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
@@ -276,10 +406,11 @@ Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></t
 Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
 <tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
 </table>
-<br/>
 <textarea name="npc" placeholder="NPCs"></textarea><br/>
-<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
-<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+<input type="button" id="random_ge_o" value="general entanglement" onclick="randomEntanglement('g','o');" /><br/>
+<textarea id="entanglement_g_o" placeholder="General Entanglement"></textarea><br/>
+<input type="button" id="random_re_o" value="romantic entanglement" onclick="randomEntanglement('r','o');" /><br/>
+<textarea id="entanglement_r_o" placeholder="Romantic Entanglement"></textarea>
 </div>
 <center><div class="toggle"><a href="#" onclick="toggleShow(this,'outsider');">hide</a> (outsider)</div></center>
 </td>
@@ -296,21 +427,14 @@ Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></
 <option value="wanderingmonk">Wandering Monk</option>
 <option value="youngersibling">Younger Sibling</option>
 </select>
-<br/>
-<select name="faction" placeholder="faction">
-<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
-<option value="ox">Ox-Pilgrim Escort Bureau</option>
-<option value="meteor">Meteor Grace Clan</option>
-<option value="" disabled="disabled">-- ambiguous --</option>
-<option value="eagle">Eagle Doctrine School</option>
-<option value="iron">Iron Prosperity Delegates</option>
-<option value="" disabled="disabled">-- destroyed --</option>
-<option value="frost">Frost Hearth Palace</option>
-<option value="" disabled="disabled">-- unrighteous --</option>
-<option value="venom">Many Venoms Sect</option>
-<option value="holy">Holy Society</option>
-</select>
-<br/><br/>
+<center>
+<input type="text" id="faction" size="23" placeholder="faction" /><br/>
+<select name="factiontype">
+<option value="" selected="selected">righteous faction</option>
+<option value="">ambiguous faction</option>
+<option value="">destroyed faction</option>
+<option value="">unrighteous faction</option>
+</select></center>
 <table>
 <tr><td><input type="radio" name="style_s" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
 <tr><td><input type="radio" name="style_s" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
@@ -321,10 +445,11 @@ Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></t
 Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
 <tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
 </table>
-<br/>
 <textarea name="npc" placeholder="NPCs"></textarea><br/>
-<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
-<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+<input type="button" id="random_ge_s" value="general entanglement" onclick="randomEntanglement('g','s');" /><br/>
+<textarea id="entanglement_g_s" placeholder="General Entanglement"></textarea><br/>
+<input type="button" id="random_re_s" value="romantic entanglement" onclick="randomEntanglement('r','s');" /><br/>
+<textarea id="entanglement_r_s" placeholder="Romantic Entanglement"></textarea>
 </div>
 <center><div class="toggle"><a href="#" onclick="toggleShow(this,'student');">hide</a> (student)</div></center>
 </td>
@@ -341,21 +466,14 @@ Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></
 <option value="hidden">Hidden</option>
 <option value="prodigy">Prodigy</option>
 </select>
-<br/>
-<select name="faction" placeholder="faction">
-<option value="" disabled="disabled" selected="selected">-- righteous faction --</option>
-<option value="ox">Ox-Pilgrim Escort Bureau</option>
-<option value="meteor">Meteor Grace Clan</option>
-<option value="" disabled="disabled">-- ambiguous --</option>
-<option value="eagle">Eagle Doctrine School</option>
-<option value="iron">Iron Prosperity Delegates</option>
-<option value="" disabled="disabled">-- destroyed --</option>
-<option value="frost">Frost Hearth Palace</option>
-<option value="" disabled="disabled">-- unrighteous --</option>
-<option value="venom">Many Venoms Sect</option>
-<option value="holy">Holy Society</option>
-</select>
-<br/><br/>
+<center>
+<input type="text" id="faction" size="23" placeholder="faction" /><br/>
+<select name="factiontype">
+<option value="" selected="selected">righteous faction</option>
+<option value="">ambiguous faction</option>
+<option value="">destroyed faction</option>
+<option value="">unrighteous faction</option>
+</select></center>
 <table>
 <tr><td><input type="radio" name="style_u" /></td><td><span class="earth" title="Caution, Focus, Presence | Obsessive, Disdainful, Uncaring">Earth</span></td><td><input type="checkbox"/></td></tr>
 <tr><td><input type="radio" name="style_u" /></td><td><span class="fire" title="Creativity, Speed, Passion | Reckless, Alienating, Scattered">Fire</span></td><td><input type="checkbox"/></td></tr>
@@ -366,10 +484,11 @@ Uncertain, Isolated, Depressed">Water</span></td><td><input type="checkbox"/></t
 Overconfident, Angry, Licentious">Wood</span></td><td><input type="checkbox"/></td></tr>
 <tr><td></td><td>WOUNDED</td><td><input type="checkbox"/></td></tr>
 </table>
-<br/>
 <textarea name="npc" placeholder="NPCs"></textarea><br/>
-<textarea name="entanglement_g" placeholder="General Entanglement"></textarea><br/>
-<textarea name="entanglement_r" placeholder="Romantic Entanglement"></textarea>
+<input type="button" id="random_ge_u" value="general entanglement" onclick="randomEntanglement('g','u');" /><br/>
+<textarea id="entanglement_g_u" placeholder="General Entanglement"></textarea><br/>
+<input type="button" id="random_re_u" value="romantic entanglement" onclick="randomEntanglement('r','u');" /><br/>
+<textarea id="entanglement_r_u" placeholder="Romantic Entanglement"></textarea>
 </div>
 <center><div class="toggle"><a href="#" onclick="toggleShow(this,'unorthodox');">hide</a> (unorthodox)</div></center>
 </td>
