@@ -204,6 +204,10 @@ function playOrder() {
         characters[i] = key;
     }
 
+    if (characters.length == 0) {
+        characters.push("(you)"); // default option
+    }
+
     updateCharacters();
 }
 
@@ -288,7 +292,9 @@ function updateCardOptions() {
         html += "<div id=\"\">OPTIONS<br/><br/>";
 
         html += "<a href=\"#\" onclick=\"drawCard();\">Next Prompt</a><br/><br/>";
-        html += "<a href=\"#\" onclick=\"passCard();\">Pass</a><br/><br/>";
+        if (characters.length > 1) {
+            html += "<a href=\"#\" onclick=\"passCard();\">Pass</a><br/><br/>";
+        }
         html += "<a href=\"#\" onclick=\"removeCard();\">Remove</a><br/><br/>";
 
         html += "</div>";
@@ -388,10 +394,12 @@ function displayCard() {
 }
 
 function nextCharacter() {
-    // move current player to end of list
-    var c = characters.shift();
-    characters.push(c);
-    updateCharacters();
+    if (characters.length > 0) {
+        // move current player to end of list
+        var c = characters.shift();
+        characters.push(c);
+        updateCharacters();
+    }
 }
 
 function passCard() {
