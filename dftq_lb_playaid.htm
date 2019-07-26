@@ -302,6 +302,11 @@ function updateCardOptions() {
 
         html += "</div>";
     }
+    else if (characters.length > 1) {
+        html += "<div id=\"\">FINAL ROUND<br/><br/>";
+        html += "<a href=\"#\" onclick=\"nextCharacter();\">Next Player</a><br/><br/>";
+        html += "</div>";
+    }
 
     $("#cardoptions").html(html);
 }
