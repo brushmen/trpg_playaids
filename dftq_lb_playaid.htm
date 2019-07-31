@@ -8,7 +8,7 @@
     <script type="text/javascript" src="scripts/jquery.min.js"></script>
 <script>
 var instruction_cards = [
-    "(begin) Players take turns reading these cards aloud.",
+    "[BEGIN] Players take turns reading these cards aloud.",
     "Lady Blackbird is a Stormblood sorcerer in the Imperial Worlds. The House of Blackbird was rewarded with wealth and status by the Empress for years of loyal service to the Empire.",
     "However, she turned her back on all of it when she fled on the day of her wedding.",
     "She hired a crew of smugglers to take her on her soul-searching journey, but with an uncertain end.",
@@ -20,14 +20,15 @@ var instruction_cards = [
     /*"Shuffle the prompt cards, and place them facedown.",*/
     /*"Put the \"Lady Blackbird looks to you for guidance\" card in the middle of the deck for an approximately 30 minute game, or into the bottom third of the deck to play for an hour or more.",*/
     "Take turns reading the questions out loud. Interpret these questions, and answer them however you wish.",
-    "Other players may ask you questions or make suggestions on your turn, but it's up to you whether you answer them or include the suggestions.",
-    "Use X-card, Script Change, or other safe play methods that's suitable for your group",
+    "Other players may ask you questions or make suggestions on your turn, but it's optional whether you answer them and/or incorporate the suggestions.",
+    "Use X-card, Script Change, or other safe play methods that's suitable for your group.",
     "If you encounter a card, or an answer, that you don't want to be included in the game, use your preferred safe play method to notify the group, then remove that content from the game.",
     "If you draw a card that is removed this way by yourself or someone else, another prompt will be shown to you.",
     "You can also pass on your turn. To do so, pass the prompt card to the next player, and say: \"I'd like to hear your answer to this question.\"",
     "A prompt card can be passed around until someone chooses to remove it from the game.",
     "Continue answering, passing, and removing questions until the \"Lady Blackbird looks to you for guidance\" card is drawn.",
-    "Each player should respond to that prompt in turn. Then, the game is over. (end)"
+    "Each player should respond to that prompt in turn. Then, the game is over.",
+    "Refresh the browser page to start a new game. [END] Click to read the instruction from the beginning."
 ];
 
 var prompt_cards = [
@@ -72,6 +73,11 @@ var prompt_cards = [
     "You owe Lady Blackird a great debt. What is it and why does she never mention it?",
     "What was the worst thing you have ever done but will do it again in a heartbeat?",
     "What was the worst thing you know Lady Blackbird did, and that she has never regretted doing?",
+    "Who among Lady Blackbird's companions do you owe a favor from?",
+    "Who among Lady Blackbird's companions saved your life on the crime-infested Nightport?",
+    "Who among Lady Blackbird's companions told you a secret about the Empire that not even Lady Blackbird knew about? And what was that secret?",
+    "Who among Lady Blackbird's companions told you a secret about the Free Worlds that no one else knew about? And what was that secret?",
+    "Who among Lady Blackbird's companions told you a secret about her? And what was that secret?",
 ];
 
 var bodyguard_prompts = [
@@ -177,6 +183,14 @@ function playOrder() {
     var val;
 
     characters = new Array();
+
+    // if custom character has a play order but no name
+    // give default name
+    char = $("input[name='customcharacter']").val();
+    if (!char) {
+        char = "(custom)";
+    }
+    $("input[name='customcharacter']").parent().html(char);
 
     $("input[name='playorder']").each(function() {
         // only picked characters have play order
@@ -539,7 +553,7 @@ input[name="playorder"] {
             <input type="text" name="playorder" />
         </td></tr>
         <tr><td>
-            (custom)
+            <input type="text" name="customcharacter" placeholder="(custom)" />
         </td><td>
             <input type="text" name="playorder" />
         </td></tr>
