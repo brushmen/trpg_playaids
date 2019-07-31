@@ -27,8 +27,21 @@ var instruction_cards = [
     "You can also pass on your turn. To do so, pass the prompt card to the next player, and say: \"I'd like to hear your answer to this question.\"",
     "A prompt card can be passed around until someone chooses to remove it from the game.",
     "Continue answering, passing, and removing questions until the \"Lady Blackbird looks to you for guidance\" card is drawn.",
-    "Each player should respond to that prompt in turn. Then, the game is over.",
-    "Refresh the browser page to start a new game. [END] Click to read the instruction from the beginning."
+    "Each player should respond to that prompt in turn. Then, the game is over. [END] Click to read the instruction from the beginning."
+];
+
+var setting_cards = [
+    "Sorcery is dominated by the nobility in the Imperial Worlds, but how is it regulated to preserve balance of power?",
+    "Is the Wild Blue like outer space as we know it, or layers of breathable air above layers of corrosive clouds?",
+    "How has advancing technology not over-taken sorcery in this era?",
+    "Are floating shard worlds powered by sorcery or technology, or a mix of both?",
+    "How close is the Empire to abolishing all forms of slavery for good?",
+    "Why has the Empire not yet conquered Haven, a beacon of the Free World?",
+    "How are pirate clans regarded by both the Imperial and the Free Worlds?",
+    "Do other races beside human exist in this world? What are some of them like?",
+    "What do the people know about the creatures in the eternal darkness of the Lower Depth?",
+    "What is a prominent color scheme in the Imperial Worlds?",
+    "What is a prominent characteristic of architecture in the Free Worlds?"
 ];
 
 var prompt_cards = [
@@ -44,14 +57,7 @@ var prompt_cards = [
     "What is your one quality that Lady Blackbird can barely tolerate?",
     "What was the one decision you made that significantly changed your path in life?",
     "What makes you believe that Lady Blackbird has feelings for you? What do you do about it?",
-    "Why do you suspect Lady Blackbird's bodyguard will compromise her goal?",
-    "Why do you suspect the smuggler she hired will compromise her goal?",
-    "Why do you suspect the fixer of the smuggler crew will compromise her goal?",
-    "Why do you suspect the sky-sailor of the smuggler crew will compromise her goal?",
-    "Why do you think her old flame is not worthy of her?",
     "Why do you believe you are the best match for her?",
-    "Who among her traveling companions do you trust the least and why?",
-    "Who among her traveling companions do you trust the most and why?",
     "What secret you hold that will change Lady Blackbird's opinion of you for the worse?",
     "How does Lady Blackbird attempt to pay you for your help when she cannot access her family's wealth anymore?",
     "What is the scariest thing she has done in your presence?",
@@ -63,9 +69,8 @@ var prompt_cards = [
     "What did you sacrifice in order to help her with the journey?",
     "What did she sacrifice in order to help you?",
     "Why do you regret helping her?",
-    "Why do her other traveling companions put up with you?",
     "What did Lady Blackbird once say to you that opened up an old wound?",
-    "What do you admire about Lady Blackbird besides her appearence?",
+    "What do you admire about Lady Blackbird besides her presence?",
     "Who or what are you most proud of?",
     "Lady Blackbird forgave you for an offense, but when she is frustrated, what does she do that reminds you of the incident?",
     "What is flawed about Lady Blackbird that could end her journey prematurely?",
@@ -73,16 +78,27 @@ var prompt_cards = [
     "You owe Lady Blackird a great debt. What is it and why does she never mention it?",
     "What was the worst thing you have ever done but will do it again in a heartbeat?",
     "What was the worst thing you know Lady Blackbird did, and that she has never regretted doing?",
-    "Who among Lady Blackbird's companions do you owe a favor from?",
-    "Who among Lady Blackbird's companions saved your life on the crime-infested Nightport?",
-    "Who among Lady Blackbird's companions told you a secret about the Empire that not even Lady Blackbird knew about? And what was that secret?",
-    "Who among Lady Blackbird's companions told you a secret about the Free Worlds that no one else knew about? And what was that secret?",
-    "Who among Lady Blackbird's companions told you a secret about her? And what was that secret?",
+    "She once told you a story that you believe is a lie. Why did you not tell her so?",
+
+    "Why do you think her other traveling companions put up with you?",
+    "Why do you think her old flame is not worthy of her?",
+    "Who among her companions do you trust the least and why?",
+    "Who among her companions do you trust the most and why?",
+    "Who among her companions do you owe a favor from?",
+    "Who among her companions saved your life on the crime-infested Nightport?",
+    "Who among her companions told you a secret about the Empire that not even Lady Blackbird knew about? And what was that secret?",
+    "In what way will one of her companions compromise her goal? Why do you think so?",
+    "If any of her companions upset you, how do you keep control over your anger?",
+    "Who among her companions told you a secret about the Free Worlds that no one else knew about? And what was that secret?",
+    "Who among her companions told you a secret about her? And what was that secret?",
+    "Who among her companions saw you help someone in Haven? Why did you ask them to keep it a secret?",
+    "Who among her companions defended you when she accused you falsely?",
+    "One of her companions completely changed your impression of them with a single action. What did they do?"
 ];
 
 var bodyguard_prompts = [
     "You went from one indentured servitude to a lengthy contract with her. How do you feel about that?",
-    "How did you help Lady Blackbird escape the wedding to her betrothed?",
+    "How did you help Lady Blackbird escape the wedding she did not want?",
     "What was the outcome of a sparring match between you and her?",
     "What terms did you ask for in your contract that she refused to agree to?"
 ];
@@ -91,7 +107,8 @@ var smuggler_prompts = [
     "Why does the Owl, your skyship, remind you of home?",
     "How did you become an outcast of the Empire?",
     "What is your connection to the Imperial noble clans, knowing your Warpblood is a rare bloodline for teleportation sorcery?",
-    "What reputation have you heard of Lady Blackbird or her family when you were still an Imperial soldier?"
+    "What reputation have you heard of Lady Blackbird or her family when you were still an Imperial soldier?",
+    "Who are you still loyal to in the Imperial Worlds? And why?"
 ];
 
 var fixer_prompts = [
@@ -99,7 +116,8 @@ var fixer_prompts = [
     "How does the Owl, the skyship you maintain, make you feel?",
     "Where did your skills with sorcery come from?",
     "What is the one thing you should never have stolen?",
-    "Why did you never join a crime syndicate on the darkside of Nightport, when they offered you a much richer lifestyle?"
+    "Why did you never join a crime syndicate on the darkside of Nightport, when they offered you a much richer lifestyle?",
+    "What is your relationship with theft?"
 ];
 
 var skysailor_prompts = [
@@ -171,6 +189,16 @@ function shuffle(array) {
 
 function play(minutes=30) {
     playOrder();
+    if ($("#skipsettingprompts").prop('checked')) {
+        // skip setting prompts by emptying that deck
+        setting_cards = new Array();
+    } else {
+        // shuffle the setting prompts
+        setting_cards = shuffle(setting_cards);
+    }
+    // remove that section from the user interface
+    $("#worldbuilding").hide();
+
     gameLength(minutes);
 
     // display the top card for the first character
@@ -318,7 +346,8 @@ function updateCardOptions() {
     }
     else if (characters.length > 1) {
         html += "<div id=\"\">FINAL ROUND<br/><br/>";
-        html += "<a href=\"#\" onclick=\"nextCharacter();\">Next Player</a><br/><br/>";
+        html += "<a href=\"#\" onclick=\"nextCharacter();\">Next Player</a><br/><br/><br/><br/>";
+        html += "<a href=\"#\" onclick=\"window.location.reload(false);\">Start New Game</a>?";
         html += "</div>";
     }
 
@@ -333,80 +362,89 @@ function drawCard() {
 function displayCard() {
     var html = "";
 
-    // first draw from character-specific decks
-    // first character is current character
-    if (characters[0] == "bodyguard") {
-        if (bodyguard_prompts.length > 0) {
-            // also remove the card from deck
-            html = bodyguard_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
-        }
+    // go through setting prompts first if not skipping
 
-    } else if (characters[0] == "smuggler") {
-        if (smuggler_prompts.length > 0) {
-            // also remove the card from deck
-            html = smuggler_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
-        }
-    } else if (characters[0] == "fixer") {
-        if (fixer_prompts.length > 0) {
-            // also remove the card from deck
-            html = fixer_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
-        }
-    } else if (characters[0] == "sky-sailor") {
-        if (skysailor_prompts.length > 0) {
-            // also remove the card from deck
-            html = skysailor_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
-        }
-    } else if (characters[0] == "betrothed") {
-        if (betrothed_prompts.length > 0) {
-            // also remove the card from deck
-            html = betrothed_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
-        }
-    } else if (characters[0] == "old flame") {
-        if (oldflame_prompts.length > 0) {
-            // also remove the card from deck
-            html = oldflame_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
-        }
-    } else if (characters[0] == "confidant") {
-        if (confidant_prompts.length > 0) {
-            // also remove the card from deck
-            html = confidant_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
-        }
-    } else {
-        if (custom_prompts.length > 0) {
-            // also remove the card from deck
-            html = custom_prompts.shift();
-        }
-        else {
-            // also remove the card from deck
-            html = deck.shift();
+    if (setting_cards.length > 0) {
+        html = setting_cards.shift();
+    }
+
+    else {
+
+        // first draw from character-specific decks
+        // first character is current character
+        if (characters[0] == "bodyguard") {
+            if (bodyguard_prompts.length > 0) {
+                // also remove the card from deck
+                html = bodyguard_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
+
+        } else if (characters[0] == "smuggler") {
+            if (smuggler_prompts.length > 0) {
+                // also remove the card from deck
+                html = smuggler_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
+        } else if (characters[0] == "fixer") {
+            if (fixer_prompts.length > 0) {
+                // also remove the card from deck
+                html = fixer_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
+        } else if (characters[0] == "sky-sailor") {
+            if (skysailor_prompts.length > 0) {
+                // also remove the card from deck
+                html = skysailor_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
+        } else if (characters[0] == "betrothed") {
+            if (betrothed_prompts.length > 0) {
+                // also remove the card from deck
+                html = betrothed_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
+        } else if (characters[0] == "old flame") {
+            if (oldflame_prompts.length > 0) {
+                // also remove the card from deck
+                html = oldflame_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
+        } else if (characters[0] == "confidant") {
+            if (confidant_prompts.length > 0) {
+                // also remove the card from deck
+                html = confidant_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
+        } else {
+            if (custom_prompts.length > 0) {
+                // also remove the card from deck
+                html = custom_prompts.shift();
+            }
+            else {
+                // also remove the card from deck
+                html = deck.shift();
+            }
         }
     }
 
@@ -558,6 +596,14 @@ input[name="playorder"] {
             <input type="text" name="playorder" />
         </td></tr>
         </table>
+        <br/>
+        <table id="worldbuilding">
+            <tr><td>
+                Skip the first 10 prompts about the setting?
+            </td><td>
+                <input type="checkbox" id="skipsettingprompts" />
+            </td></tr>
+        </table>
     </div>
 </td><td valign="top">
     <div id="prompt">
@@ -566,6 +612,8 @@ input[name="playorder"] {
     <span style="font-size: 16pt;">is a group storytelling game where each player answers prompt about Lady Blackbird and a character they play. Everyone takes turns and builds on previous answers to flesh out the Lady and their characters. It is inspired by John Harper's <a href="http://onesevendesign.com/ladyblackbird/">Lady Blackbird</a>.
     <br/><br/>
     This work is based on <a href="http://www.forthequeengame.com/">For the Queen</a>, product of Alex Roberts and Evil Hat Productions, and licensed for our use under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported license</a>.
+    <br/><br/>
+    Thanks to Diana Moon for valuable feedback.
     </span>
     </div>
 </div>
