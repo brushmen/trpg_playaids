@@ -45,9 +45,25 @@ var setting_cards = [
 ];
 
 var prompt_cards = [
+    /* about one's own character */
     "What is one principle that the Empire champions that you also believe in?",
-    "What is a belief that you and Lady Blackbird have agreed to disagree on?",
     "What is the one quality about the Free Worlds that you dislike?",
+    "What was the one decision you made that significantly changed your path in life?",
+    "What great loss did you suffer in the Imperial Worlds?",
+    "What great loss did you suffer in the Free Worlds?",
+    "What great loss did you suffer in the Lower Depth, where even the toughest skyship will go bust after four hours?",
+    "Why do you want to exact revenge on the nobles of the Empire, knowing that Lady Blackbird is one of them?",
+    "What was the worst thing you have ever done but will do it again in a heartbeat?",
+    "What has been your greatest regret?",
+    "What has been your proudest achievement?",
+
+    /* about Lady Blackbird or one's relationship to her */
+    "What common belief do you and Lady Blackbird hold?",
+    "Which piece of art form that both you and Lady Blackbird love and often bond over?",
+    "After finding out her skill with disguises, what would you do or look for to see through her methods?",
+    "What skill have you learned from her?",
+    "What did Lady Blackbird ask you to teach her? Did you agree? What happened?",
+    "What is a belief that you and Lady Blackbird have agreed to disagree on?",
     "Lady Blackbird is a master of disguise. Why did she choose to reveal her identity to you?",
     "What is one thing that Lady Blackbird did that made you respect her regardless of her wealth and status?",
     "Which secret did Lady Blackbird share with no one but you?",
@@ -55,31 +71,29 @@ var prompt_cards = [
     "Why do you believe Lady Blackbird has the power to change the Empire?",
     "What is something Lady Blackbird does often that annoys you?",
     "What is your one quality that Lady Blackbird can barely tolerate?",
-    "What was the one decision you made that significantly changed your path in life?",
     "What makes you believe that Lady Blackbird has feelings for you? What do you do about it?",
     "Why do you believe you are the best match for her?",
     "What secret you hold that will change Lady Blackbird's opinion of you for the worse?",
     "How does Lady Blackbird attempt to pay you for your help when she cannot access her family's wealth anymore?",
     "What is the scariest thing she has done in your presence?",
+    "What did Lady Blackbird shed a tear over when she thought no one was looking?",
     "What is the real reason you are helping her on this journey, other than fulfilling a contract?",
-    "What great loss did you suffer in the Imperial Worlds?",
-    "What great loss did you suffer in the Free Worlds?",
-    "What great loss did you suffer in the Lower Depth, where even the toughest skyship will go bust after four hours?",
-    "Why do you want to exact revenge on the nobles of the Empire, knowing that Lady Blackbird is one of them?",
     "What did you sacrifice in order to help her with the journey?",
     "What did she sacrifice in order to help you?",
-    "Why do you regret helping her?",
+    "What did she do that makes you start to regret helping her?",
     "What did Lady Blackbird once say to you that opened up an old wound?",
     "What do you admire about Lady Blackbird besides her presence?",
-    "Who or what are you most proud of?",
     "Lady Blackbird forgave you for an offense, but when she is frustrated, what does she do that reminds you of the incident?",
     "What is flawed about Lady Blackbird that could end her journey prematurely?",
     "What did you destroy in her presence? How did it affect her?",
+    "What did she destroy in your presence? How did it affect you?",
     "You owe Lady Blackird a great debt. What is it and why does she never mention it?",
-    "What was the worst thing you have ever done but will do it again in a heartbeat?",
     "What was the worst thing you know Lady Blackbird did, and that she has never regretted doing?",
     "She once told you a story that you believe is a lie. Why did you not tell her so?",
 
+    /* about relationship to other characters */
+    "Who are you most proud of in life?",
+    "What skill have you learned from one of her companions?",
     "Why do you think her other traveling companions put up with you?",
     "Why do you think her old flame is not worthy of her?",
     "Who among her companions do you trust the least and why?",
@@ -279,11 +293,11 @@ function gameLength(minutes=30) {
 
     // don't play with every card
     if (minutes == 30) {
-        numcards = 7;
+        numcards = 20;
     } else if (minutes == 60) {
-        numcards = 14;
+        numcards = 30;
     } else {
-        numcards = 21;
+        numcards = 40;
     }
 
     // can't play more than the deck size
