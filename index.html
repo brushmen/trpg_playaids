@@ -14,5 +14,24 @@
     <li><a href="#" onclick="window.open('quill_playaid.htm','_blank','toolbar=no');">Quill</a> (solo)</li>
     <li><a href="#" onclick="window.open('storyleaves.htm','_blank','toolbar=no');">Storyleaves</a> (solo, diceless, cards)</li>
   </ul>
+
+  <br/><br/>
+  <div>
+    <form>
+    <input type="text" id="url" placeholder="URL" />
+    <input type="submit" value="open window" onsubmit="openWindow();" />
+    </form>
+  </div>
+    <script>
+    function openWindow() {
+        var e = document.getElementById("url");
+
+        window.open(e.value,'_blank','toolbar=no');
+    }
+
+    document.getElementById("url").onclick = function() {
+        return openWindow();
+    };
+  
 </body>
 </html>
