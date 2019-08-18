@@ -19,7 +19,7 @@
   <div>
     <form>
       <input type="text" id="url" placeholder="URL" />
-      <input type="submit" value="open window" onclick="openWindow();" />
+      <input type="submit" id="urlSubmit" value="open window" onclick="openWindow();" />
     </form>
   </div>
     <script>
@@ -28,7 +28,7 @@
         window.open(e.value,'_blank','toolbar=no');alert('url ' + e.value);
     }
 
-    document.getElementById("url").onclick = function() {
+    document.getElementById("urlSubmit").onclick = function() {
         return openWindow();
     };
     </script>
