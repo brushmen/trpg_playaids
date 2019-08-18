@@ -18,15 +18,14 @@
   <br/><br/>
   <div>
     <form>
-    <input type="text" id="url" placeholder="URL" />
-    <input type="submit" value="open window" onsubmit="openWindow();" />
+      <input type="text" id="url" placeholder="URL" />
+      <input type="submit" value="open window" onsubmit="openWindow();" />
     </form>
   </div>
     <script>
     function openWindow() {
         var e = document.getElementById("url");
-
-        window.open(e.value,'_blank','toolbar=no');
+        window.open(e.value,'_blank','toolbar=no');console.log('url ' + e.value);
     }
 
     document.getElementById("url").onclick = function() {
