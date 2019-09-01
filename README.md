@@ -1,4 +1,4 @@
-# Tabletol Roleplaying Game Playaids
+# Tabletop Roleplaying Game Playaids
 Written in Javascript.
 
 # client-side only
