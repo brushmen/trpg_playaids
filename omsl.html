@@ -421,12 +421,26 @@
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
-    <script src="https://togetherjs.com/togetherjs-min.js"></script>
     <script src="js/jquery.timer.js"></script>
     <script src="js/common.js"></script>
     <script src="js/omsl.js"></script>
 
-    <!-- Javascript code -->
+    <!-- TogetherJS config and library -->
+    <script>
+    var TogetherJSConfig_siteName = "Our Mundane Supernatural Life";
+    var TogetherJSConfig_dontShowClicks = true;
+    //var TogetherJSConfig_cloneClicks = "#mergeSchedules";
+    var TogetherJSConfig_suppressJoinConfirmation = true;
+    var TogetherJSConfig_suppressInvite = true;
+    //use this in single-page apps where being at the same base URL
+    //doesn’t mean the two people are looking at the same thing.
+    var TogetherJSConfig_includeHashInUrl = true;
+    var TogetherJSConfig_disableWebRTC = true;
+    </script>
+
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+
+    <!-- other Javascript code -->
     <script>
         var gamehandle = 'omsl';
 
@@ -558,15 +572,18 @@
                     $(this).removeClass('text-supernatural-dark');
                 }
             });
+            TogetherJS.reinitialize();
         }
 
         function mergeSchedules() {
 
             unlockTimer();
+            TogetherJS.reinitialize();
         }
 
         function setSceneTimer() {
             setClock(getSceneLength());
+            TogetherJS.reinitialize();
         }
 
         $('#infolist').on('change', function() {
@@ -593,6 +610,7 @@
         $('#scenetimer').click(function(e) {
             e.preventDefault();
             Clock.Timer.toggle();
+            TogetherJS.reinitialize();
         });
 
         var Clock = new (function() {
@@ -642,6 +660,7 @@
             $('#scenetimer').removeClass('locked');
             $('#scenetimer').addClass('btn-info');
             $('#scenetimer').removeClass('btn-success');
+            TogetherJS.reinitialize();
         }
 
         function saveJSON() {
@@ -653,6 +672,7 @@
         function loadImage(imgID, imgURLID) {
             var imgURL = $('#' + imgURLID).val();
             $('#' + imgID).prop('src', imgURL);
+            TogetherJS.reinitialize();
         }
 
         function newGame() {
