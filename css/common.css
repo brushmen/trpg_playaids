@@ -19,6 +19,10 @@
 
 /* buttons */
 
+.togetherjs-started {
+    background-color: red;
+}
+
 #mainbuttons {
     position: absolute;
     top: 0;
