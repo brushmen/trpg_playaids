@@ -19,6 +19,20 @@
 
 /* buttons */
 
+#mainbuttons {
+    position: absolute;
+    top: 0;
+    right: 3px;
+    z-index: 2;
+}
+
+#clearfieldsbutton {
+    position: absolute;
+    bottom: 0;
+    right: 3px;
+    z-index: 2;
+}
+
 .btn-link {
     cursor: pointer;
 }
@@ -115,6 +129,20 @@ div.tooltip-inner {
 #loadboxjson {
     width: 600px;
     height: 300px;
+}
+
+.move {
+    cursor: move;
+}
+
+#imageviewbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    overflow: auto;
+    z-index: 3;
+    max-height: 720px;
 }
 
 /* scratchpad area */
