@@ -53,6 +53,11 @@ function ucFirstLetter(str) {
     return result;
 }
 
+function clearFields() {
+    $(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
+    $(':checkbox, :radio').prop('checked', false);
+}
+
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     var element = document.getElementById(elmnt.id + "Header");
