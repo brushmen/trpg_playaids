@@ -12,6 +12,9 @@
     <!-- <link rel="stylesheet" href="/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/common.css">
+    
+    <!-- Javscript Libraries -->
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
 
     <!-- custom CSS -->
     <style>
@@ -140,10 +143,6 @@
         height: 1.8em;
     }
 
-    #playArea {
-        display: none;
-    }
-
     #ourday select {
         background-color: #c9daf8 !important;
         overflow: auto;
@@ -165,23 +164,6 @@
 
     <!-- main content -->
     <div class="container-fluid">
-
-        <div id="roleArea">
-            <div class="row full-height">
-                <div class="col justify-content-center align-self-center">
-                    <div class="input-group justify-content-center font-weight-bold">
-                        OUR
-                        <button type="submit" id="mundane" class="btn btn-sm btn-link bg-mundane text-mundane-light" style="margin: 0 2px 0 4px">MUNDANE</button>
-                        <button type="submit" id="supernatural" class="btn btn-sm btn-link bg-supernatural text-supernatural" style="margin: 0 4px 0 2px">SUPERNATURAL</button>
-                        LIFE
-                    </div>
-                    <br>
-                    <div class="row justify-content-center text-supernatural-dark">
-                        a slice of life game about extraordinary daily living
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div id="playArea">
             <div class="row full-height">
@@ -413,25 +395,8 @@
                                     <div id="timerArea"><button id="scenetimer" type="submit" class="btn btn-info btn-sm btn-block locked">scene timer</button></div>
                                 </div>
 
-                                <div id="chatArea">
-                                    <div class="row">
-                                        <form id="messageForm" class="container">
-                                            <div id="chatSection">
-                                                <!-- the chatSection has a set height
-                                                    but the chat obj has a dynamically
-                                                    changing height, otherwise scroll-to-bottom
-                                                    won't work -->
-                                                <div class="chat" id="chat"></div>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control width100" id="message" placeholder="chat" />
-                                                <span class="input-group-btn">
-                                                    <input type="submit" class="btn btn-info btn-sm" value="send" />
-                                                </span>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                                <button onclick="TogetherJS(this); return false;">Start TogetherJS</button>
+                                
                             </div>
                         </div>
                     </div>
@@ -448,9 +413,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/jquery.timer.js"></script>
-    <script src="/js/common.js"></script>
+    <script src="scripts/jquery.timer.js"></script>
+    <script src="scripts/common.js"></script>
 
     <!-- Javascript code -->
     <script>
@@ -469,60 +433,12 @@
                 "<p>Play through each activity until you reach the end of the day.</p><p>Optionally you may then choose to end the day with both characters talking immediately before bed.</p><p><b>The game is now over.</b></p>"
         };
 
-        var room = 'test';
-        var gamehandle = 'omsl';
-        var socket = io('/' + gamehandle);
-
-        // socket receive
-
-        socket.on('connect', function() {
-            // get room name from URL ending, make sure it's not malicious text
-            var pathparts = window.location.href.split('?');
-            pathparts[1] = sanitize(pathparts[1], 'alphanumeric');
-            if (pathparts[1]) {
-                room = pathparts[1];
-            }
-            socket.emit("join room", room);
-        });
 
         function save(type='current') {
             socket.emit('save ' + type);
         }
 
-        socket.on('new message', function(data) {
-            var message = data.message;
-            var type = data.type;
-            var role = data.role;
-            var html = '';
 
-            if (type == 'newgame') {
-                html = '<div class="well text-muted">' + role + ' started a new game</div>';
-                setTimer('unset');
-            }
-            else if (type == 'savegame') {
-                var filename = gamehandle + '_' + room + '_' + getTodayString() + '.json';
-                // generate the file to download locally
-                download(filename, message);
-                html = '<div class="well text-muted">' + role + ' is saving game data</div>';
-            }
-            else if (type == 'loadgame') {
-                $('#loadbox').show();
-            }
-            else if (type == "rollresult") {
-                html = '<div class="well"><strong>' + role + '</strong> ( ' + message + ' )</div>';
-            }
-            else if (type == 'scenedone') {
-                $('#scenetimer').html('scene done');
-                $('#scenetimer').removeClass('btn-info');
-                $('#scenetimer').addClass('btn-success');
-                html = '<div class="well">' + message + '</div>';
-            }
-
-            else { // should be regular chat message
-                html = '<div class="well"><strong>' + role + '</strong>: ' + message + '</div>';
-            }
-            updateChat(html);
-        });
 
         socket.on('unlock timer', function() {
             unlockTimer();
