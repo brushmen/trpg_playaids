@@ -438,7 +438,6 @@
     TogetherJSConfig_includeHashInUrl = true;
     TogetherJSConfig_disableWebRTC = true;
     </script>
-
     <script src="https://togetherjs.com/togetherjs-min.js"></script>
 
     <!-- other Javascript code -->
@@ -464,12 +463,12 @@
         //dragElement(document.getElementById("scratchpadArea"));
         dragElement(document.getElementById("imageviewbox"));
 
-        function unlockTimer() {
-            $('#setscenetimer').removeClass('locked');
-        }
-        function lockTimer() {
-            $('#setscenetimer').addClass('locked');
-        }
+        // function unlockTimer() {
+        //     $('#setscenetimer').removeClass('locked');
+        // }
+        // function lockTimer() {
+        //     $('#setscenetimer').addClass('locked');
+        // }
 
         function updateFields() {
             var info = gamedata;
@@ -558,12 +557,12 @@
                     else {
                         $(this).removeClass('goeswrong');
                     }
-                    if (indices && indices.length > 0) {
-                        unlockTimer();
-                    }
-                    else {
-                        lockTimer();
-                    }
+                    // if (indices && indices.length > 0) {
+                    //     unlockTimer();
+                    // }
+                    // else {
+                    //     lockTimer();
+                    // }
                 }
                 else { // default text
                     $(this).html('activity ' + (index + 1));
@@ -578,7 +577,7 @@
 
         function mergeSchedules() {
 
-            unlockTimer();
+            //unlockTimer();
             TogetherJS.reinitialize();
         }
 
