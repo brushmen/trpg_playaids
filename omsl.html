@@ -9,12 +9,8 @@
     <meta name="author" content="brushmen">
 
     <!-- Bootstrap CSS -->
-    <!-- <link rel="stylesheet" href="/css/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/common.css">
-    
-    <!-- Javscript Libraries -->
-    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/common.css">
 
     <!-- custom CSS -->
     <style>
@@ -112,6 +108,10 @@
         color: #957cc3;
     }
 
+    #commonArea {
+        width: 11em;
+    }
+
     textarea {
         min-height: 150px !important;
     }
@@ -121,26 +121,18 @@
         line-height: 50px;
     }
     #scenetimer {
-        font-size: 2em;
+        min-height: 100%;
+        font-size: 1.7em;
         font-weight: bolder;
     }
 
     #infoArea {
-        height: 250px;
+        height: 650px;
         overflow: auto;
-        font-size: 1em;
+        font-size: 0.8em;
         line-height: 1.3em;
-        padding: 10px;
+        padding: 5px;
         overflow-wrap: break-word;
-    }
-
-    #chatSection {
-        height: 150px;
-        overflow-y: scroll;
-    }
-
-    #message {
-        height: 1.8em;
     }
 
     #ourday select {
@@ -159,8 +151,26 @@
         <h5 class="card-header">load JSON content</h5>
         <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
         <textarea id="loadboxjson" placeholder="JSON only"></textarea>
-        <button type="submit" class="btn btn-sm btn-warning">send</button>
+        <button type="submit" class="btn btn-sm btn-warning">load</button>
     </div>
+    <div id="imageviewbox" style="display: none" class="card">
+        <h5 id="imageviewboxHeader" class="card-header move">image view</h5>
+        <div class="topRightClick" onclick="$('#imageviewbox').hide();">hide</div>
+        <img src="" id="imageviewImage" alt="an image" title="an image to show the group" />
+        <div class="container-fluid input-group p-0">
+            <input type="text" id="imageviewImageURL" class="form-control form-control-sm" placeholder="URL of image" />
+            <button class="btn btn-sm btn-info" onclick="loadImage('imageviewImage', 'imageviewImageURL');">load image</button>
+        </div>
+    </div>
+
+    <div id="mainbuttons" class="btn-group-vertical">
+        <button id="togetherjsbutton" class="btn btn-sm btn-outline-dark" onclick="TogetherJS(this); return false;" title="start TogetherJS to collaborate with friends">👥</button>
+        <button id="loadjsonbutton" class="btn btn-sm btn-outline-dark" onclick="$('#loadbox').toggle();" title="load a JSON file of the game content">📂</button>
+        <button id="savejsonbutton" class="btn btn-sm btn-outline-dark" onclick="saveJSON(); return false;" title="save current game content to a JSON file to download">💾</button>
+        <button id="imagebutton" class="btn btn-sm btn-outline-dark" onclick="$('#imageviewbox').toggle(); return false;" title="show an image of character or object">🖼</button>
+        <button id="drawbutton" class="btn btn-sm btn-outline-dark locked" onclick="scratchPad(); return false;" title="draw something">🎨</button>
+    </div>
+    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark" onclick="newGame(); return false;" title="clear fields, start over">🗑</button>
 
     <!-- main content -->
     <div class="container-fluid">
@@ -169,7 +179,7 @@
             <div class="row full-height">
                 <div class="col my-col justify-content-center align-self-center">
                     <div class="row my-row">
-                        <div id="c1" class="col-3 my-col character">
+                        <div id="c1" class="col-3 my-col p-0">
                             <div id="mundaneArea" class="row-fluid">
                                 <select id="mundaneProblem" name="problem" class="form-control form-control-sm bg-mundane-light">
                                     <option value="" disabled="disabled" selected="selected">a mundane problem</option>
@@ -227,9 +237,19 @@
                                 </div>
                             </div>
 
+                            <br>
+
+                            <div class="row-fluid">
+                                <button id="mergeSchedules" type="submit" class="btn btn-outline-info btn-sm btn-block" onclick="mergeSchedules();">merge our schedules</button>
+                            </div>
+
+                            <div class="row-fluid">
+                                <button id="setscenetimer" type="submit" class="btn btn-outline-info btn-sm btn-block locked" onclick="setSceneTimer();">set scene timer</button>
+                            </div>
+
                         </div>
 
-                        <div id="c2" class="col-3 my-col character">
+                        <div id="c2" class="col-3 my-col p-0">
                             <div id="sharedArea" class="row-fluid">
                                 <select id="relationship" name="relationship" class="form-control form-control-sm bg-shared-light">
                                     <option value="" disabled="disabled" selected="selected">we are...</option>
@@ -294,7 +314,7 @@
                             </div>
                         </div>
 
-                        <div id="c3" class="col-3 my-col character">
+                        <div id="c3" class="col-3 my-col p-0">
                             <div id="supernaturalArea" class="row-fluid">
                                 <select id="supernaturalProblem" name="problem" class="form-control form-control-sm bg-supernatural-light">
                                     <option value="" disabled="disabled" selected="selected">a supernatural problem</option>
@@ -361,18 +381,13 @@
                             </div>
 
                             <br>
-
-                            <div class="row-fluid">
-                                <button id="mergeSchedules" type="submit" class="btn btn-outline-info btn-sm btn-block">merge our schedules</button>
-                            </div>
-
-                            <div class="row-fluid">
-                                <button id="setscenetimer" type="submit" class="btn btn-outline-info btn-sm btn-block locked">set scene timer</button>
+                            <div class="row-fluid justify-content-center">
+                                <div id="timerArea"><button id="scenetimer" type="submit" class="btn btn-info btn-sm btn-block locked">scene timer</button></div>
                             </div>
 
                         </div>
 
-                        <div id="c4" class="col-3 my-col character">
+                        <div id="c4" class="col-3 my-col">
                             <div id="commonArea">
                                 <div class="row" class="text-center">
                                     <select id="infolist" name="infolist" class="form-control form-control-sm">
@@ -387,16 +402,12 @@
                                 </div>
 
                                 <div id="infoArea" class="row card-body">
-                                    <p><i>How do you make the most of every day when something marks you as different from those around you?</i></p>
-                                    <p><i>How do you help a loved one get through the daily struggles of their supernatural existence?</i></p>
+                                    <em>
+                                        <p>How do you make the most of every day when something marks you as different from those around you?</p>
+                                        <p>How do you help a loved one get through the daily struggles of their supernatural existence?</p>
+                                    </em>
                                 </div>
 
-                                <div class="row-fluid justify-content-center">
-                                    <div id="timerArea"><button id="scenetimer" type="submit" class="btn btn-info btn-sm btn-block locked">scene timer</button></div>
-                                </div>
-
-                                <button onclick="TogetherJS(this); return false;">Start TogetherJS</button>
-                                
                             </div>
                         </div>
                     </div>
@@ -406,18 +417,19 @@
     </div>
 
     <!-- Bootstrap template script includes -->
-    <!-- <script src="/js/jquery-3.4.1.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script> -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
-    <script src="scripts/jquery.timer.js"></script>
-    <script src="scripts/common.js"></script>
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <script src="js/jquery.timer.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/omsl.js"></script>
 
     <!-- Javascript code -->
     <script>
+        var gamehandle = 'omsl';
+
         var infotext = {
             'about':
                 "<p>Our Mundane Supernatural Life is a two player micro-rpg that explores a day in the life of a supernatural person and their loved one.</p><p>It's a game about the difficulties of grocery shopping when you're partly ethereal, or the importance of finding good child care every full moon.</p><p>The game is set in a world where supernatural abilities are uncommon. Whether they are unheard of is up to you.</p><p>Created by <a href=\"https://storybrewersroleplaying.com/our-mundane-supernatural-life/\" target='_new'>Storybrewers</a>.</p>",
@@ -433,17 +445,10 @@
                 "<p>Play through each activity until you reach the end of the day.</p><p>Optionally you may then choose to end the day with both characters talking immediately before bed.</p><p><b>The game is now over.</b></p>"
         };
 
+        // prep element effects
+        //dragElement(document.getElementById("scratchpadArea"));
+        dragElement(document.getElementById("imageviewbox"));
 
-        function save(type='current') {
-            socket.emit('save ' + type);
-        }
-
-
-
-        socket.on('unlock timer', function() {
-            unlockTimer();
-            $('#scenetimer').html('scene length');
-        });
         function unlockTimer() {
             $('#setscenetimer').removeClass('locked');
         }
@@ -451,98 +456,47 @@
             $('#setscenetimer').addClass('locked');
         }
 
-        socket.on('update timer', function(data) {
-            var newstate = data.newstate;
-            var scenelength = data.scenelength;
+        function updateFields() {
+            var info = gamedata;
+            var roles = ['mundane', 'supernatural'];
 
-            if (newstate == 'set') {
-                setClock(scenelength);
+            for (var i = 0; i < roles.length; i++) {
+                var r = roles[i];
+                $('#' + r + 'Problem').val(info['roles'][r]['problem'] ? info['roles'][r]['problem'] : '');
+                $('#' + r + 'Name').val(info['roles'][r]['name'] ? info['roles'][r]['name'] : '');
+                $('#' + r + 'Pronoun').val(info['roles'][r]['pronoun'] ? info['roles'][r]['pronoun'] : '');
+                $('#' + r + 'Notes').val(info['roles'][r]['notes'] ? info['roles'][r]['notes'] : '');
             }
-            else if (newstate == 'toggle') {
-                Clock.Timer.toggle();
-            }
-        });
 
-        socket.on('update field', function(data) {
-            var field = data.field;
-            var role = data.role;
-            var number = data.number;
-            var value = data.value;
-
-            if (field == 'name' || field == 'pronoun' || field == 'notes' || field == 'problem') {
-                $('#' + role + ucFirstLetter(field)).val(value);
-            }
-            else if (field == 'relationship') {
-                $('#relationship').val(value);
-            }
-            else if (field == 'supernaturaltype') {
-                $('#supernaturalType').val(value);
-            }
-            else if (field == 'time' || field == 'activity') {
-                $('#' + role + ucFirstLetter(field) + number).val(value);
-            }
-            save();
-        });
-
-        socket.on('update client', function(data) {
-            var n = '';
-            var activeRoles = data.roles;
-            var info = data.info;
-            var roles = ['mundane', 'supernatural']
-
-            if (activeRoles && activeRoles.length > 0) {
-                for (var i = 0; i < roles.length; i++) {
-                    var r = roles[i];
-
-                    if (activeRoles.indexOf(r) !== -1) {
-                        //  disable buttons for active roles
-                        $('#' + r).prop('disabled', true);
-                        $('#' + r + 'Area').removeClass('inactive');
-                        $('#' + r + 'Area').removeClass('locked');
-                    }
-                    else {
-                        // re-enable buttons for released roles
-                        $('#' + r).prop('disabled', false);
-                        $('#' + r + 'Area').addClass('inactive');
-                        $('#' + r + 'Area').addClass('locked');
-                    }
-
-                    $('#' + r + 'Problem').val(info['roles'][r]['problem']);
-                    $('#' + r + 'Name').val(info['roles'][r]['name']);
-                    $('#' + r + 'Pronoun').val(info['roles'][r]['pronoun']);
-                    $('#' + r + 'Notes').val(info['roles'][r]['notes']);
+            var list = ['mundane', 'supernatural', 'shared'];
+            var activities = [];
+            for (var i = 0; i < list.length; i++) {
+                var r = list[i];
+                $activities = $('#' + r + 'Activities input[type=text]');
+                if (r == 'shared') {
+                    activities = info['shared']['activities'] ? info['shared']['activities'] : []
                 }
-
-                var list = ['mundane', 'supernatural', 'shared'];
-                var activities = [];
-                for (var i = 0; i < list.length; i++) {
-                    var r = list[i];
-                    $activities = $('#' + r + 'Activities input[type=text]');
-                    if (r == 'shared') {
-                        activities = info['shared']['activities'];
-                    }
-                    else {
-                        activities = info['roles'][r]['activities'];
-                    }
-                    for (var j = 0; j < $activities.length; j++) {
-                        var k = Math.floor(j/2);
-                        var type = $($activities[j]).prop('name');
-                        $($activities[j]).val(activities[k][type]);
-                    }
+                else {
+                    activities = info['roles'][r]['activities'] ? info['roles'][r]['activities'] : [];
                 }
-
-                $('#relationship').val(info['shared']['relationship']);
-                $('#supernaturalType').val(info['roles']['supernatural']['supernaturaltype']);
-
-                // timer
-                if (info['scenelength']) {
-                    setClock(info['scenelength']);
+                for (var j = 0; j < $activities.length; j++) {
+                    var k = Math.floor(j/2);
+                    var type = $($activities[j]).prop('name');
+                    $($activities[j]).val(activities[k] ? activities[k][type] : '');
                 }
+            }
+
+            $('#relationship').val(info['shared']['relationship'] ? info['shared']['relationship'] : '');
+            $('#supernaturalType').val(info['roles']['supernatural']['supernaturaltype'] ? info['roles']['supernatural']['supernaturaltype'] : '');
+
+            // timer
+            if (info['scenelength']) {
+                setClock(info['scenelength']);
             }
 
             // our day activities
-            activities = info['ourday']['activities'];
-            var indices = info['ourday']['indicesofactivitygonewrong'];
+            activities = info['ourday']['activities'] ? info['ourday']['activities'] : [];
+            var indices = info['ourday']['indicesofactivitygonewrong'] ? info['ourday']['indicesofactivitygonewrong'] : [];
             var html, c;
 
             $("#ourdayActivities option").each(function(index) {
@@ -604,70 +558,15 @@
                     $(this).removeClass('text-supernatural-dark');
                 }
             });
-            save();
-        });
+        }
 
-        // socket send
+        function mergeSchedules() {
 
-        $('#mundane, #supernatural').each(function() {
-            $(this).click(function(e) {
-                e.preventDefault();
-                role = $(this).prop('id');
-                $(this).prop('disabled',true);
-                $('#message').prop('placeholder', role);
+            unlockTimer();
+        }
 
-                socket.emit('choose role', {'role': role}, function(data) {
-                    $('#roleArea').hide();
-                    $('#playArea').show();
-                });
-            });
-        });
-
-        $('#messageForm').submit(function(e) {
-            e.preventDefault();
-            var $message = $('#message');
-            socket.emit('send message', $message.val());
-            $message.val('');
-        });
-
-        $('#mergeSchedules').click(function(e) {
-            e.preventDefault();
-            socket.emit('merge schedules');
-        });
-
-        $('#mundaneArea input, #sharedArea input, #supernaturalArea input, [name=notes], #relationship, #mundaneProblem, #supernaturalProblem, #supernaturalType').each(function() {
-            $(this).on('change', function(e) {
-                e.preventDefault();
-                var field = $(this).prop('name');
-                var id = $(this).prop('id');
-                var v = $(this).val();
-                var i = id.slice(-1); // last letter of index is the count number
-                i = parseInt(i) - 1;
-                var role = 'shared';
-                if (id.indexOf('mundane') !== -1) {
-                    role = 'mundane';
-                }
-                else if (id.indexOf('supernatural') !== -1) {
-                    role = 'supernatural';
-                }
-                //console.log('field ' + field + ' index ' + i + ' value ' + v);
-                socket.emit('update field', {'field': field, 'role': role, 'index': i, 'value': v});
-            });
-        });
-
-        $('#setscenetimer').click(function(e) {
-            e.preventDefault();
-            socket.emit('set timer');
-        });
-
-        // local UI related
-
-        function updateChat(html) {
-            if (html) {
-                var $chat = $('#chat');
-                $chat.append(html);
-                $('#chatSection').scrollTop($chat.height());
-            }
+        function setSceneTimer() {
+            setClock(getSceneLength());
         }
 
         $('#infolist').on('change', function() {
@@ -680,18 +579,20 @@
 
         $('#loadbox button[type=submit]').click(function(e) {
             e.preventDefault();
-            socket.emit('load json', $('#loadboxjson').val());
+            var json = $('#loadboxjson').val();
+            JSONtoGame(JSON.parse(json));
+
             // hide the loadbox
             $('#loadbox').hide();
+
+            updateFields();
         });
 
         // timer
 
         $('#scenetimer').click(function(e) {
             e.preventDefault();
-            Clock.Timer.toggle(); // locally toggle the countdown
-            // then notify the server
-            socket.emit('update timer', 'toggle');
+            Clock.Timer.toggle();
         });
 
         var Clock = new (function() {
@@ -711,8 +612,7 @@
                 },
                 timerComplete = function() {
                     //alert('Scene Done');
-                    // when timer done, update timer state and change text
-                    setTimer('unset');
+                    $('#scenetimer').html('00:00');
                 },
                 init = function() {
                     $countdown = $('#scenetimer');
@@ -736,19 +636,65 @@
             $(init);
         });
 
-        function setTimer(newstate) {
-            socket.emit('update timer', newstate);
-            if (newstate == 'unset') {
-                $('#scenetimer').html('00:00');
-            }
-        }
-
         function setClock(scenelength) {
             Clock.resetCountdown(scenelength);
             // make sure every user can click the button
             $('#scenetimer').removeClass('locked');
             $('#scenetimer').addClass('btn-info');
             $('#scenetimer').removeClass('btn-success');
+        }
+
+        function saveJSON() {
+            var filename = gamehandle + getTodayString() + '.json';
+            // generate the file to download locally
+            download(filename, GametoJSON());
+        }
+
+        function loadImage(imgID, imgURLID) {
+            var imgURL = $('#' + imgURLID).val();
+            $('#' + imgID).prop('src', imgURL);
+        }
+
+        function newGame() {
+            if(confirm('Clear all fields?')) {
+                clearFields();
+                gamedata = {
+                    "roles": {
+                        "mundane": {
+                            "name": null,
+                            "pronoun": null,
+                            "notes": null,
+                            "problem": null,
+                            "activities": []
+                        },
+            			"supernatural": {
+                            "name": null,
+                            "pronoun": null,
+                            "notes": null,
+                            "problem": null,
+            				"supernaturaltype": null,
+                            "activities": []
+            			}
+                    },
+                    "shared": {
+                        "relationship": null,
+                        "activities": []
+                    },
+                    "ourday": {
+                        "activities": [],
+                        "indicesofactivitygonewrong" : []
+                    },
+                    "scenelength": null
+                }
+                //resetOurDay();
+                updateFields();
+            }
+        }
+
+        function resetOurDay() {
+            $("#ourdayActivities option").each(function(index) {
+                $(this).html('activity ' + (index+1));
+            });
         }
 
     </script>
