@@ -85,8 +85,8 @@
         width: 100px !important;
     }
     input[name=time] {
-        min-width: 70px !important;
-        max-width: 80px !important;
+        min-width: 2em !important;
+        max-width: 4.4em !important;
     }
 
     #sharedArea {
@@ -244,7 +244,7 @@
                             </div>
 
                             <div class="row-fluid">
-                                <button id="setscenetimer" type="submit" class="btn btn-outline-info btn-sm btn-block setscenetimer" onclick="setSceneTimer();">set scene timer</button>
+                                <button id="setscenetimer" type="submit" class="btn btn-outline-info btn-sm btn-block" onclick="setSceneTimer();">set scene timer</button>
                             </div>
 
                         </div>
@@ -431,7 +431,8 @@
     TogetherJSConfig_siteName = "Our Mundane Supernatural Life";
     TogetherJSConfig_dontShowClicks = true;
     TogetherJSConfig_cloneClicks = "#mergeSchedules";
-    TogetherJSConfig_cloneClicks = ".setscenetimer";
+    TogetherJSConfig_cloneClicks = "#setscenetimer";
+    TogetherJSConfig_cloneClicks = "#scenetimer";
     TogetherJSConfig_suppressJoinConfirmation = true;
     TogetherJSConfig_suppressInvite = true;
     //use this in single-page apps where being at the same base URL
@@ -577,7 +578,36 @@
         }
 
         function mergeSchedules() {
+            // get activity inputs
+            var list = ['mundane', 'supernatural', 'shared'];
+            for (var i = 0; i < list.length; i++) {
+                var r = list[i];
+                $activities = $('#' + r + 'Activities input[type=text]');
 
+                if (!gamedata['roles'][r]) {
+                    gamedata['roles'][r] = {};
+                }
+                if (!gamedata['roles'][r]['activities']) {
+                    gamedata['roles'][r]['activities'] = [];
+                }
+                for (var j = 0; j < $activities.length; j++) {
+                    var k = Math.floor(j/2);
+                    var type = $($activities[j]).prop('name');
+
+                    if (!gamedata['roles'][r]['activities'][k]) {
+                        gamedata['roles'][r]['activities'][k] = {};
+                    }
+                    if (type == 'time') {
+                        gamedata['roles'][r]['activities'][k]['time'] = $($activities[j]).val();
+                    }
+                    else {
+                        gamedata['roles'][r]['activities'][k]['activity'] = $($activities[j]).val();
+                    }
+                }
+            }
+
+            sortSchedules();
+            updateFields();
             //unlockTimer();
             TogetherJS.reinitialize();
         }
@@ -679,43 +709,9 @@
         function newGame() {
             if(confirm('Clear all fields?')) {
                 clearFields();
-                gamedata = {
-                    "roles": {
-                        "mundane": {
-                            "name": null,
-                            "pronoun": null,
-                            "notes": null,
-                            "problem": null,
-                            "activities": []
-                        },
-            			"supernatural": {
-                            "name": null,
-                            "pronoun": null,
-                            "notes": null,
-                            "problem": null,
-            				"supernaturaltype": null,
-                            "activities": []
-            			}
-                    },
-                    "shared": {
-                        "relationship": null,
-                        "activities": []
-                    },
-                    "ourday": {
-                        "activities": [],
-                        "indicesofactivitygonewrong" : []
-                    },
-                    "scenelength": null
-                }
-                //resetOurDay();
+                initGameData();
                 updateFields();
             }
-        }
-
-        function resetOurDay() {
-            $("#ourdayActivities option").each(function(index) {
-                $(this).html('activity ' + (index+1));
-            });
         }
 
     </script>
