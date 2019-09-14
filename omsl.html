@@ -147,13 +147,13 @@
 
 <body>
     <!-- hovering panels -->
-    <div id="loadbox" style="display: none" class="card">
+    <div id="loadbox" style="display: none" class="card shadow">
         <h5 class="card-header">load JSON content</h5>
         <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
         <textarea id="loadboxjson" placeholder="JSON only"></textarea>
         <button type="submit" class="btn btn-sm btn-warning">load</button>
     </div>
-    <div id="imageviewbox" style="display: none" class="card">
+    <div id="imageviewbox" style="display: none" class="card shadow">
         <h5 id="imageviewboxHeader" class="card-header move">image view</h5>
         <div class="topRightClick" onclick="$('#imageviewbox').hide();">hide</div>
         <img src="" id="imageviewImage" alt="an image" title="an image to show the group" />
@@ -163,14 +163,14 @@
         </div>
     </div>
 
-    <div id="menubuttons" class="btn-group-vertical">
+    <div id="menubuttons" class="btn-group-vertical shadow">
         <button id="togetherjsbutton" class="btn btn-sm btn-outline-dark" onclick="TogetherJS(this); return false;" title="start TogetherJS to collaborate with friends">👥</button>
         <button id="loadjsonbutton" class="btn btn-sm btn-outline-dark" onclick="$('#loadbox').toggle();" title="load a JSON file of the game content">📂</button>
         <button id="savejsonbutton" class="btn btn-sm btn-outline-dark" onclick="saveJSON(); return false;" title="save current game content to a JSON file to download">💾</button>
         <button id="imagebutton" class="btn btn-sm btn-outline-dark" onclick="$('#imageviewbox').toggle(); return false;" title="show an image of character or object">🖼</button>
         <button id="drawbutton" class="btn btn-sm btn-outline-dark locked" onclick="scratchPad(); return false;" title="draw something">🎨</button>
     </div>
-    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark" onclick="newGame(); return false;" title="clear fields, start over">🗑</button>
+    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark shadow" onclick="newGame(); return false;" title="clear fields, start over">🗑</button>
 
     <!-- main content -->
     <div class="container-fluid">
