@@ -17,9 +17,77 @@ function sanitize(str, type='number') {
         result = result.replace(/[^a-zA-Z0-9\s]/g, ''); // replace non-word and extra spaces
         result = result.trim();
     }
+    else if (type == 'time') {
+        result = result.trim();
+        var date = new Date();
+        var h, m, n;
+        var matches;
 
+        // if input includes am or pm indicator,
+        // convert to 4 digit numbers first
+
+        if (result.match(/^(\d{1,4}|\d{1,2}:\d{2})\s?(a|p)m$/i)) {
+            matches = result.match(/^(\d{1,4}|\d{1,2}:\d{2})\s?(a|p)m$/i);
+
+            n = matches[1];
+            if (n.indexOf(':') !== -1) {
+                var parts = n.split(':');
+                h = parseInt(parts[0]);
+                m = parseInt(parts[1]);
+
+                if (h > 24 || h < 0) {
+                    h = 24;
+                }
+                if (m > 60 || m < 0) {
+                    m = 0;
+                }
+
+                h = h.toString().padStart(2, '0');
+                m = m.toString().padStart(2, '0');
+                n = h + m;
+                //console.log('h ' + h + ' m ' + m + ' n ' + n);
+            }
+
+            // if string starts with 2 leading 0s, means time is in minutes
+            if (n.substring(0,2) != "00") {
+                n = parseInt(n);
+                if (n < 100) {
+                    n *= 100;
+                }
+            }
+            n = parseInt(n);
+
+            if (matches[2] == 'p' && n <= 1200) {
+                n += 1200;
+            }
+
+            result = n.toString().padStart(4, '0');
+
+            //console.log('result ' + result + ' n ' + n);
+        }
+
+        if (result.match(/^(\d{4})$/)) {
+            matches = result.match(/^(\d{4})$/); // 4 digits
+            h = parseInt(matches[1].slice(0,2));
+            if (h > 24) {
+                h = 24;
+            } else if (h < 0) {
+                h = 0;
+            }
+            m = parseInt(matches[1].slice(2,4));
+            if (m > 60 || m < 0) {
+                m = 0;
+            }
+
+            result = h * 100 + m;
+
+            result = result.toString().padStart(4, '0');
+        }
+        else {
+            result = '0000'; // default value
+        }
+    }
     //console.log('sanitize ' + str + ' to ' + result);
-
     return result;
 }
 
