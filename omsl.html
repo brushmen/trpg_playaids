@@ -546,8 +546,9 @@
         }
 
         function mergeSchedules() {
+            var $activities;
             // get activity inputs
-            var list = ['mundane', 'supernatural', 'shared'];
+            var list = ['mundane', 'supernatural'];
             for (var i = 0; i < list.length; i++) {
                 var r = list[i];
                 $activities = $('#' + r + 'Activities input[type=text]');
@@ -573,11 +574,37 @@
                     }
                 }
             }
+            $activities = $('#sharedActivities input[type=text]');
+            if (!gamedata['shared']) {
+                gamedata['shared'] = {};
+            }
+            if (!gamedata['shared']['activities']) {
+                gamedata['shared']['activities'] = [];
+            }
+            for (var j = 0; j < $activities.length; j++) {
+                var k = Math.floor(j/2);
+                var type = $($activities[j]).prop('name');
 
-            sortSchedules();
-            updateFields();
-            //unlockTimer();
-            TogetherJS.reinitialize();
+                if (!gamedata['shared']['activities'][k]) {
+                    gamedata['shared']['activities'][k] = {};
+                }
+                if (type == 'time') {
+                    gamedata['shared']['activities'][k]['time'] = $($activities[j]).val();
+                }
+                else {
+                    gamedata['shared']['activities'][k]['activity'] = $($activities[j]).val();
+                }
+            }
+
+            if (hasTimeOverlap()) {
+                alert('Some shared activity happens at the same time as an individual activity. Please double-check.');
+            }
+            else {
+                sortSchedules();
+                updateFields();
+                //unlockTimer();
+                TogetherJS.reinitialize();
+            }
         }
 
         function setSceneTimer() {
@@ -603,6 +630,27 @@
 
             updateFields();
         });
+
+        function hasTimeOverlap() {
+            var result = false;
+            var shared = gamedata['shared']['activities'];
+            var mundane = gamedata['roles']['mundane']['activities'];
+            var supernatural = gamedata['roles']['supernatural']['activities'];
+
+            for (var i = 0; i < shared.length; i++) {
+                for (var j = 0; j < mundane.length; j++) {
+                    // activity has some text
+                    if (shared[i]['activity'] && mundane[j]['activity']) {
+                        if (sanitize(shared[i]['time'], 'time') == sanitize(mundane[j]['time'], 'time')) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
 
         // timer
 
