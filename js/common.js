@@ -57,8 +57,11 @@ function sanitize(str, type='number') {
             }
             n = parseInt(n);
 
-            if (matches[2] == 'p' && n <= 1200) {
+            if (matches[2] == 'p' && n < 1200) {
                 n += 1200;
+            }
+            else if (matches[2] == 'a' && n == 1200) {
+                n = 0;
             }
 
             result = n.toString().padStart(4, '0');
