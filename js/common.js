@@ -66,6 +66,11 @@ function sanitize(str, type='number') {
             //console.log('result ' + result + ' n ' + n);
         }
 
+        // if 3 numbers, add leading 0
+        if (result.match(/^(\d{3})$/)) {
+            result = result.toString().padStart(4, '0');
+        }
+
         if (result.match(/^(\d{4})$/)) {
             matches = result.match(/^(\d{4})$/); // 4 digits
             h = parseInt(matches[1].slice(0,2));
