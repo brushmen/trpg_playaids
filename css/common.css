@@ -146,7 +146,7 @@ div.tooltip-inner {
     padding: 10px;
     overflow: auto;
     z-index: 3;
-    max-height: 720px;
+    max-height: 700px;
 }
 #imageviewboxHeader {
     padding: 0 10px;
