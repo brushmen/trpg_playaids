@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Archipelago III</title>
+    <meta name="description" content="playaids for Archipelago III built with Javascript">
+    <meta name="author" content="brushmen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/common.css">
+
+    <!-- custom CSS -->
+    <style>
+    body {
+        background-color: rgb(220, 217, 205);
+    }
+
+    select {
+        background-color: Gainsboro !important;
+    }
+    .selected {
+        pointer-events: none;
+        border: 2px solid orange;
+        color: orange;
+    }
+
+    #c1, #c2, #c3, #c4 {
+        position: relative;
+    }
+    #c1 { border: 1px solid red; }
+    #c2 { border: 1px solid green; }
+    #c3 { border: 1px solid blue; }
+    #c4 { border: 1px solid aliceblue; }
+
+    div.tooltip-inner {
+        max-width: 700px;
+        max-height: 550px;
+        color: black;
+        font-size: 1.5em;
+    }
+    .tooltip.show {
+        opacity: 1!important;
+    }
+
+    .portrait img {
+        width: 100%;
+    }
+
+    input[name=player], input[name=character],
+    input[name=ownedelement], textarea[name=notes],
+    textarea[name=destiny] {
+        width: 100%;
+    }
+    input[name=player] {
+        text-align: center;
+    }
+    input[name=character] {
+        font-weight: bolder;
+    }
+    textarea[name=ownedelement] {
+        font-style: italic;
+        min-height: 70px;
+    }
+    input[name=player], textarea[name=notes], textarea[name=ownedelement] {
+        font-size: 0.8em;
+    }
+    textarea[name=ownedelement], textarea[name=notes] {
+        line-height: 1.2em;
+        resize: vertical;
+    }
+    textarea[name=notes] {
+        min-height: 7em;
+    }
+
+    textarea[name=destiny] {
+        min-height: 370px;
+        line-height: 1em;
+        font-size: 1em;
+    }
+
+    #commonArea {
+        width: 11.1em;
+    }
+
+    #infoArea {
+        font-size: 13pt;
+        margin: 5px -13px;
+        padding-left: 3px;
+        height: 97vh;
+        overflow: auto;
+        background-color: Gainsboro;
+    }
+
+    .fate, .resolution {
+        text-align: center;
+        padding: 1em;
+    }
+    button[name=fatebutton], .fate {
+        background-color: #bee1f3;
+    }
+    button[name=resolutionbutton], .resolution {
+        background-color: #fbeeb3;
+    }
+    button[name=fatebutton], button[name=resolutionbutton] {
+        display: inline;
+        font-size: 1em;
+        padding: 5px;
+    }
+
+    #cardbox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        max-width: 1200px;
+        max-height: 700px;
+        overflow: auto;
+        z-index: 3;
+    }
+    .card-body {
+        font-size: 2em !important;
+    }
+
+    </style>
+</head>
+
+<body>
+    <!-- hovering panels -->
+    <div id="loadbox" style="display: none" class="card shadow">
+        <h5 class="card-header">load JSON content</h5>
+        <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
+        <textarea id="loadboxjson" placeholder="JSON only"></textarea>
+        <button type="submit" class="btn btn-sm btn-warning">load</button>
+    </div>
+    <div id="imageviewbox" style="display: none" class="card shadow">
+        <h5 id="imageviewboxHeader" class="card-header move">image view</h5>
+        <div class="topRightClick" onclick="$('#imageviewbox').hide();">hide</div>
+        <img src="" id="imageviewImage" alt="an image" title="an image to show the group" />
+        <div class="container-fluid input-group p-0">
+            <input type="text" id="imageviewImageURL" class="form-control form-control-sm" placeholder="URL of image" />
+            <button class="btn btn-sm btn-info" onclick="loadImage('imageviewImage', 'imageviewImageURL');">load image</button>
+        </div>
+    </div>
+    <div id="cardbox" style="display: none" class="card shadow">
+        <h5 class="card-header move">card type</h5>
+        <div class="topRightClick" onclick="$('#cardbox').hide();">hide</div>
+        <div class="card-body">card text</div>
+    </div>
+
+    <div id="menubuttons" class="btn-group-vertical shadow">
+        <button id="togetherjsbutton" class="btn btn-sm btn-outline-dark" onclick="TogetherJS(this); return false;" title="start TogetherJS to collaborate with friends">👥</button>
+        <button id="loadjsonbutton" class="btn btn-sm btn-outline-dark" onclick="$('#loadbox').toggle();" title="load a JSON file of the game content">📂</button>
+        <button id="savejsonbutton" class="btn btn-sm btn-outline-dark" onclick="saveJSON(); return false;" title="save current game content to a JSON file to download">💾</button>
+        <button id="imagebutton" class="btn btn-sm btn-outline-dark" onclick="$('#imageviewbox').toggle(); return false;" title="show an image of character or object">🖼</button>
+    </div>
+    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark shadow" onclick="newGame(); return false;" title="clear fields, start over">🗑</button>
+
+    <!-- main content -->
+    <div class="container-fluid">
+        <div id="playArea">
+            <div class="row full-height">
+                <div class="col justify-content-center align-self-center">
+                    <div class="row">
+
+                        <div id="c1" class="col-3 full-height">
+                            <div class="hideClick" onclick="$('#p1Area').toggle();">👁</div>
+                            <div id="p1Area" class="row">
+
+                                <div class="container-fluid">
+                                    <div id="profile1" name="profile" class="row form-group">
+
+                                        <input type="text" id="player1" name="player" class="form-control form-control-sm text-muted" placeholder="player" />
+
+                                        <input type="text" id="character1" name="character" class="form-control form-control-sm text-primary" placeholder="character" />
+
+                                        <div class="col-5 portrait p-0">
+                                            <img src="https://raw.githubusercontent.com/brushmen/trpgplayaid_server/master/public/images/portraiticon.png" id="portrait1" data-toggle="tooltip" alt="image for character 1" onclick="portraitURL(1);" title="" />
+                                        </div>
+                                        <div class="col-7 p-0">
+                                            <textarea id="ownedelement1" name="ownedelement" class="form-control form-control-sm" placeholder="owned element(s)"></textarea>
+
+                                            <textarea id="notes1" name="notes" class="form-control form-control-sm" placeholder="notes"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <textarea id="destiny1" name="destiny" class="form-control form-control-sm" placeholder="destiny point(s)"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="c2" class="col-3 full-height">
+                            <div class="hideClick" onclick="$('#p2Area').toggle();">👁</div>
+                            <div id="p2Area" class="row">
+
+                                <div class="container-fluid">
+                                    <div id="profile2" name="profile" class="row form-group">
+
+                                        <input type="text" id="player2" name="player" class="form-control form-control-sm text-muted" placeholder="player" />
+
+                                        <input type="text" id="character2" name="character" class="form-control form-control-sm text-primary" placeholder="character" />
+
+                                        <div class="col-5 portrait p-0">
+                                            <img src="https://raw.githubusercontent.com/brushmen/trpgplayaid_server/master/public/images/portraiticon.png" id="portrait2" data-toggle="tooltip" alt="image for character 2" onclick="portraitURL(2);" title="" />
+                                        </div>
+                                        <div class="col-7 p-0">
+                                            <textarea id="ownedelement2" name="ownedelement" class="form-control form-control-sm" placeholder="owned element(s)"></textarea>
+
+                                            <textarea id="notes2" name="notes" class="form-control form-control-sm" placeholder="notes"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <textarea id="destiny2" name="destiny" class="form-control form-control-sm" placeholder="destiny point(s)"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="c3" class="col-3 full-height">
+                            <div class="hideClick" onclick="$('#p3Area').toggle();">👁</div>
+                            <div id="p3Area" class="row">
+
+                                <div class="container-fluid">
+                                    <div id="profile3" name="profile" class="row form-group">
+
+                                        <input type="text" id="player3" name="player" class="form-control form-control-sm text-muted" placeholder="player" />
+
+                                        <input type="text" id="character3" name="character" class="form-control form-control-sm text-primary" placeholder="character" />
+
+                                        <div class="col-5 portrait p-0">
+                                            <img src="https://raw.githubusercontent.com/brushmen/trpgplayaid_server/master/public/images/portraiticon.png" id="portrait3" data-toggle="tooltip" alt="image for character 3" onclick="portraitURL(3);" title="" />
+                                        </div>
+                                        <div class="col-7 p-0">
+                                            <textarea id="ownedelement3" name="ownedelement" class="form-control form-control-sm" placeholder="owned element(s)"></textarea>
+
+                                            <textarea id="notes3" name="notes" class="form-control form-control-sm" placeholder="notes"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <textarea id="destiny3" name="destiny" class="form-control form-control-sm" placeholder="destiny point(s)"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="c4" class="col-3 full-height">
+                            <div id="commonArea">
+                                <!-- <div class="row" class="text-center">
+                                    <select id="infolist" name="infolist" class="form-control form-control-sm">
+                                        <option value="" disabled="disabled" selected="selected">Archipelago</option>
+                                    </select>
+                                </div> -->
+
+                                <div id="infoArea">
+                                    On <b>your turn</b>, you MUST...<br>
+                                    * Set the stage: give initial directions to the other players<br>
+                                    * Portray your character<br>
+                                    * Finish scene when ready<br>
+                                    You <i>CAN</i>...<br>
+                                    * draw <button id="fatebutton" name="fatebutton" data-toggle="tooltip" class="btn btn-sm btn-outline-dark" onclick="showCard('fate');">fate</button> (once per session; interpreted by another player)<br>
+                                    On <b>anyone's turn</b>, including your own, you <i>CAN</i>...<br>
+                                    * Create or play a secondary character<br>
+                                    * Describe events and the environment<br>
+                                    * Say "Try a different way"<br>
+                                    * Say "Help"<br>
+                                    * Say "Harder"<br>
+                                    * Say "Describe that in detail"<br>
+                                    * Say "That might not be quite so easy" (once per turn; draw <button id="resolutionbutton" name="resolutionbutton" data-toggle="tooltip" class="btn btn-sm btn-outline-dark" onclick="showCard('resolution');">resolution</button>, interpreted by another player)<br>
+                                    * Say "I'd like an interlude after that" (only once per turn, keep it short)<br>
+                                    * Veto narration related to elements you own<br>
+                                    <br>
+                                    <a href="https://norwegianstyle.wordpress.com/2012/09/20/archipelago-iii/" target="new">Archipelago</a> is by Matthijs Holter.
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap template script includes -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/jquery.timer.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/archipelago.js"></script>
+
+    <!-- TogetherJS config and library -->
+    <script>
+    TogetherJSConfig_autoStart  = false;
+    TogetherJSConfig_siteName = "Archipelago";
+    TogetherJSConfig_dontShowClicks = true;
+    TogetherJSConfig_cloneClicks = "#fatebutton";
+    TogetherJSConfig_cloneClicks = "#resolutionbutton";
+    TogetherJSConfig_suppressJoinConfirmation = true;
+    TogetherJSConfig_suppressInvite = true;
+    //use this in single-page apps where being at the same base URL
+    //doesn’t mean the two people are looking at the same thing.
+    TogetherJSConfig_includeHashInUrl = true;
+    TogetherJSConfig_disableWebRTC = true;
+    </script>
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+
+    <!-- other Javascript code -->
+    <script>
+        // prep element effects
+        dragElement(document.getElementById("imageviewbox"));
+        dragElement(document.getElementById("cardbox"));
+
+        $('#loadbox button[type=submit]').click(function(e) {
+            e.preventDefault();
+            var json = $('#loadboxjson').val();
+            JSONtoGame(JSON.parse(json));
+            // hide the loadbox
+            $('#loadbox').hide();
+
+            updateFields();
+        });
+
+        function portraitURL(number) {
+            var url = prompt("paste in the URL of the image");
+            if (url) {
+                // try to check if image can be loaded
+                var img = new Image();
+                img.src = url;
+                img.onload = function(){
+                    updatePortrait(number, url);
+                };
+                img.onerror = function(){
+                    alert("image cannot be loaded");
+                }
+            }
+        }
+        function updatePortrait(n=1, url) {
+            var $e = $('#portrait' + n);
+            gamedata['profiles'][n-1]['portrait'] = url;
+            // hovering tooltip should show the image without distorted porportions
+            $e.prop('src', url);
+            // force browser to use new image instead of cached image
+            $e.tooltip('dispose');
+            $e.tooltip({
+                html: true,
+                placement: 'right',
+                title: '<img src="' + url + '" height="500" />'
+            });
+        }
+
+        function showCard(type='resolution') {
+            var html = '';
+
+            $('#cardbox .card-header').html(type);
+            html = drawCard(type);
+            gamedata['currentcard'] = html;
+            gamedata['currentcardtype'] = type;
+
+            html = "<div class='" + type + "'>" + html + "</div>";
+            var $e = $('#' + type + 'button');
+            $e.prop('title', html);
+            $e.tooltip('dispose');
+            $e.tooltip({
+                'html': true,
+                'placemenet': 'left',
+                'title': html
+            });
+            $('#cardbox .card-body').html(html);
+            $('#cardbox').show();
+        }
+
+        function updateFields() {
+            var info = gamedata;
+            var profiles = gamedata['profiles'];
+            for (var i = 0; i < profiles.length; i++) {
+                $('#player' + (i+1)).val(profiles[i]['player']);
+                $('#character' + (i+1)).val(profiles[i]['character']);
+                updatePortrait((i+1), profiles[i]['portrait']);
+                $('#ownedelement' + (i+1)).val(profiles[i]['ownedelement']);
+                $('#notes' + (i+1)).val(profiles[i]['notes']);
+                $('#destiny' + (i+1)).val(profiles[i]['destiny']);
+            }
+            if (info['currentimage']) {
+                $('#' + 'imageviewImage').prop('src', info['currentimage']);
+            }
+            if (info['currentcard']) {
+                // show current card in hover of corresponding button
+                $('#' + info['currentcardtype'] + 'button').prop('title', info['currentcard']);
+            }
+
+        }
+
+        function saveJSON() {
+            var filename = gamehandle + getTodayString() + '.json';
+            // generate the file to download locally
+            download(filename, GametoJSON());
+        }
+
+        function loadImage(imgID, imgURLID) {
+            var imgURL = $('#' + imgURLID).val();
+            $('#' + imgID).prop('src', imgURL);
+            gamedata['currentimage'] = imgURL;
+            TogetherJS.reinitialize();
+        }
+
+        function newGame() {
+            if(confirm('Clear all fields?')) {
+                clearFields();
+                initGameData();
+                updateFields();
+            }
+        }
+
+    </script>
+</body>
+</html>
