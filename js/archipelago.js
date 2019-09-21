@@ -47,7 +47,7 @@ function initGameData() {
 				"character": null,
 				"ownedelement": null,
 				"notes": null,
-				"destiny": "* suggestion 1\n\n* suggestion 2\n\n* suggestion 3"
+				"destiny": null
 			},
 			{
 				"portrait": "https://raw.githubusercontent.com/brushmen/trpgplayaid_server/master/public/images/portraiticon.png",
@@ -55,23 +55,15 @@ function initGameData() {
 				"character": null,
 				"ownedelement": null,
 				"notes": null,
-				"destiny": "* suggestion 1\n\n* suggestion 2\n\n* suggestion 3"
+				"destiny": null
 			},
 			{
 				"portrait": "https://raw.githubusercontent.com/brushmen/trpgplayaid_server/master/public/images/portraiticon.png",
 				"player": null,
 				"character": null,
-				"ownedelement": "",
+				"ownedelement": null,
 				"notes": null,
-				"destiny": "* suggestion 1\n\n* suggestion 2\n\n* suggestion 3"
-			},
-			{
-				"portrait": "https://raw.githubusercontent.com/brushmen/trpgplayaid_server/master/public/images/portraiticon.png",
-				"player": null,
-				"character": null,
-				"ownedelement": "",
-				"notes": null,
-				"destiny": "* suggestion 1\n\n* suggestion 2\n\n* suggestion 3"
+				"destiny": null
 			}
 		],
         "currentimage": null
