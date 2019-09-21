@@ -148,6 +148,9 @@ div.tooltip-inner {
     z-index: 3;
     max-height: 720px;
 }
+#imageviewboxHeader {
+    padding: 0 10px;
+}
 
 /* scratchpad area */
 
