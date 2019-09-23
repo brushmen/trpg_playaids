@@ -146,10 +146,14 @@ div.tooltip-inner {
     padding: 10px;
     overflow: auto;
     z-index: 3;
-    max-height: 670px;
+    max-width: 1000px;
+    max-height: 700px;
 }
 #imageviewboxHeader {
     padding: 0 10px;
+}
+#imageviewImage {
+    width: 100%;
 }
 
 /* scratchpad area */
