@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>For Lady Blackbird</title>
+    <meta name="description" content="a tabletop roleplaying game playaid built with Javascript">
+    <meta name="author" content="brushmen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/common.css">
+
+    <!-- custom CSS -->
+    <style>
+    body {
+        background-color: #8eb0d6;
+    }
+    a:link, a:visited {
+        color: navy;
+        text-decoration: underline;
+    }
+
+    select {
+        background-color: Gainsboro !important;
+    }
+
+    #infoArea .card {
+        padding: 1em;
+        margin-bottom: 1em;
+        background-color: #d4e4ee;
+    }
+
+    #menubuttons, #clearfieldsbutton {
+        background-color: Gainsboro;
+    }
+
+    #c1, #c2, #c3 {
+        position: relative;
+    }
+
+    input[name=playorder] {
+        width: 2em;
+    }
+
+    #commonArea {
+        width: 11.1em;
+    }
+
+    #infoArea {
+        font-size: 16pt;
+        margin: 5px -13px;
+        padding-left: 3px;
+        height: 97vh;
+        overflow: auto;
+    }
+
+    #characters {
+        margin: auto;
+        padding: 1em;
+        color: #1c1108;
+        background-color: #969188;
+    }
+
+    #currentchar {
+        padding: 0.5em;
+        color: #969188;
+        background-color: #441b11;
+    }
+
+    #prompt {
+        padding: 2em;
+        background-color: #dcd1a7;
+    }
+
+    #deckbox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        max-width: 1000px;
+    }
+    #deckboxtext {
+        height: 400px;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- hovering panels -->
+    <div id="loadbox" style="display: none" class="card shadow">
+        <h5 class="card-header">load JSON content</h5>
+        <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
+        <textarea id="loadboxjson" placeholder="JSON only"></textarea>
+        <button type="submit" class="btn btn-sm btn-warning">load</button>
+    </div>
+    <div id="deckbox" style="display: none" class="card shadow">
+        <h5 class="card-header">custom deck</h5>
+        <div class="topRightClick" onclick="$('#deckbox').hide();">hide</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-5">
+                    bodyguard:<br>
+                    prompt 1 for bodyguard<br>
+                    smuggler:<br>
+                    prompt 1 for smuggler<br>
+                    prompt 2 for smuggler<br>
+                    any:<br>
+                    prompt 1<br>
+                    prompt 2<br>
+                    end:<br>
+                    Lady Blackbird looks to you for guidance, what do you say to her?<br>
+                </div>
+                <div class="col-7">
+                    <textarea id="deckboxtext" class="form-control form-control-sm" placeholder="paste in list of cards, see left-side formatting example"></textarea>
+                    <button type="submit" class="form-control btn btn-sm btn-warning btn-block">load</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="imageviewbox" style="display: none" class="card shadow">
+        <h6 id="imageviewboxHeader" class="card-header move">image view</h6>
+        <div class="topRightClick" onclick="$('#imageviewbox').hide();">hide</div>
+        <img src="" id="imageviewImage" alt="an image" title="an image to show the group" />
+        <div class="container-fluid input-group p-0">
+            <input type="text" id="imageviewImageURL" class="form-control form-control-sm" placeholder="URL of image" />
+            <button class="btn btn-sm btn-info" onclick="loadImage('imageviewImage', 'imageviewImageURL');">load image</button>
+        </div>
+    </div>
+
+    <!-- right side menu buttons, leave space in between for TogetherJS bar. add/remove buttons as applicable -->
+    <div id="menubuttons" class="btn-group-vertical shadow">
+        <button id="togetherjsbutton" class="btn btn-sm btn-outline-dark" onclick="TogetherJS(this); return false;" title="start TogetherJS to collaborate with friends">👥</button>
+        <button id="loaddeckbutton" class="btn btn-sm btn-outline-dark" onclick="$('#deckbox').toggle();" title="load a custom list of cards">🂠</button>
+        <button id="loadjsonbutton" class="btn btn-sm btn-outline-dark" onclick="loadJSON(); return false;" title="load a JSON file of the game content">📂</button>
+        <button id="savejsonbutton" class="btn btn-sm btn-outline-dark" onclick="saveJSON(); return false;" title="save current game content to a JSON file to download">💾</button>
+        <button id="imagebutton" class="btn btn-sm btn-outline-dark" onclick="$('#imageviewbox').toggle(); return false;" title="show an image of character or object">🖼</button>
+    </div>
+
+    <!-- main content -->
+    <div class="container-fluid">
+
+        <div id="gameArea">
+            <div class="row full-height">
+                <div class="col justify-content-center align-self-center">
+                    <div class="row">
+
+                        <div id="c1" class="col-3 full-height">
+                            <div id="characters" class="container" style="margin-top: 1em">
+                                <div class="row align-items-center">
+                                    <div class="col text-center" style="font-size: 0.8em"><b>characters</b></div>
+                                    <div class="col text-center" style="font-size: 0.8em"><b>play order</b></div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">bodyguard</div>
+                                    <div class="col justify-content-center">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">smuggler</div>
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">fixer</div>
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">sky-sailor</div>
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">betrothed</div>
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">old flame</div>
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">confidant</div>
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="col-8">
+                                        <input type="text" name="customcharacter" size="16" class="form-control form-control-sm" placeholder="(custom)" />
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" name="playorder" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="gamelength" class="text-center" style="margin-top: 1em">
+                                <div style="font-size: 0.8em"><strong>approximate session length</strong></div>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-info" onclick="play(30);" title="~30 prompts">30 min</button>
+                                    <button class="btn btn-sm btn-info" onclick="play(60);" title="~40 prompts">1 hour</button>
+                                    <button class="btn btn-sm btn-info" onclick="play(120);" title="all prompts">2 hours</button>
+                                </div>
+                            </div>
+
+                            <div id="cardoptions" class="text-center" style="margin-top: 1em; display: none">
+                                <div><strong>options</strong></div>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-info" onclick="drawCard();">next prompt</button>
+                                    <button class="btn btn-sm btn-info" onclick="passCard();">pass</button>
+                                    <button class="btn btn-sm btn-info" onclick="removeCard();">remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="c2" class="col full-height">
+                            <div id="prompt">
+                                <p><span style="font-size:30pt;">For Lady Blackbird</span> is a group storytelling game where each player answers prompt about Lady Blackbird and a character they play. Everyone takes turns and builds on previous answers to flesh out the Lady and their characters. It is inspired by John Harper's <a href="http://ladyblackbird.org" target="_new">Lady Blackbird</a>.</p>
+                                <p>This work is based on <a href="http://www.forthequeengame.com/" target="_new">For the Queen</a>, product of Alex Roberts and Evil Hat Productions, and licensed for our use under the <a href="http://creativecommons.org/licenses/by/3.0/" target="_new">Creative Commons Attribution 3.0 Unported license</a>.</p>
+                                <p>Thanks to Diana Moon for valuable feedback.</p>
+                            </div>
+                        </div>
+
+                        <div id="c3" class="col-3 full-height">
+                            <div id="commonArea">
+                                <div id="infoArea">
+                                    <div class="card">Players take turns reading these cards aloud.</div>
+                                    <div class="card">Lady Blackbird is a Stormblood sorcerer from the Imperial Worlds. The House of Blackbird was rewarded with wealth and status by the Empress for years of loyal service to the Empire.</div>
+                                    <div class="card">However, she turned her back on all of it when she fled on the day of her wedding.</div>
+                                    <div class="card">She hired a crew of smugglers to take her on her soul-searching journey, but with an uncertain end.</div>
+                                    <div class="card">Wealth and status can no longer assist her as she ventures further from home.</div>
+                                    <div class="card">Perhaps you can help her find what she is looking for.</div>
+                                    <div class="card">When at last she looks to you for guidance, what do you say to her?</div>
+                                    <div class="card">Decide on a play order, then the first player will start with the first prompt card.</div>
+                                    <div class="card">Pick an approximate session length to begin the game. (Or load a custom deck with a specific number of cards.)</div>
+                                    <div class="card">Take turns reading the questions out loud. Interpret these questions, and answer them however you wish.</div>
+                                    <div class="card">Other players may ask you questions or make suggestions on your turn, but it is optional whether you answer them and/or incorporate the suggestions.</div>
+                                    <div class="card">Use X-card, Script Change, or other safe play methods that work for your group.</div>
+                                    <div class="card">If you encounter a card, or an answer, that you do not want to be included in the game, use your preferred safe play method to notify the group, then remove that content from the game.</div>
+                                    <div class="card">If you draw a card that is removed this way by yourself or someone else, another prompt will be shown to you.</div>
+                                    <div class="card">You can also pass on your turn. To do so, pass the prompt card to the next player, and say: "I'd like to hear your answer to this question."</div>
+                                    <div class="card">A prompt card can be passed around until someone chooses to remove it from the game.</div>
+                                    <div class="card">Continue answering, passing, and removing questions until the "Lady Blackbird looks to you for guidance" card is drawn."</div>
+                                    <div class="card">Each player should respond to that prompt in turn. Then, the game is over.</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap template script includes -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/common.js"></script>
+
+    <!-- TogetherJS config and library -->
+    <script>
+    TogetherJSConfig_autoStart  = false;
+    TogetherJSConfig_siteName = "For Lady Blackbird";
+    TogetherJSConfig_dontShowClicks = true;
+    TogetherJSConfig_suppressJoinConfirmation = true;
+    TogetherJSConfig_suppressInvite = true;
+    //use this in single-page apps where being at the same base URL
+    //doesn’t mean the two people are looking at the same thing.
+    TogetherJSConfig_includeHashInUrl = true;
+    TogetherJSConfig_disableWebRTC = true;
+    </script>
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+
+    <!-- other Javascript code -->
+    <script>
+        var gamehandle = 'forladyblackbird';
+        var gamedata = {};
+
+        initGameData();
+
+        // prep element effects
+        //dragElement(document.getElementById("scratchpadArea"));
+        dragElement(document.getElementById("imageviewbox"));
+
+        function initGameData() {
+            gamedata = {};
+            gamedata['prompts'] = {
+                'any': [
+                    /* about the setting */
+                    "Can anyone learn magic or do you need to have noble blood?",
+                    "What kind of trouble are pirates known to cause?",
+                    "How is sorcery regulated to preserve balance of power?",
+                    "Is the Wild Blue like outer space as we know it, or layers of breathable air above layers of corrosive clouds?",
+                    "How has advancing technology not over-taken sorcery in this era?",
+                    "Are floating shard worlds powered by sorcery or technology, or a mix of both?",
+                    "How close is the Empire to abolishing all forms of slavery for good?",
+                    "Why has the Empire not yet conquered Haven, a beacon of the Free World?",
+                    "How are pirate clans regarded by both the Imperial and the Free Worlds?",
+                    "Do other races beside human exist in this world? What are some of them like?",
+                    "What do the people know about the creatures in the eternal darkness of the Lower Depth?",
+                    "What is a prominent color scheme in the Imperial Worlds?",
+                    "What is a prominent characteristic of architecture in the Free Worlds?",
+
+                    /* about one's own character */
+                    "Have you ever seen a real sky squid?",
+                    "What is one principle that the Empire champions that you also believe in?",
+                    "What is the one quality about the Free Worlds that you dislike?",
+                    "What was the one decision you made that significantly changed your path in life?",
+                    "What was a major world event that impacted your life?",
+                    "What great loss did you suffer in the Imperial Worlds?",
+                    "What great loss did you suffer in the Free Worlds?",
+                    "What great loss did you suffer in the Lower Depth, where even the toughest skyship will go bust after four hours?",
+                    "Why do you want to exact revenge on the nobles of the Empire, knowing that Lady Blackbird is one of them?",
+                    "What was the worst thing you have ever done but will do it again in a heartbeat?",
+                    "What has been your greatest regret?",
+                    "What has been your proudest achievement?",
+
+                    /* about Lady Blackbird or one's relationship to her */
+                    "What common belief do you and Lady Blackbird hold?",
+                    "Which piece of art form that both you and Lady Blackbird love and often bond over?",
+                    "After finding out her skill with disguises, what would you do or look for to see through her methods?",
+                    "What skill have you learned from her?",
+                    "What did Lady Blackbird ask you to teach her? Did you agree? What happened?",
+                    "What is a belief that you and Lady Blackbird have agreed to disagree on?",
+                    "Lady Blackbird is a master of disguise. Why did she choose to reveal her identity to you?",
+                    "What is one thing that Lady Blackbird did that made you respect her regardless of her wealth and status?",
+                    "Which secret did Lady Blackbird share with no one but you?",
+                    "Why do you trust her?",
+                    "Why do you believe Lady Blackbird has the power to change the Empire?",
+                    "What is something Lady Blackbird does often that annoys you?",
+                    "What is your one quality that Lady Blackbird can barely tolerate?",
+                    "What makes you believe that Lady Blackbird has feelings for you? What do you do about it?",
+                    "Why do you believe you are the best match for her?",
+                    "What secret you hold that will change Lady Blackbird's opinion of you for the worse?",
+                    "How does Lady Blackbird attempt to pay you for your help when she cannot access her family's wealth anymore?",
+                    "What is the scariest thing she has done in your presence?",
+                    "What did Lady Blackbird shed a tear over when she thought no one was looking?",
+                    "What is the real reason you are helping her on this journey, other than fulfilling a contract?",
+                    "What did you sacrifice in order to help her with the journey?",
+                    "What did she sacrifice in order to help you?",
+                    "What did she do that makes you start to regret helping her?",
+                    "What did Lady Blackbird once say to you that opened up an old wound?",
+                    "What do you admire about Lady Blackbird besides her presence?",
+                    "Lady Blackbird forgave you for an offense, but when she is frustrated, what does she do that reminds you of the incident?",
+                    "What is flawed about Lady Blackbird that could end her journey prematurely?",
+                    "What did you destroy in her presence? How did it affect her?",
+                    "What did she destroy in your presence? How did it affect you?",
+                    "You owe Lady Blackird a great debt. What is it and why does she never mention it?",
+                    "What was the worst thing you know Lady Blackbird did, and that she has never regretted doing?",
+                    "She once told you a story that you believe is a lie. Why did you not tell her so?",
+
+                    /* about relationship to other characters */
+                    "Who are you most proud of in life?",
+                    "What skill have you learned from one of her companions?",
+                    "Why do you think her other traveling companions put up with you?",
+                    "Why do you think her old flame is not worthy of her?",
+                    "Who among her companions do you trust the least and why?",
+                    "Who among her companions do you trust the most and why?",
+                    "Who among her companions do you owe a favor from?",
+                    "Who among her companions saved your life on the crime-infested Nightport?",
+                    "Who among her companions told you a secret about the Empire that not even Lady Blackbird knew about? And what was that secret?",
+                    "In what way will one of her companions compromise her goal? Why do you think so?",
+                    "If any of her companions upset you, how do you keep control over your anger?",
+                    "Who among her companions told you a secret about the Free Worlds that no one else knew about? And what was that secret?",
+                    "Who among her companions told you a secret about her? And what was that secret?",
+                    "Who among her companions saw you help someone in Haven? Why did you ask them to keep it a secret?",
+                    "Who among her companions defended you when she accused you falsely?",
+                    "One of her companions completely changed your impression of them with a single action. What did they do?"
+                ],
+                'bodyguard': [
+                    "How did you become Lady Blackbird’s bodyguard?",
+                    "Who was your biggest rival in the pits?",
+                    "Have you ever been to Haven or any of the other Free Worlds?",
+                    "You went from one indentured servitude to a lengthy contract with Lady Blackbird. How do you feel about that?",
+                    "How did you help Lady Blackbird escape the wedding she did not want?",
+                    "What was the outcome of a sparring match between you and her?",
+                    "What terms did you ask for in your contract that she refused to agree to?",
+                    "What promise did you make to someone who helped you back in the days of cage fights?",
+                    "What was a pleasant memory you have back when you were still landlocked on Ilysium, the capital world of the Empire?"
+                ],
+                'smuggler': [
+                    "What do you usually smuggle?",
+                    "What did you do to be exiled from the Empire?",
+                    "Whose fault is it that you were captured for flying a false flag?",
+                    "Who was the pilot before your current hire?",
+                    "Why does the Owl, your raggedy skyship, give you hope?",
+                    "What is your connection to the Imperial noble clans, knowing your Warpblood is a rare bloodline for teleportation sorcery?",
+                    "What reputation have you heard of Lady Blackbird or her family when you were still an Imperial soldier?",
+                    "Who are you still loyal to in the Imperial Worlds? And why?",
+                    "What was a pleasant memory you have back when you were still serving in Olympia, the naval stronghold of the Empire?"
+                ],
+                'fixer': [
+                    "What created such a deep bond between you and the Captain?",
+                    "You are on a mission to get Lady Blackbird to the Pirate King. What’s in it for you?",
+                    "Who does the Captain like more: you or the pilot?",
+                    "What weird thing has been going on with The Owl lately?",
+                    "How do you keep the Owl, the skyship you maintain, in tip-top shape?",
+                    "Where did your skills with sorcery come from?",
+                    "What is the one thing you should never have stolen?",
+                    "Why did you never join a crime syndicate on the darkside of Nightport, when they offered you a much richer lifestyle?",
+                    "What is your relationship with theft?",
+                    "What do you keep going back to on Nightport, where natural light can never reach?"
+                ],
+                'sky-sailor': [
+                    "How are your people treated by the Empire?",
+                    "Who does the Captain like more: you or the mechanic?",
+                    "What’s the most dangerous escape you’ve ever made?",
+                    "How does the Owl, the skyship you pilot, remind you of home?",
+                    "Despite being known as a dare-devil in the Wild Blue, deep down what are you afraid of the most?",
+                    "Why did you never join a pirate clan when they offered a much freer lifestyle?",
+                    "What was a cool story you keep telling others about the Lower Depth?",
+                    "Why did you become a pilot?"
+                ],
+                'betrothed': [
+                    "How did you convince the person who abandoned you to let you join her travels?",
+                    "What was the primary reason for the arranged marriage between you and Lady Blackbird?",
+                    "What did you think of her before the marriage ceremony?",
+                    "How much harm has her refusal to marry you brought to your clan's or your own reputation?",
+                    "How do you really feel when she left you at the altar?",
+                    "How do you plan to convince her to come home?"
+                ],
+                'old flame': [
+                    "How did your old flame not turn you away when you became part of her crew?",
+                    "How did the two of you fall in love?",
+                    "How did the two of you become separated?",
+                    "Do you still love her as you used to?",
+                    "How has she changed since you last saw her?",
+                    "How have you changed since you two were last together?"
+                ],
+                'confidant': [
+                    "You two led very divergent lives. Why are you now with her on this journey?",
+                    "Where did the two of you first meet?",
+                    "How did you stay in touch over the years?",
+                    "What do you remember fondly of her before she left the Imperial Worlds?",
+                    "What is something you confided in her that strengthened your bond?",
+                    "What is the biggest change you saw in her over the years?"
+                ],
+                'custom': [
+                    "What made her agree to take you along on her journey?",
+                    "What is your connection to the House of Blackbird?",
+                    "What important task was assigned to you with regard to Lady Blackbird?",
+                    "Why do you want to bring her home?",
+                    "What secret do you know of Lady Blackbird that could ruin her?",
+                    "What nickname do you have for her?"
+                ]
+            };
+            gamedata['characters'] = [];
+            gamedata['deck'] = [];
+            gamedata['endcard'] = 'Lady Blackbird looks to you for guidance. What do you say to her?';
+        }
+
+        function loadImage(imgID, imgURLID) {
+            var imgURL = $('#' + imgURLID).val();
+            $('#' + imgID).prop('src', imgURL);
+        }
+
+        $('#infolist').on('change', function() {
+            // only update locally
+            var $infolist = $('#infolist');
+            var $infoArea = $('#infoArea');
+            $infoArea.html(infotext[$infolist.val()]);
+        });
+
+        function loadJSON() {
+            $('#loadbox').toggle();
+        }
+        $('#loadbox button[type=submit]').click(function(e) {
+            e.preventDefault();
+            var json = $('#loadboxjson').val();
+            JSONtoGame(JSON.parse(json));
+            // hide the loadbox
+            $('#loadbox').hide();
+            updateGame();
+        });
+
+        $('#deckbox button[type=submit]').click(function(e) {
+            e.preventDefault();
+            var deck = $('#deckboxtext').val();
+            inputDeck(deck);
+            // hide the loadbox
+            $('#deckbox').hide();
+            updateGame();
+        });
+
+        function inputDeck(deck) {
+            gamedata['prompts'] = {};
+            var lines = deck.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+                if (lines[i].toLowerCase() == 'end:') {
+                    i += 1;
+                    gamedata['endcard'] = lines[i];
+                }
+                else {
+                    if (lines[i].match(/:$/)) {
+                        var type = lines[i].substring(0, lines[i].length-1);
+                        gamedata['prompts'][type] = new Array();
+                        i += 1;
+                        while (!lines[i].match(/:$/)) {
+                            gamedata['prompts'][type].push(lines[i]);
+                            i += 1;
+                        }
+                        i -= 1;
+                    }
+                }
+            }
+            gamedata['deck'] = shuffle(gamedata['prompts']['any']);
+            gamedata['deck'].push(gamedata['endcard']);
+        }
+
+        function updateGame() {
+            updateCharacters();
+            displayCard();
+            updateCardOptions();
+        }
+
+        function JSONtoGame(obj) {
+            if (obj) {
+                gamedata = obj[gamehandle];
+            }
+        }
+
+        function GametoJSON() {
+            var gameJSON = {};
+            if (gamedata) {
+                gameJSON[gamehandle] = gamedata;
+                gameJSON = JSON.stringify(gameJSON, null, "\t");
+            }
+            return gameJSON;
+        }
+
+        function saveJSON() {
+            var filename = gamehandle + getTodayString() + '.json';
+            // generate the file to download locally
+            download(filename, GametoJSON());
+        }
+
+        function play(minutes=30) {
+            playOrder();
+            // remove that section from the user interface
+
+            $("#gamelength").hide();
+            $('#cardoptions').show();
+            gameLength(minutes); // builds deck
+
+            // display the top card for the first character
+            displayCard();
+            updateCardOptions();
+        }
+
+        function playOrder() {
+            var char = "";
+            var val;
+            var characters = {};
+
+            // if custom character has a play order but no name
+            // give default name
+            char = $("input[name='customcharacter']").val();
+            if (!char) {
+                char = "(custom)";
+            }
+            $("input[name='customcharacter']").parent().html(char);
+
+            $("input[name='playorder']").each(function() {
+                // only picked characters have play order
+                val = $(this).val();
+                if ($.isNumeric(val)) {
+                    char = $(this).parent().prev().html().trim();
+                    characters[char] = val;
+                }
+            });
+
+            // sort the characters by play order
+            // convert to tuple, then back to regular array
+            var tuples = [];
+            for (var key in characters) tuples.push([key, characters[key]]);
+
+            tuples.sort(function(a, b) {
+                a = a[1];
+                b = b[1];
+
+                return a < b ? -1 : (a > b ? 1 : 0);
+            });
+
+            characters = [];
+            for (var i = 0; i < tuples.length; i++) {
+                var key = tuples[i][0];
+                var value = tuples[i][1];
+
+                characters[i] = key;
+            }
+
+            if (characters.length == 0) {
+                characters.push("(you)"); // default option
+            }
+
+            gamedata['characters'] = characters;
+
+            updateCharacters();
+        }
+
+        function updateCharacters() {
+            var html = "";
+            var characters = gamedata['characters'];
+
+            for (var key in characters) {
+                if (key == 0) {
+                    html += "<div id=\"currentchar\">⮕&nbsp;&nbsp;" + characters[key] + "</div>";
+                } else {
+                    html += "<div>" + characters[key] + "</div>";
+                }
+            }
+
+            $("#characters").html(html);
+        }
+
+        function gameLength(minutes=30) {
+            var numcards;
+            var tempdeck;
+            var deck = [];
+            tempdeck = shuffle(gamedata['prompts']['any']);
+
+            // don't play with every card
+            if (minutes == 30) {
+                numcards = 20;
+            } else if (minutes == 60) {
+                numcards = 40;
+            } else {
+                numcards = 80;
+            }
+
+            // can't play more than the deck size
+            if (numcards > tempdeck.length) {
+                numcards = tempdeck.length;
+            }
+
+            // copy from general prompt cards up to numcards
+            for (var i = 0; i < numcards; i++) {
+                deck.push(tempdeck[i]);
+            }
+            deck.push(gamedata['endcard']);
+            gamedata['deck'] = deck;
+
+            // shuffle the character-specific decks and
+            // discard all but 2
+            numcards = 2;
+
+            for (var j = 0; j < gamedata['characters'].length; j++) {
+                var c = gamedata['characters'][j];
+                if (!gamedata['prompts'][c]) {
+                    c = 'custom'; // if unrecognized name, assume custom
+                }
+                if (gamedata['prompts'][c]) { // if still unrecognized, questions for custom character don't exist
+                    gamedata['prompts'][c] = shuffle(gamedata['prompts'][c]);
+                    gamedata['prompts'][c] = gamedata['prompts'][c].slice(0, numcards);
+                }
+            }
+        }
+
+        function updateCardOptions() {
+            var html = "";
+
+            if (gamedata['deck'].length > 0) {
+                html += '<div class="text-center">options</div>';
+                html += '<div class="btn-group">';
+
+                html += '<button class="btn btn-sm btn-info" onclick="drawCard();">next prompt</button>';
+
+                if (gamedata['characters'].length > 1) {
+                    html += '<button class="btn btn-sm btn-info" onclick="passCard();">pass</button>';
+                }
+                html += '<button class="btn btn-sm btn-info" onclick="removeCard();">remove</button>';
+
+                html += "</div></div>";
+            }
+            else {
+                if (gamedata['characters'].length > 1) {
+                    html += '<div class="text-center">final round</div>';
+                    html += '<div class="btn-group">';
+                    html += '<button class="btn btn-sm btn-info" onclick="nextCharacter();">next player</button>';
+                }
+                html += '<button class="btn btn-sm btn-info" onclick="window.location.reload(false);">new game</a>';
+                html += "</div></div>";
+            }
+
+            $("#cardoptions").html(html);
+        }
+
+        function drawCard() {
+            nextCharacter();
+            displayCard();
+        }
+
+        function displayCard() {
+            var html = "";
+
+            // first draw from character-specific decks
+            // first character is current character
+            var char = gamedata['characters'][0];
+            if (!gamedata['prompts'][char]) {
+                // if unrecognized name, assume it's custom
+                char = 'custom';
+            }
+            if (gamedata['prompts'][char] && gamedata['prompts'][char].length > 0) {
+                // also remove the card from deck
+                html = gamedata['prompts'][char].shift();
+            }
+            else {
+                // also remove the card from deck
+                html = gamedata['deck'].shift();
+            }
+
+            // display card in main area
+            $("#prompt").html(html);
+            updateCardOptions();
+        }
+
+        function nextCharacter() {
+            if (gamedata['characters'].length > 1) {
+                // move current player to end of list
+                var c = gamedata['characters'].shift();
+                gamedata['characters'].push(c);
+                updateCharacters();
+            }
+        }
+
+        function passCard() {
+            // highlight next player
+            nextCharacter();
+        }
+
+        function removeCard() {
+            // draw new card instead without passing to next
+            displayCard();
+        }
+    </script>
+</body>
+</html>
