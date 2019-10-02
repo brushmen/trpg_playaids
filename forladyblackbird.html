@@ -26,6 +26,14 @@
         background-color: Gainsboro !important;
     }
 
+    .tooltip > .tooltip-inner{
+        background: #ffffff;
+        color: #000;
+        max-width: 800px;
+        max-height: 700px;
+        font-size: 2em;
+    }
+
     #infoArea .card {
         padding: 1em;
         margin-bottom: 1em;
@@ -226,24 +234,23 @@
                         <div id="c3" class="col-3 full-height">
                             <div id="commonArea">
                                 <div id="infoArea">
-                                    <div class="card">Players take turns reading these cards aloud.</div>
-                                    <div class="card">Lady Blackbird is a Stormblood sorcerer from the Imperial Worlds. The House of Blackbird was rewarded with wealth and status by the Empress for years of loyal service to the Empire.</div>
-                                    <div class="card">However, she turned her back on all of it when she fled on the day of her wedding.</div>
-                                    <div class="card">She hired a crew of smugglers to take her on her soul-searching journey, but with an uncertain end.</div>
-                                    <div class="card">Wealth and status can no longer assist her as she ventures further from home.</div>
-                                    <div class="card">Perhaps you can help her find what she is looking for.</div>
-                                    <div class="card">When at last she looks to you for guidance, what do you say to her?</div>
-                                    <div class="card">Decide on a play order, then the first player will start with the first prompt card.</div>
-                                    <div class="card">Pick an approximate session length to begin the game. (Or load a custom deck with a specific number of cards.)</div>
-                                    <div class="card">Take turns reading the questions out loud. Interpret these questions, and answer them however you wish.</div>
-                                    <div class="card">Other players may ask you questions or make suggestions on your turn, but it is optional whether you answer them and/or incorporate the suggestions.</div>
-                                    <div class="card">Use X-card, Script Change, or other safe play methods that work for your group.</div>
-                                    <div class="card">If you encounter a card, or an answer, that you do not want to be included in the game, use your preferred safe play method to notify the group, then remove that content from the game.</div>
-                                    <div class="card">If you draw a card that is removed this way by yourself or someone else, another prompt will be shown to you.</div>
-                                    <div class="card">You can also pass on your turn. To do so, pass the prompt card to the next player, and say: "I'd like to hear your answer to this question."</div>
-                                    <div class="card">A prompt card can be passed around until someone chooses to remove it from the game.</div>
-                                    <div class="card">Continue answering, passing, and removing questions until the "Lady Blackbird looks to you for guidance" card is drawn."</div>
-                                    <div class="card">Each player should respond to that prompt in turn. Then, the game is over.</div>
+                                    <div class="card" data-toggle="tooltip" title="Players take turns reading these cards aloud.">Players take turns reading these cards aloud.</div>
+                                    <div class="card" data-toggle="tooltip" title="Lady Blackbird is a Stormblood sorcerer from the Imperial Worlds. The House of Blackbird was rewarded with wealth and status by the Empress for years of loyal service to the Empire.">Lady Blackbird is a Stormblood sorcerer from the Imperial Worlds. The House of Blackbird was rewarded with wealth and status by the Empress for years of loyal service to the Empire.</div>
+                                    <div class="card" data-toggle="tooltip" title="However, she turned her back on all of it when she fled on the day of her wedding.">However, she turned her back on all of it when she fled on the day of her wedding.</div>
+                                    <div class="card" data-toggle="tooltip" title="She hired a crew of smugglers to take her on her soul-searching journey, but with an uncertain end.">She hired a crew of smugglers to take her on her soul-searching journey, but with an uncertain end.</div>
+                                    <div class="card" data-toggle="tooltip" title="Wealth and status can no longer assist her as she ventures further from home.">Wealth and status can no longer assist her as she ventures further from home.</div>
+                                    <div class="card" data-toggle="tooltip" title="Perhaps you can help her find what she is looking for.">Perhaps you can help her find what she is looking for.</div>
+                                    <div class="card" data-toggle="tooltip" title="When at last she looks to you for guidance, what do you say to her?">When at last she looks to you for guidance, what do you say to her?</div>
+                                    <div class="card" data-toggle="tooltip" title="Decide on a play order, then the first player will start with the first prompt card.">Decide on a play order, then the first player will start with the first prompt card.</div>
+                                    <div class="card" data-toggle="tooltip" title="Pick an approximate session length to begin the game. (Or load a custom deck with a specific number of cards.)">Pick an approximate session length to begin the game. (Or load a custom deck with a specific number of cards.)</div>
+                                    <div class="card" data-toggle="tooltip" title="Take turns reading the questions out loud. Interpret these questions, and answer them however you wish.">Take turns reading the questions out loud. Interpret these questions, and answer them however you wish.</div>
+                                    <div class="card" data-toggle="tooltip" title="Other players may ask you questions or make suggestions on your turn, but it is optional whether you answer them and/or incorporate the suggestions.">Other players may ask you questions or make suggestions on your turn, but it is optional whether you answer them and/or incorporate the suggestions.</div>
+                                    <div class="card" data-toggle="tooltip" title="If you encounter a card, or an answer, that you do not want to be included in the game, use your preferred safe play method (such as X-Card or Script Change) to notify the group, then have that content removed from the game.">If you encounter a card, or an answer, that you do not want to be included in the game, use your preferred safe play method (such as X-Card or Script Change) to notify the group, then have that content removed from the game.</div>
+                                    <div class="card" data-toggle="tooltip" title="If you draw a card that is removed this way by yourself or someone else, another prompt will be shown to you.">If you draw a card that is removed this way by yourself or someone else, another prompt will be shown to you.</div>
+                                    <div class="card" data-toggle="tooltip" title="You can also pass on your turn. To do so, pass the prompt card to the next player, and say: &ldquo;I'd like to hear your answer to this question.&rdquo;">You can also pass on your turn. To do so, pass the prompt card to the next player, and say: "I'd like to hear your answer to this question."</div>
+                                    <div class="card" data-toggle="tooltip" title="A prompt card can be passed around until someone chooses to remove it from the game.">A prompt card can be passed around until someone chooses to remove it from the game.</div>
+                                    <div class="card" data-toggle="tooltip" title="Continue answering, passing, and removing questions until the &ldquo;Lady Blackbird looks to you for guidance&rdquo; card (or a custom ending card) is drawn.">Continue answering, passing, and removing questions until the "Lady Blackbird looks to you for guidance" card (or a custom ending card) is drawn.</div>
+                                    <div class="card" data-toggle="tooltip" title="Each player should respond to that prompt in turn. Then, the game is over.">Each player should respond to that prompt in turn. Then, the game is over.</div>
                                 </div>
 
                             </div>
@@ -287,6 +294,7 @@
         // prep element effects
         //dragElement(document.getElementById("scratchpadArea"));
         dragElement(document.getElementById("imageviewbox"));
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'click', html: true, placement: 'auto' });
 
         function initGameData() {
             gamedata = {};
