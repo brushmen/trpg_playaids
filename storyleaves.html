@@ -597,8 +597,16 @@
             JSONtoGame(JSON.parse(json));
             // hide the loadbox
             $('#loadbox').hide();
+            updateGame();
+        });
 
-            updateFields();
+        $('#deckbox button[type=submit]').click(function(e) {
+            e.preventDefault();
+            var deck = $('#deckboxtext').val();
+            inputDeck(deck);
+            // hide the loadbox
+            $('#deckbox').hide();
+            updateGame();
         });
 
         function saveJSON() {
@@ -611,7 +619,7 @@
             if(confirm('Clear all fields?')) {
                 clearFields();
                 newSetup();
-                updateFields();
+                updateGame();
             }
         }
 
@@ -631,7 +639,7 @@
             return gameJSON;
         }
 
-        function updateFields() {
+        function updateGame() {
             $('#notes').val(gamedata['notes']);
         }
 
@@ -2119,17 +2127,14 @@
             }
 
             if (passCheck) {
-                gamedata['cards'] = list;
+                gamedata['cards'] = lines;
                 newSetup();
                 updateTable();
-
-                // hide link and clear textarea
-                $("#notes").html("");
-                $("#notes").attr("placeholder","premise, goals, story");
             }
             else {
                 alert("Please double-check if all cards are formatted correctly.");
             }
+            $('#deckbox').hide();
         }
 
         function cardFormatOK(card) {
@@ -2143,15 +2148,6 @@
             }
             return result;
         }
-
-        $('#deckbox button[type=submit]').click(function(e) {
-            e.preventDefault();
-            var deck = $('#deckboxtext').val();
-            inputDeck(deck);
-            // hide the loadbox
-            $('#deckbox').hide();
-            updateGame();
-        });
     </script>
 </body>
 </html>
