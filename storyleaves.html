@@ -124,7 +124,7 @@
         <h5 class="card-header">load JSON content</h5>
         <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
         <textarea id="loadboxjson" placeholder="JSON only"></textarea>
-        <button type="submit" class="btn btn-sm btn-warning">load</button>
+        <button type="submit" class="btn btn-sm btn-warning btn-block">load</button>
     </div>
     <div id="deckbox" style="display: none" class="card shadow">
         <h5 class="card-header">custom deck</h5>
@@ -170,9 +170,13 @@
                     <div class="row">
 
                         <div id="c1" class="col-2 full-height">
-                            <div class="btn-group input-group">
-                                <button id="deck" class="form-control btn btn-sm btn-outline-dark btn" onclick="setFocus('deck')">deck (100)</button>
-                                <button id="discard" class="form-control btn btn-sm btn-outline-dark text-muted">discarded (0)</button>
+                            <div class="row">
+                                <div class="col">
+                                    <div id="deck" style="border: 1px solid black; padding: 5px" class="text-center" onclick="setFocus('deck')">deck (100)</div>
+                                </div>
+                                <div class="col">
+                                    <div id="discard" style="border: 1px solid black; padding: 5px" class="text-center text-muted">discarded</div>
+                                </div>
                             </div>
                             <div class="btn-group-vertical" style="width: 100%; margin-top: 10px">
                                 <button id="protagonist" class="btn btn-sm btn-outline-dark" onclick="setFocus('protagonist')"><span class="text-primary">protagonist</span></button>
