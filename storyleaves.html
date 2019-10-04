@@ -1,0 +1,2153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Storyleaves</title>
+    <meta name="description" content="a solo tabletop roleplaying game playaid built with Javascript">
+    <meta name="author" content="brushmen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/common.css">
+
+    <!-- custom CSS -->
+    <style>
+    body {
+        background-color: rgb(220, 217, 205);
+        font-family: tahoma, sans-serif;
+    }
+
+    select {
+        background-color: Gainsboro !important;
+    }
+
+    .tooltip > .tooltip-inner{
+        background: Gainsboro;
+        color: #000;
+        max-width: 800px;
+        max-height: 700px;
+        font-size: 2em;
+    }
+
+    #c1, #c2, #c3 {
+        position: relative;
+    }
+
+    #progress {
+        color: green;
+    }
+    #conditions {
+        color: red;
+    }
+
+    .active {
+        background-color: yellow;
+    }
+    .focus {
+        color: red;
+    }
+
+    #table {
+        height: 300px;
+        overflow: auto;
+        border: 1px outset aliceblue;
+    }
+
+    #hand {
+        height: 100px;
+        overflow: auto;
+    }
+
+    #deck, #discard {
+        font-size: 0.7em;
+    }
+
+    #gamelog {
+        height: 200px;
+        overflow: auto;
+        border: 1px solid green;
+        font-size: 0.7em;
+    }
+
+    #commonArea {
+        width: 11.1em;
+    }
+
+    #infoArea {
+        font-size: 13pt;
+        margin: 5px -13px;
+        padding-left: 3px;
+        height: 230px;
+        overflow: auto;
+    }
+
+    #notesArea {
+        margin: 5px -13px;
+        padding-left: 3px;
+    }
+    #notes {
+        height: 400px;
+    }
+
+    #deckbox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        font-size: 1em;
+        min-width: 800px;
+        max-width: 1200px;
+    }
+    #deckboxtext {
+        height: 400px;
+    }
+
+    .card {
+        text-align: center;
+        display: inline-block;
+        width: 6em;
+        margin: 0.5em;
+        border: 1px solid black;
+        font-size: 0.6em;
+    }
+    .card:active {
+        background-color: yellow;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- hovering panels -->
+    <div id="loadbox" style="display: none" class="card shadow">
+        <h5 class="card-header">load JSON content</h5>
+        <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
+        <textarea id="loadboxjson" placeholder="JSON only"></textarea>
+        <button type="submit" class="btn btn-sm btn-warning">load</button>
+    </div>
+    <div id="deckbox" style="display: none" class="card shadow">
+        <h5 class="card-header">custom deck</h5>
+        <div class="topRightClick" onclick="$('#deckbox').hide();">hide</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-5">
+                    character: person 1<br>
+                    character: person 2<br>
+                    place: location<br>
+                    event: event 1<br>
+                    event: event 2<br>
+                    item: thing 1<br>
+                    item: thing 2<br>
+                    item: thing 3<br>
+                    aspect: aspect<br>
+                    detail: detail
+                </div>
+                <div class="col-7">
+                    <textarea id="deckboxtext" class="form-control form-control-sm" placeholder="paste in list of cards, see left-side formatting example"></textarea>
+                    <button type="submit" class="form-control btn btn-sm btn-warning btn-block">load</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- right side menu buttons, leave space in between for TogetherJS bar. add/remove buttons as applicable -->
+    <div id="menubuttons" class="btn-group-vertical shadow">
+        <button id="togetherjsbutton" class="btn btn-sm btn-outline-dark" onclick="TogetherJS(this); return false;" title="start TogetherJS to collaborate with friends">👥</button>
+        <button id="loaddeckbutton" class="btn btn-sm btn-outline-dark" onclick="$('#deckbox').toggle();" title="load a custom list of cards">🂠</button>
+        <button id="loadjsonbutton" class="btn btn-sm btn-outline-dark" onclick="loadJSON(); return false;" title="load a JSON file of the game content">📂</button>
+        <button id="savejsonbutton" class="btn btn-sm btn-outline-dark" onclick="saveJSON(); return false;" title="save current game content to a JSON file to download">💾</button>
+
+    </div>
+    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark shadow" onclick="newGame(); return false;" title="clear fields, start over">🗑</button>
+
+    <!-- main content -->
+    <div class="container-fluid">
+
+        <div id="gameArea">
+            <div class="row full-height">
+                <div class="col justify-content-center align-self-center">
+                    <div class="row">
+
+                        <div id="c1" class="col-2 full-height">
+                            <div class="btn-group input-group">
+                                <button id="deck" class="form-control btn btn-sm btn-outline-dark btn" onclick="setFocus('deck')">deck (100)</button>
+                                <button id="discard" class="form-control btn btn-sm btn-outline-dark text-muted">discarded (0)</button>
+                            </div>
+                            <div class="btn-group-vertical" style="width: 100%; margin-top: 10px">
+                                <button id="protagonist" class="btn btn-sm btn-outline-dark" onclick="setFocus('protagonist')"><span class="text-primary">protagonist</span></button>
+                                <button id="beloved" class="btn btn-sm btn-outline-dark" onclick="setFocus('beloved')"><span class="text-primary">beloved</span></button>
+                                <button id="antagonist" class="btn btn-sm btn-outline-dark" onclick="setFocus('antagonist')"><span class="text-primary">antagonist</span></button>
+                            </div>
+                            <button id="finishsetup" class="btn btn-sm btn-success" style="margin-top: 10px; display: none" onclick="play()">Finish Setup, Start Playing</button>
+                            <div class="btn-group-vertical">
+                                <button id="gameover" class="btn btn-sm btn-warning" style="display: none" onclick="window.location.reload()">Game Over, Restart</button>
+                                <button id="waitandsee" class="btn btn-sm btn-primary" style="display: none" onclick="waitAndSee()">Wait And See</button>
+                                <button id="pursuegoal" class="btn btn-sm btn-primary" style="display: none" onclick="pursueGoal()">Pursue Goal</button>
+                                <button id="playfromdeck" class="btn btn-sm btn-primary" style="display: none" onclick="playFromDeck()">Play From Deck</button>
+                                <button id="sacrificeresource" class="btn btn-sm btn-primary" style="display: none" onclick="sacrificeResource()">Sacrifice Resource</button>
+                                <button id="reversecondition" class="btn btn-sm btn-primary" style="display: none" onclick="reverseCondition()">Reverse Condition</button>
+                                <button id="attackantagonist" class="btn btn-sm btn-primary" style="display: none" onclick="attackAntagonist()">Attack Antagonist</button>
+                                <button id="givein" class="btn btn-sm btn-primary" style="display: none" onclick="giveIn()">Give In</button>
+                            </div>
+                        </div>
+
+                        <div id="c2" class="col-7 full-height">
+                            <div class="row">
+                                <div class="btn-group">
+                                    <button id="pfacet" class="btn btn-sm btn-outline-dark" onclick="setFocus('pfacet')"><span class="text-primary">protagonist facet</span></button>
+                                    <button id="bfacet" class="btn btn-sm btn-outline-dark" onclick="setFocus('bfacet')"><span class="text-primary">beloved facet</span></button>
+                                    <button id="pbshared" class="btn btn-sm btn-outline-dark" onclick="setFocus('pbshared')"><span class="text-primary">shared between P/B</span></button>
+                                    <button id="afacet" class="btn btn-sm btn-outline-dark" onclick="setFocus('afacet')"><span class="text-primary">antagonist facet</span></button>
+                                    <button id="apshared" class="btn btn-sm btn-outline-dark" onclick="setFocus('apshared')"><span class="text-primary">shared between A/P</span></button>
+                                    <button id="abshared" class="btn btn-sm btn-outline-dark" onclick="setFocus('abshared')"><span class="text-primary">shared between A/B</span></button>
+                                </div>
+                            </div>
+                            <div id="table" class="row"></div>
+                            <div id="hand" class="row"></div>
+                            <div id="gamelog" class="row text-muted"></div>
+                        </div>
+
+                        <div id="c3" class="col-3 full-height">
+                            <div id="commonArea">
+                                <div class="row">
+                                    <select id="infolist" name="infolist" class="form-control form-control-sm">
+                                        <option value="" disabled="disabled" selected="selected">Storyleaves</option>
+
+                                    </select>
+                                </div>
+
+                                <div id="infoArea">
+                                    <p>A way to make a little story, about the size of a story-poem, or a fairy tale, or the summary of a TV episode ... in an hour or so. It might have a sad ending ... it might have a happy ending ... you won’t know until you play.</p>
+                                    <p><a href="http://gamedevblog.typepad.com/Storyleaves.pdf" target="new">Storyleaves</a> is by Jamie Fristrom.</p>
+                                </div>
+                                <div id="notesArea">
+                                    <textarea id="notes" class="form-control form-control-sm" placeholder="premise, goals, story"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap template script includes -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/common.js"></script>
+
+    <!-- TogetherJS config and library -->
+    <script>
+    TogetherJSConfig_autoStart  = false;
+    TogetherJSConfig_siteName = "Storyleaves";
+    TogetherJSConfig_dontShowClicks = true;
+    TogetherJSConfig_suppressJoinConfirmation = true;
+    TogetherJSConfig_suppressInvite = true;
+    //use this in single-page apps where being at the same base URL
+    //doesn’t mean the two people are looking at the same thing.
+    TogetherJSConfig_includeHashInUrl = true;
+    TogetherJSConfig_disableWebRTC = true;
+    </script>
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+
+    <!-- other Javascript code -->
+    <script>
+        var gamehandle = 'storyleaves';
+        var gamedata = {};
+        var infotext = {};
+
+        ////  CARDS FOR THE STORY DECK ///////////
+        gamedata['cards'] = [
+            "character: brother",
+            "character: sister",
+            "character: father",
+            "character: mother",
+            "character: grandmother",
+            "character: grandfather",
+            "character: granddaughter",
+            "character: grandson",
+            "character: daughter",
+            "character: son",
+            "character: uncle",
+            "character: aunt",
+            "character: cousin",
+            "character: best friend",
+            "character: confidant",
+            "character: classmate",
+            "character: lover",
+            "character: neighbor",
+            "character: civilian",
+            "character: refugee",
+            "character: doctor",
+            "character: soldier",
+            "character: cook",
+            "character: farmer",
+            "character: artist",
+            "character: writer",
+            "character: captain",
+            "character: mercenary",
+            "character: smuggler",
+            "character: laborer",
+            "character: guard",
+            "character: bodyguard",
+            "character: entertainer",
+            "character: street performer",
+            "character: actor",
+            "character: singer",
+            "character: danger",
+            "character: musician",
+            "character: poet",
+            "character: trader",
+            "character: hunter",
+            "character: bounty-hunter",
+            "character: scout",
+            "character: messenger",
+            "character: spy",
+            "character: prisoner",
+            "character: con-artist",
+            "character: detective",
+            "character: judge",
+            "character: marketer",
+            "character: journalist",
+            "character: courier",
+            "character: warlord",
+            "character: diplomat",
+            "character: politician",
+            "character: scholar",
+            "character: law-keeper",
+            "character: custodian",
+            "character: miner",
+            "character: secretary",
+            "character: governor",
+            "character: inspector",
+            "character: assassin",
+            "character: subordinate",
+            "character: prostitute",
+            "place: home",
+            "place: jail",
+            "place: docks",
+            "place: barrack",
+            "place: hospital",
+            "place: restaurant",
+            "place: inn",
+            "place: theater",
+            "event: birth",
+            "event: death",
+            "event: marriage",
+            "event: injury",
+            "event: illness",
+            "event: hijack",
+            "event: stage show",
+            "event: negotiation",
+            "event: inauguration",
+            "event: natural disaster",
+            "event: invention",
+            "event: invasion",
+            "event: date",
+            "event: duel",
+            "event: battle",
+            "event: ambush",
+            "event: sacrifice",
+            "event: surgery",
+            "event: interrogation",
+            "event: explosion",
+            "event: competition",
+            "event: celebration",
+            "event: betrayal",
+            "event: robbery",
+            "event: trauma",
+            "item: weapon",
+            "item: treasure",
+            "item: gift",
+            "item: drug",
+            "item: alcohol",
+            "item: painting",
+            "item: book",
+            "item: map",
+            "item: letter",
+            "item: mask",
+            "item: heirloom",
+            "aspect: strong",
+            "aspect: fast",
+            "aspect: smart",
+            "aspect: wise",
+            "aspect: nimble",
+            "aspect: beautiful",
+            "aspect: charming",
+            "aspect: loving",
+            "aspect: mad",
+            "aspect: logical",
+            "aspect: cheerful",
+            "aspect: stubborn",
+            "aspect: inhuman",
+            "aspect: loyal",
+            "aspect: disabled",
+            "aspect: friendless",
+            "aspect: paranoid",
+            "aspect: greedy",
+            "aspect: arrogant",
+            "aspect: lascivious",
+            "aspect: abrasive",
+            "aspect: noisy",
+            "aspect: reserved",
+            "aspect: detached",
+            "aspect: anxious",
+            "aspect: depressed",
+            "aspect: awkward",
+            "aspect: austere",
+            "aspect: authoritative",
+            "aspect: careless",
+            "aspect: bossy",
+            "aspect: vindictive",
+            "aspect: classy",
+            "aspect: clumsy",
+            "aspect: combative",
+            "aspect: controlling",
+            "aspect: cowardly",
+            "aspect: ambitious",
+            "aspect: ambivalent",
+            "aspect: honorable",
+            "aspect: honest",
+            "aspect: decisive",
+            "aspect: extreme",
+            "aspect: fierce",
+            "aspect: flirty",
+            "aspect: forgiving",
+            "aspect: glamorous",
+            "aspect: gregarious",
+            "aspect: guilty",
+            "aspect: hateful",
+            "aspect: hostile",
+            "aspect: humble",
+            "aspect: immature",
+            "aspect: incompetent",
+            "aspect: industrious",
+            "aspect: intimidating",
+            "aspect: insightful",
+            "aspect: intense",
+            "aspect: intellectual",
+            "aspect: introspective",
+            "aspect: jaded",
+            "aspect: jittery",
+            "aspect: keen",
+            "aspect: malicious",
+            "aspect: manipulative",
+            "aspect: mercurial",
+            "aspect: mischievous",
+            "aspect: optimistic",
+            "aspect: pessimistic",
+            "aspect: ostentatious",
+            "aspect: quixotic",
+            "aspect: scarred",
+            "aspect: adopted",
+            "aspect: secretive",
+            "aspect: underhanded",
+            "aspect: shadowy",
+            "aspect: shady",
+            "aspect: scheming",
+            "aspect: ex",
+            "aspect: nemesis",
+            "aspect: superior",
+            "aspect: inferior",
+            "aspect: patron",
+            "detail: dripping blood",
+            "detail: suicide",
+            "detail: homocide",
+            "detail: artificial limb",
+            "detail: medicine"
+        ];
+
+        var num_of_reshuffle_cards = Math.ceil(gamedata['cards'].length / 18);
+
+        var table = new Array();
+        var resources = new Array();
+        var discard = new Array();
+        var hand = new Array();
+
+        var phase = "setup";
+        var roundnumber = 0;
+        var focus = "";
+        var protagonist = "";
+        var beloved = "";
+        var antagonist = "";
+        var pfacet = "";
+        var bfacet = "";
+        var pbshared = "";
+        var afacet = "";
+        var apshared = "";
+        var abshared = "";
+
+        var color = "black";
+        var goalProgress = 0;
+        var goalMax = 3;
+        var conditions = 0;
+        var conditionMax = 3;
+        var protagMove = "";
+        var protagCard = "";
+        var protagCardValue = 0;
+        var antagCard = "";
+        var antagCardValue = 0;
+        var antagAttacked = false;
+        var attackCardPicked = false;
+        var targetCardPicked = false;
+
+        newSetup();
+
+        function newSetup() {
+            num_of_reshuffle_cards = Math.ceil(gamedata['cards'].length / 18);
+            table = new Array();
+            resources = new Array();
+            discard = new Array();
+            hand = new Array();
+
+            phase = "setup";
+            roundnumber = 0;
+            focus = "";
+            protagonist = "";
+            beloved = "";
+            antagonist = "";
+            pfacet = "";
+            bfacet = "";
+            pbshared = "";
+            afacet = "";
+            apshared = "";
+            abshared = "";
+
+            color = "black";
+            goalProgress = 0;
+            conditions = 0;
+            protagMove = "";
+            protagCard = "";
+            protagCardValue = 0;
+            antagCard = "";
+            antagCardValue = 0;
+            antagAttacked = false;
+            attackCardPicked = false;
+            targetCardPicked = false;
+
+            // step 0: prepare the initial deck
+
+            gamedata['cards'] = shuffle(gamedata['cards']);
+
+            // give each card a value
+            for (var c = 0; c < gamedata['cards'].length; c++) {
+                gamedata['cards'][c] = gamedata['cards'][c] + " (" + (c+1) + ")";
+            }
+
+            // reshuffle again to keep things different each time
+            gamedata['cards'] = shuffle(gamedata['cards']);
+
+            // step 1: draw from deck until 5 character cards drawn,
+            // but make sure at least 6 resources cards are drawn as well
+
+            var num_of_character_cards = 0;
+            var num_of_cards = 0;
+
+            for (var i = 0; i < gamedata['cards'].length; i++) {
+
+                var card = gamedata['cards'].shift();
+                table.push(card);
+
+                if (card.search("character") == 0) {
+                    num_of_character_cards += 1;
+                }
+
+                num_of_cards += 1;
+
+                if (num_of_character_cards >= 5 &&
+                    num_of_cards >= 16) {
+                    break;
+                }
+            }
+        }
+
+        $('[data-toggle="tooltip"]').tooltip({
+            html: true,
+            placement: 'auto'
+        });
+
+        updateTable();
+
+        var x = document.getElementById("gameArea");
+        if (x.addEventListener) {
+            // For all major browsers, except IE 8 and earlier
+            x.addEventListener("click", setupListener);
+        } else if (x.attachEvent) {
+            // For IE 8 and earlier versions
+            x.attachEvent("onclick", setupListener);
+        }
+
+        function loadJSON() {
+            $('#loadbox').toggle();
+        }
+
+        $('#loadbox button[type=submit]').click(function(e) {
+            e.preventDefault();
+            var json = $('#loadboxjson').val();
+            JSONtoGame(JSON.parse(json));
+            // hide the loadbox
+            $('#loadbox').hide();
+
+            updateFields();
+        });
+
+        function saveJSON() {
+            var filename = gamehandle + getTodayString() + '.json';
+            // generate the file to download locally
+            download(filename, GametoJSON());
+        }
+
+        function newGame() {
+            if(confirm('Clear all fields?')) {
+                clearFields();
+                newSetup();
+                updateFields();
+            }
+        }
+
+        function JSONtoGame(obj) {
+            if (obj) {
+                gamedata = obj[gamehandle];
+            }
+        }
+
+        function GametoJSON() {
+            gamedata['notes'] = $('#notes').val();
+            var gameJSON = {};
+            if (gamedata) {
+                gameJSON[gamehandle] = gamedata;
+                gameJSON = JSON.stringify(gameJSON, null, "\t");
+            }
+            return gameJSON;
+        }
+
+        function updateFields() {
+
+        }
+
+        //////// UI INTERACTION /////////////
+
+        function updateTable() {
+            var html = '';
+
+            for (var i = 0; i < table.length; i++) {
+
+                card = table[i];
+                if (cardType(card) == "character") {
+                    color = "black";
+                }
+                else if (cardType(card) == "place") {
+                    color = "green";
+                }
+                else if (cardType(card) == "event") {
+                    color = "red";
+                }
+                else if (cardType(card) == "item") {
+                    color = "blue";
+                }
+                else if (cardType(card) == "aspect") {
+                    color = "purple";
+                }
+                else if (cardType(card) == "detail") {
+                    color = "orange";
+                }
+
+                html += '<div class="card" style="color: ' + color + '" onclick="pickCard(\'' + card + '\')">' + card + '</div>';
+                $('#table').html(html);
+            }
+        }
+
+        function updateDeck() {
+            var html = 'deck (' + gamedata['cards'].length + ")";
+            $('#deck').html(html);
+        }
+
+        function updateHand() {
+            var html = 'hand: ';
+            for (var i = 0; i < hand.length; i++) {
+                html += '<div class="card" onclick=\"pickCard(\"' + hand[i] + '\")">' + hand[i] + '</div>';
+            }
+            $('#hand').html(html);
+        }
+
+        function updateDiscard() {
+            var html = 'discarded';
+            var last = discard[discard.length - 1];
+            if (last) { // if not empty
+                html += "<br>" + last;
+            }
+            $('#discard').html(html);
+        }
+
+        function updateProtagonist() {
+            var html = '<span class="text-primary">protagonist</span>';
+            if (phase == "setup") {
+                if (protagonist) {
+                    html += '<div class="card" onclick="pickCard(\"' + protagonist + '\")">' + protagonist + '</div>';
+                }
+            }
+            else if (phase == "play") {
+                $('#protagonist').prop('disabled', true);
+                html += "<br>" + cardDesc(protagonist);
+                html += '<div id="progress">' + goalProgress + '/' + goalMax + 'progress</div><div id="conditions">' + conditions + '/' + conditionMax + ' conditions</div>';
+            }
+            $('#protagonist').html(html);
+        }
+
+        function updateBeloved() {
+            var html = '<span class="text-primary">beloved</span>';
+
+            if (phase == "setup") {
+                if (beloved) {
+                    html += '<div class="card" onclick="pickCard(\"' + beloved + '\")">' + beloved + '</div>';
+                }
+            }
+            else if (phase == "play") {
+                $('#beloved').prop('disabled', true);
+                if (beloved) {
+                    html += "<br>" + cardDesc(beloved);
+                }
+            }
+            $('#beloved').html(html);
+        }
+
+        function updateAntagonist() {
+            var html = '<span class="text-primary">antagonist</span>';
+
+            if (phase == "setup") {
+                if (antagonist) {
+                    html += '<div class="card" onclick="pickCard(\"' + antagonist + '\")">' + antagonist + '</div>';
+                }
+            }
+            else if (phase == "play") {
+                $('#antagonist').prop('disabled', true);
+                html += "<br>" + cardDesc(antagonist);
+            }
+            $('#antagonist').html(html);
+        }
+
+        function updatePFacet() {
+            var html = '<span class="text-primary">protagonist facet</span>';
+            if (pfacet) {
+                html += '<div class="card" onclick="pickCard(\"' + pfacet + '\")">' + pfacet + '</div>';
+            }
+            $('#pfacet').html(html);
+        }
+
+        function updateBFacet() {
+            var html = '<span class="text-primary">beloved facet</span>';
+            if (bfacet) {
+                html += '<div class="card" onclick="pickCard(\"' + bfacet + '\")">' + bfacet + '</div>';
+            }
+            $('#bfacet').html(html);
+        }
+
+        function updatePBShared() {
+            var html = '<span class="text-primary">shared between P/B</span>';
+            if (pbshared) {
+                html += '<div class="card" onclick="pickCard(\"' + pbshared + '\")">' + pbshared + '</div>';
+            }
+            $('#pbshared').html(html);
+        }
+
+        function updateAFacet() {
+            var html = '<span class="text-primary">antgonist facet</span>';
+            if (afacet) {
+                html += '<div class="card" onclick="pickCard(\"' + afacet + '\")">' + afacet + '</div>';
+            }
+            $('#afacet').html(html);
+        }
+
+        function updateAPShared() {
+            var html = '<span class="text-primary">shared between A/P</span>';
+            if (apshared) {
+                html += '<div class="card" onclick="pickCard(\"' + apshared + '\")">' + apshared + '</div>';
+            }
+            $('#apshared').html(html);
+        }
+
+        function updateABShared() {
+            var html = '<span class="text-primary">shared between A/B</span>';
+            if (abshared) {
+                html += '<div class="card" onclick="pickCard(\"' + abshared + '\")">' + abshared + '</div>';
+            }
+            $('#abshared').html(html);
+        }
+
+        function updateHint(text) {
+            var old = document.getElementById("gamelog").innerHTML;
+            document.getElementById("gamelog").innerHTML = text + "<br>" + old;
+        }
+
+        function enablePlayerTurnButtons(show = true) {
+            var style = "none";
+            if (show) {
+                style = "inline";
+            }
+
+            document.getElementById("waitandsee").style.display = style;
+            document.getElementById("pursuegoal").style.display = style;
+            document.getElementById("sacrificeresource").style.display = style;
+            if (resources.length < 1) {
+                // hide this button if there is no available resource
+                document.getElementById("sacrificeresource").style.display = "none";
+            }
+            document.getElementById("reversecondition").style.display = style;
+            if (conditions == 0) {
+                document.getElementById("reversecondition").style.display = "none";
+            }
+            document.getElementById("attackantagonist").style.display = style;
+            if (antagAttacked) {
+                // hide this button if antagonist was attacked successfully
+                document.getElementById("attackantagonist").style.display = "none";
+            }
+        }
+
+        function enablePlayerResponseButtons(show = true) {
+            var style = "none";
+            if (show) {
+                style = "inline";
+            }
+
+            if (hasLowerResource()) {
+                document.getElementById("sacrificeresource").style.display = style;
+            }
+            document.getElementById("playfromdeck").style.display = style;
+            document.getElementById("givein").style.display = style;
+        }
+
+        //// OTHER FUNCTIONS ///////////////
+
+        function shuffle(array) {
+          var currentIndex = array.length, temporaryValue, randomIndex;
+
+          // While there remain elements to shuffle...
+          while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+          }
+
+          return array;
+        }
+
+        function reshuffle() {
+            updateHint("note: RESHUFFLE card was drawn, discarded cards will return to the deck");
+
+            // shuffle discard pile back into deck
+            gamedata['cards'] = gamedata['cards'].concat(discard);
+            discard = new Array();
+
+            // shuffle
+            gamedata['cards'] = shuffle(gamedata['cards']);
+        }
+
+        function setFocus(variable) {
+            var hint_choose_char = "Hint: select or unselect a character for ";
+
+            switch(variable) {
+                case "protagonist":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " " + variable);
+                    }
+                    break;
+                case "beloved":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " " + variable);
+                    }
+                    break;
+                case "antagonist":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " " + variable);
+                    }
+                    break;
+                case "pfacet":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " " + " protagonist's facet");
+                    }
+                    break;
+                case "bfacet":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " " + " beloved's facet");
+                    }
+                    break;
+                case "pbshared":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " facet shared between protagonist and beloved");
+                    }
+                    break;
+                case "afacet":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " antagonist's facet");
+                    }
+                    break;
+                case "apshared":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " facet shared between antagonist and protagonist");
+                    }
+                    break;
+                case "abshared":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateHint(hint_choose_char + " facet shared between antagonist and beloved");
+                    }
+                    break;
+                case "deck":
+                    focus = variable;
+                    if (phase == "setup") {
+                        updateDeck();
+                    }
+                    break;
+                case "pursue":
+                    focus = variable;
+                    break;
+                case "sacrifice":
+                    focus = variable;
+                    break;
+                case "attack":
+                    focus = variable;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function pickCard(card) {
+            var hint_characterplease = "Hint: pick a character type card please";
+            var hint_pickfreecard = "Hint: pick a card that's not already associated please";
+
+            if (phase == "setup") {
+
+                if (focus == "protagonist") {
+
+                    // make sure card is of character type
+
+                    if (cardType(card) == "character") {
+
+                        if (protagonist == card) {
+                            // unselecting the character card
+                            moveCard(card, focus, "table");
+                        }
+
+                        else {
+                            // choose from cards on the table
+                            if (table.includes(card)) {
+                                if (protagonist == "") {
+                                    moveCard(card, "table", focus);
+                                }
+                                else { // replace existing choice
+                                    moveCard(protagonist, focus, "table");
+                                    moveCard(card, "table", focus);
+                                }
+                            }
+                            else {
+                                updateHint(hint_pickfreecard);
+                            }
+                        }
+
+                    }
+
+                    else {
+                        updateHint(hint_characterplease);
+                    }
+                }
+
+                else if (focus == "beloved") {
+
+                    // make sure card is of character type
+                    if (cardType(card) == "character") {
+
+                        if (beloved == card) {
+                            // unselecting the character card
+                            moveCard(card, focus, "table");
+                        }
+
+                        else {
+                            // choose from cards on the table
+                            if (table.includes(card)) {
+                                if (beloved == "") {
+                                    moveCard(card, "table", focus);
+                                }
+                                else { // replace existing choice
+                                    moveCard(beloved, focus, "table");
+                                    moveCard(card, "table", focus);
+                                }
+                            }
+                            else {
+                                updateHint(hint_pickfreecard);
+                            }
+                        }
+                    }
+                    else {
+                        updateHint(hint_characterplease);
+                    }
+                }
+
+                else if (focus == "antagonist") {
+                    // make sure card is of character type
+
+                    if (cardType(card) == "character") {
+
+                        if (antagonist == card) {
+                            // unselecting the character card
+                            moveCard(card, focus, "table");
+                        }
+
+                        else {
+                            // choose from cards on the table
+                            if (table.includes(card)) {
+                                if (antagonist == "") {
+                                    moveCard(card, "table", focus);
+                                }
+                                else { // replace existing choice
+                                    moveCard(antagonist, focus, "table");
+                                    moveCard(card, "table", focus);
+                                }
+                            }
+                            else {
+                                updateHint(hint_pickfreecard);
+                            }
+                        }
+                    }
+                    else {
+                        updateHint(hint_characterplease);
+                    }
+                }
+
+                else if (focus == "pfacet") {
+
+                    if (pfacet == card) {
+                        // unselecting the card
+                        moveCard(card, focus, "table");
+                    }
+                    else {
+                        // choose from cards on the table
+                        if (table.includes(card)) {
+                            if (pfacet == "") {
+                                moveCard(card, "table", focus);
+                            }
+                            else { // replace existing choice
+                                moveCard(pfacet, focus, "table");
+                                moveCard(card, "table", focus);
+                            }
+                        }
+                        else {
+                            updateHint(hint_pickfreecard);
+                        }
+                    }
+                }
+
+                else if (focus == "bfacet") {
+                    if (bfacet == card) {
+                        // unselecting the card
+                        moveCard(card, focus, "table");
+                    }
+                    else {
+                        // choose from cards on the table
+                        if (table.includes(card)) {
+                            if (bfacet == "") {
+                                moveCard(card, "table", focus);
+                            }
+                            else { // replace existing choice
+                                moveCard(bfacet, focus, "table");
+                                moveCard(card, "table", focus);
+                            }
+                        }
+                        else {
+                            updateHint(hint_pickfreecard);
+                        }
+                    }
+                }
+
+                else if (focus == "pbshared") {
+
+                    if (pbshared == card) {
+                        // unselecting the card
+                        moveCard(card, focus, "table");
+                    }
+                    else {
+                        // choose from cards on the table
+                        if (table.includes(card)) {
+                            if (pbshared == "") {
+                                moveCard(card, "table", focus);
+                            }
+                            else { // replace existing choice
+                                moveCard(pbshared, focus, "table");
+                                moveCard(card, "table", focus);
+                            }
+                        }
+                        else {
+                            updateHint(hint_pickfreecard);
+                        }
+                    }
+                }
+
+                else if (focus == "afacet") {
+
+                    if (afacet == card) {
+                        // unselecting the card
+                        moveCard(card, focus, "table");
+                    }
+                    else {
+                        // choose from cards on the table
+                        if (table.includes(card)) {
+                            if (afacet == "") {
+                                moveCard(card, "table", focus);
+                            }
+                            else { // replace existing choice
+                                moveCard(afacet, focus, "table");
+                                moveCard(card, "table", focus);
+                            }
+                        }
+                        else {
+                            updateHint(hint_pickfreecard);
+                        }
+                    }
+                }
+
+                else if (focus == "apshared") {
+
+                    if (apshared == card) {
+                        // unselecting the card
+                        moveCard(card, focus, "table");
+                    }
+                    else {
+                        // choose from cards on the table
+                        if (table.includes(card)) {
+                            if (apshared == "") {
+                                moveCard(card, "table", focus);
+                            }
+                            else { // replace existing choice
+                                moveCard(apshared, focus, "table");
+                                moveCard(card, "table", focus);
+                            }
+                        }
+                        else {
+                            updateHint(hint_pickfreecard);
+                        }
+                    }
+                }
+
+                else if (focus == "abshared") {
+
+                    if (abshared == card) {
+                        // unselecting the card
+                        moveCard(card, focus, "table");
+                    }
+                    else {
+                        // choose from cards on the table
+                        if (table.includes(card)) {
+                            if (abshared == "") {
+                                moveCard(card, "table", focus);
+                            }
+                            else { // replace existing choice
+                                moveCard(abshared, focus, "table");
+                                moveCard(card, "table", focus);
+                            }
+                        }
+                        else {
+                            updateHint(hint_pickfreecard);
+                        }
+                    }
+                }
+            }
+            else if (phase == "play") {
+
+                if (protagMove == "wait" && focus != "sacrifice") {
+
+                    // card should be from player's hand
+                    if (hand.includes(card)) {
+                        if (protagCard == "") {
+                            moveCard(card, "hand", "table");
+                            protagCard = card;
+                            protagCardValue = cardValue(card);
+                        }
+
+                        // higher card wins
+                        if (protagCardValue > antagCardValue) {
+                            updateHint("{after wait-and-see} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                            newRound();
+                        }
+                        else {
+                            updateHint("{after wait-and-see} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                            responseTurnSetup();
+                            protagCard = "";
+                        }
+                    }
+                    else {
+                        updateHint("Hint: play cards from your hand or try another option");
+                    }
+                }
+
+                else if (protagMove == "pursue" && focus != "sacrifice") {
+                    // card should be from player's hand
+                    if (hand.includes(card)) {
+                        if (protagCard == "") {
+                            moveCard(card, "hand", "table");
+                            protagCard = card;
+                            protagCardValue = cardValue(card);
+                        }
+
+                        if (antagCard == "") {
+                            antagMove();
+                        }
+
+                        // lower card wins
+                        if (protagCardValue < antagCardValue) {
+                            goalProgress++;
+                            updateProtagonist();
+                            updateHint("{pursue goal} your " + protagCard + " beat " + antagCard + "; gain progress; round " + roundnumber + " ends");
+                            newRound();
+                        }
+                        else { // player may respond
+                            responseTurnSetup();
+                            updateHint("{pursue goal} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                            protagCard = "";
+                        }
+                    }
+                }
+
+                else if (protagMove == "reverse" && focus != "sacrifice") {
+                    // card should be from player's hand
+                    if (hand.includes(card)) {
+                        if (protagCard == "") {
+                            moveCard(card, "hand", "table");
+                            protagCard = card;
+                            protagCardValue = cardValue(card);
+                        }
+
+                        if (antagCard == "") {
+                            antagMove();
+                        }
+
+                        // lower card wins
+                        if (protagCardValue < antagCardValue) {
+                            updateHint("{reverse condition} your " + protagCard + " beat " + antagCard + "; reverse one existing condition narratively but not mechanically; round " + roundnumber + " ends");
+                            newRound();
+                        }
+                        else { // player may respond
+                            responseTurnSetup();
+                            updateHint("{reverse condition} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                            protagCard = "";
+                        }
+                    }
+                }
+
+                else if (protagMove == "sacrifice" && focus == "sacrifice") {
+                    // during sacrifice
+
+                    // pick a card from available resources
+                    var index = resources.indexOf(card);
+                    if (index > -1) {
+                        resources.splice(index, 1);
+                        if (card == pfacet) {
+                            pfacet = "";
+                            updatePFacet();
+                        }
+                        else if (card == bfacet) {
+                            bfacet = "";
+                            updateBFacet();
+                        }
+                        else if (card == pbshared) {
+                            pbshared = "";
+                            updatePBShared();
+                        }
+                        else if (card == afacet) {
+                            afacet = "";
+                            updateAFacet();
+                        }
+                        else if (card == apshared) {
+                            apshared = "";
+                            updateAPShared();
+                        }
+                        else if (card == abshared) {
+                            abshared = "";
+                            updateABShared();
+                        }
+                        // draw 3 cards from deck
+                        for (var i = 0; i < 3; i++) {
+                            moveCard("", "deck", "hand");
+                        }
+                        updateHint("{sacrifice} remove " + card + "; draw 3 cards into hand; now lower card wins");
+                        protagCard = card;
+                        protagCardValue = cardValue(protagCard);
+
+                        if (antagCard == "") {
+                            antagMove();
+                        }
+                        // lower card wins
+                        if (protagCardValue < antagCardValue) {
+                            updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                            newRound();
+                        }
+                        else {
+                            updateHint("{after sacrifice} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                            responseTurnSetup();
+                        }
+
+                    }
+                    else {
+                        updateHint("Hint: this is not available to you to be sacrificed");
+                    }
+
+                }
+                else if (protagMove == "sacrifice") {
+                    // after sacrifice
+
+                    // card should be the one sacrificed
+
+                    // lower card wins
+                    if (protagCardValue < antagCardValue) {
+                        updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        newRound();
+                    }
+                    else {
+                        updateHint("{after sacrifice} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                        responseTurnSetup();
+
+                        if (hand.includes(card)) {
+                            moveCard(card, "hand", "table");
+                            protagCard = card;
+                            protagCardValue = cardValue(card);
+
+                            if (protagCardValue < antagCardValue) {
+                                updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+
+                                antagMove();
+
+                                if (protagCardValue < antagCardValue) {
+                                    updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+
+                                    newRound();
+                                }
+                                else {
+                                    updateHint("{after sacrifice} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                                    responseTurnSetup();
+                                }
+                            }
+                            else {
+                                updateHint("{after sacrifice} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                                responseTurnSetup();
+                            }
+                        }
+                    }
+                }
+
+                else if (protagMove == "attack") {
+                    // pick a card from hand
+
+                    if (hand.includes(card) && !attackCardPicked) {
+                        moveCard(card, "hand", "table");
+                        protagCard = card;
+                        protagCardValue = cardValue(card);
+                        attackCardPicked = true;
+                        updateHint("Hint: pick antagonist's resource to target; higher card wins");
+                    }
+                    if ((card == afacet || card == apshared ||
+                        card == abshared) && !targetCardPicked) {
+                        antagCard = card;
+                        antagCardValue = cardValue(card);
+                        targetCardPicked = true;
+                        updateHint("Hint: pick a card from your hand; higher card wins");
+                    }
+
+                    if (attackCardPicked && targetCardPicked) {
+
+                        // higher card wins
+                        if (protagCardValue > antagCardValue) {
+                            // remove the targeted resource card,
+                            // from play, and the other 2 resources
+                            // becomes usable by the player
+                            if (afacet == antagCard) {
+                                afacet = "";
+                                updateAFacet();
+                                resources.push(apshared);
+                                resources.push(abshared);
+                            }
+                            else if (apshared == antagCard) {
+                                apshared = "";
+                                updateAPShared();
+                                resources.push(afacet);
+                                resources.push(abshared);
+                            }
+                            else if (abshared == antagCard) {
+                                abshared = "";
+                                updateABShared();
+                                resources.push(afacet);
+                                resources.push(apshared);
+                            }
+                            attackCardPicked = false;
+                            targetCardPicked = false;
+                            antagAttacked = true;
+                            updateHint("{attack antagonist} your " + protagCard + " beat " + antagCard + "; you gain antagonist's remaining 2 resources; round " + roundnumber + " ends");
+                            newRound();
+                        }
+                        else {
+                            attackCardPicked = false;
+                            targetCardPicked = false;
+                            responseTurnSetup();
+                            updateHint("{attack antagonist} your " + protagCard + " does not beat " + antagCard + ", how do you respond?");
+                            antagCard = "";
+                        }
+                    }
+                }
+            }
+
+            // after clicking, clear focus
+            focus = "";
+        }
+
+        function moveCard(card, from, to) {
+            var index = 0;
+
+            if (phase == "setup") {
+                if (from == "table" && to == "protagonist") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        protagonist = card;
+                        updateTable();
+                        updateProtagonist();
+                    }
+                }
+
+                else if (from == "protagonist" && to == "table") {
+                    if (protagonist == card) {
+                        protagonist = "";
+                        table.push(card);
+                        updateTable();
+                        updateProtagonist();
+                    }
+                }
+
+                else if (from == "table" && to == "beloved") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        beloved = card;
+                        updateTable();
+                        updateBeloved();
+                    }
+                }
+
+                else if (from == "beloved" && to == "table") {
+                    if (beloved == card) {
+                        beloved = "";
+                        table.push(card);
+                        updateTable();
+                        updateBeloved();
+                    }
+                }
+
+                else if (from == "table" && to == "antagonist") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        antagonist = card;
+                        updateTable();
+                        updateAntagonist();
+                    }
+                }
+
+                else if (from == "antagonist" && to == "table") {
+                    if (antagonist == card) {
+                        antagonist = "";
+                        table.push(card);
+                        updateTable();
+                        updateAntagonist();
+                    }
+                }
+
+                else if (from == "table" && to == "pfacet") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        pfacet = card;
+                        updateTable();
+                        updatePFacet();
+                    }
+                }
+
+                else if (from == "pfacet" && to == "table") {
+                    if (pfacet == card) {
+                        pfacet = "";
+                        table.push(card);
+                        updateTable();
+                        updatePFacet();
+                    }
+                }
+
+                else if (from == "table" && to == "bfacet") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        bfacet = card;
+                        updateTable();
+                        updateBFacet();
+                    }
+                }
+
+                else if (from == "bfacet" && to == "table") {
+                    if (bfacet == card) {
+                        bfacet = "";
+                        table.push(card);
+                        updateTable();
+                        updateBFacet();
+                    }
+                }
+
+                else if (from == "table" && to == "pbshared") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        pbshared = card;
+                        updateTable();
+                        updatePBShared();
+                    }
+                }
+
+                else if (from == "pbshared" && to == "table") {
+                    if (pbshared == card) {
+                        pbshared = "";
+                        table.push(card);
+                        updateTable();
+                        updatePBShared();
+                    }
+                }
+
+                else if (from == "table" && to == "afacet") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        afacet = card;
+                        updateTable();
+                        updateAFacet();
+                    }
+                }
+
+                else if (from == "afacet" && to == "table") {
+                    if (afacet == card) {
+                        afacet = "";
+                        table.push(card);
+                        updateTable();
+                        updateAFacet();
+                    }
+                }
+
+                else if (from == "table" && to == "apshared") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        apshared = card;
+                        updateTable();
+                        updateAPShared();
+                    }
+                }
+
+                else if (from == "apshared" && to == "table") {
+                    if (apshared == card) {
+                        apshared = "";
+                        table.push(card);
+                        updateTable();
+                        updateAPShared();
+                    }
+                }
+
+                else if (from == "table" && to == "abshared") {
+                    index = table.indexOf(card);
+                    if (index > -1) {
+                        table.splice(index, 1);
+                        abshared = card;
+                        updateTable();
+                        updateABShared();
+                    }
+                }
+
+                else if (from == "abshared" && to == "table") {
+                    if (abshared == card) {
+                        abshared = "";
+                        table.push(card);
+                        updateTable();
+                        updateABShared();
+                    }
+                }
+            }
+            else if (phase == "play") {
+
+                if (from == "deck" && to == "hand") {
+
+                    if (gamedata['cards'].length > 0) {
+
+                        while(true) { // loop until a valid card drawn
+
+                            if (gamedata['cards'][0] == "RESHUFFLE") {
+                                reshuffle();
+                            }
+                            else { // only add to hand if not a reshuffle card
+                                card = gamedata['cards'].shift();
+                                hand.push(card);
+                                break;
+                            }
+                        }
+                    }
+                    // update cards display
+                    updateHand();
+                }
+
+                else if (from == "deck" && to == "discard") {
+                    if (gamedata['cards'].length > 0) {
+
+                        while(true) { // loop until a valid card drawn
+
+                            if (gamedata['cards'][0] == "RESHUFFLE") {
+                                reshuffle();
+                            }
+                            else { // only add to hand if not a reshuffle card
+                                card = gamedata['cards'].shift();
+                                discard.push(card);
+                                break;
+                            }
+                        }
+                    }
+                    // update cards display
+                    updateDiscard();
+                }
+
+                else if (from == "deck" && to == "table") {
+                    if (gamedata['cards'].length > 0) {
+                        while(true) { // loop until a valid card drawn
+                            if (gamedata['cards'][0] == "RESHUFFLE") {
+                                reshuffle();
+                            }
+                            else { // only add to hand if not a reshuffle card
+                                card = gamedata['cards'].shift();
+                                table.push(card);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                else if (from == "hand" && to == "table") {
+                    var index = hand.indexOf(card);
+                    if (index > -1) {
+                        hand.splice(index, 1);
+                        table.push(card);
+                        updateHand();
+                        updateTable();
+                    }
+                    else {
+                        updateHint("Hint: you can only play a card from your hand");
+                    }
+                }
+            }
+        }
+
+        function cardType(card) {
+            return card.substring(0, card.indexOf(":")).toLowerCase();
+        }
+
+        function cardDesc(card) {
+            return card.substring(card.indexOf(":")+2, card.indexOf("(")-1);
+        }
+
+        function cardValue(card) {
+            var num = 0;
+            if (card) {
+                num = parseInt(card.substring(card.lastIndexOf("(")+1,card.lastIndexOf(")")));
+            }
+
+            return num;
+        }
+
+        function onlyReshuffleCardsRemain() {
+            var check = true;
+
+            if (gamedata['cards'].length == 0) {
+                check = false;
+            }
+            else {
+
+                for (var i = 0; i < gamedata['cards'].length; i++) {
+                    if (gamedata['cards'][i] != "RESHUFFLE") {
+                        check = false;
+                        break;
+                    }
+                }
+            }
+
+            return check;
+        }
+
+        function hasLowerResource() {
+            var check = false;
+
+            for (var i = 0; i < resources.length; i++) {
+                if (cardValue(resources[i]) < cardValue(antagCard)) {
+                    check = true;
+                    break;
+                }
+            }
+
+            return check;
+        }
+
+        function play() {
+            phase = "play";
+            roundnumber++;
+            updateHint("[round " + roundnumber + "]");
+
+            // finalize resources that player can use
+            // (antagonist resource still remain on table)
+            if (pfacet) {
+                resources.push(pfacet);
+            }
+            if (bfacet) {
+                resources.push(bfacet);
+            }
+            if (pbshared) {
+                resources.push(pbshared);
+            }
+
+            // put non-resource cards back into deck
+
+            if (protagonist) {
+                table.push(protagonist);
+            }
+            if (beloved) {
+                table.push(beloved);
+            }
+            if (antagonist) {
+                table.push(antagonist);
+            }
+            gamedata['cards'] = gamedata['cards'].concat(table);
+            table = new Array();
+            updateTable();
+
+            // add RESHUFFLE cards
+            for (var i = 0; i < num_of_reshuffle_cards; i++) {
+                gamedata['cards'].push("RESHUFFLE");
+            }
+            // shuffle deck
+            gamedata['cards'] = shuffle(gamedata['cards']);
+
+            // then draw a hand of 5 cards
+            for (var i = 0; i < 5; i++) {
+                moveCard("", "deck", "hand");
+            }
+
+            // remove setup listener
+            var x = document.getElementById("gameArea");
+            x.removeEventListener("click", setupListener);
+
+            // add game time listener
+
+            if (x.addEventListener) {
+                // For all major browsers, except IE 8 and earlier
+                x.addEventListener("click", gameOverListener);
+            } else if (x.attachEvent) {
+                // For IE 8 and earlier versions
+                x.attachEvent("onclick", gameOverListener);
+            }
+
+            // update other parts of UI
+            document.getElementById("finishsetup").style.display = "none";
+            document.getElementById("table").style.height = "150px";
+            document.getElementById("discard").style.display = "inline-block";
+            document.getElementById("hand").style.display = "inline-block";
+            updateDeck();
+            updateDiscard();
+            updateProtagonist();
+            updateBeloved();
+            updateAntagonist();
+            enablePlayerTurnButtons();
+            updateHint("Hint: with 5 cards in hand, you can choose the above options");
+        }
+
+        function end() {
+            // remove setup listener
+            var x = document.getElementById("gameArea");
+            x.removeEventListener("click", gameOverListener);
+
+            enablePlayerTurnButtons(false);
+            enablePlayerResponseButtons(false);
+            document.getElementById("gameover").style.display = "inline";
+            phase = "";
+            focus = "";
+        }
+
+        function waitAndSee() {
+            protagMove = "wait";
+            moveCard("","deck","hand");
+            updateHint("{wait and see} draw 1 card into hand");
+            antagMove();
+            responseTurnSetup();
+        }
+
+        function pursueGoal() {
+            var hint = "{pursue goal} select a card to play before antagonist responds; lower card wins";
+            protagMove = "pursue";
+            setFocus("pursue");
+            updateHint(hint);
+        }
+
+        function sacrificeResource() {
+            var hint = "{sacrifice resource} select a resource to sacrifice that doesn't belong to the antagonist";
+            protagMove = "sacrifice";
+            setFocus("sacrifice");
+            updateHint(hint);
+        }
+
+        function reverseCondition() {
+            var hint = "{reverse condition} select a card to play before antagonist responds; lower card wins";
+            protagMove = "reverse";
+            setFocus("reverse");
+            updateHint(hint);
+        }
+
+        function attackAntagonist() {
+            var hint = "{attack antagonist} select a card from your hand, then a resource that belongs to the antagonist; higher card wins";
+            protagMove = "attack";
+            setFocus("attack");
+            updateHint(hint);
+        }
+
+        function playFromDeck() {
+            if (protagCard == "") { // get new card if invalidated
+                moveCard("", "deck", "table");
+                protagCard = table[table.length - 1];
+                protagCardValue = cardValue(protagCard);
+            }
+
+            if (protagMove == "wait") {
+                // higher card wins
+
+                if (protagCardValue > antagCardValue) {
+                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+
+                    // antagonist will respond
+                    antagMove();
+
+                    if (protagCardValue > antagCardValue) {
+                        // round over
+                        updateHint("{after wait-and-see} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        newRound();
+                    }
+                    else {
+                        updateHint("{after wait-and-see} your " + protagCard + " does not beat " + antagCard + "; how do you respond?");
+                        protagCard = "";
+                    }
+                }
+                else {
+                    conditions++;
+                    updateProtagonist();
+                    updateHint("{play from deck} your " + protagCard + " did not beat " + antagCard + "; gain a condition; round " + roundnumber + " ends");
+                    newRound();
+                }
+            }
+            else if (protagMove == "pursue") {
+                // lower card wins
+                if (protagCardValue < antagCardValue) {
+                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+
+                    // antagonist will respond
+                    antagMove();
+
+                    if (protagCardValue < antagCardValue) {
+                        // round over
+                        updateHint("{after pursue goal} your " + protagCard + " beat " + antagCard + "; gain progress; round " + roundnumber + " ends");
+                        goalProgress++;
+                        updateProtagonist();
+                        newRound();
+                    }
+                    else {
+                        updateHint("{after pursue goal} your " + protagCard + " does not beat " + antagCard + "; how do you respond?");
+                        protagCard = "";
+                    }
+                }
+                else {
+                    conditions++;
+                    updateProtagonist();
+                    updateHint("{play from deck} your " + protagCard + " did not beat " + antagCard + "; gain a condition; round " + roundnumber + " ends");
+                    newRound();
+                }
+            }
+
+            else if (protagMove == "reverse") {
+                // lower card wins
+                if (protagCardValue < antagCardValue) {
+                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+
+                    // antagonist will respond
+                    antagMove();
+
+                    if (protagCardValue < antagCardValue) {
+                        // round over
+                        updateHint("{after reverse condition} your " + protagCard + " beat " + antagCard + "; reverse one condition narratively but not mechanically; round " + roundnumber + " ends");
+                        newRound();
+                    }
+                    else {
+                        updateHint("{after reverse condition} your " + protagCard + " does not beat " + antagCard + "; how do you respond?");
+                        protagCard = "";
+                    }
+                }
+                else {
+                    conditions++;
+                    updateProtagonist();
+                    updateHint("{play from deck} your " + protagCard + " did not beat " + antagCard + "; gain a condition; round " + roundnumber + " ends");
+                    newRound();
+                }
+            }
+
+            else if (protagMove == "sacrifice") {
+                // lower card wins
+                if (protagCardValue < antagCardValue) {
+                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                    // antagonist will respond
+                    antagMove();
+
+                    if (protagCardValue < antagCardValue) {
+                        // round over
+                        updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        newRound();
+                    }
+                    else {
+                        updateHint("{after sacrifice} your " + protagCard + " does not beat " + antagCard + "; how do you respond?");
+                        protagCard = "";
+                    }
+                }
+                else {
+                    conditions++;
+                    updateProtagonist();
+                    updateHint("{play from deck} your " + protagCard + " did not beat " + antagCard + "; gain a condition; round " + roundnumber + " ends");
+                    newRound();
+                }
+            }
+            else if (protagMove == "attack") {
+                // higher card wins
+                if (protagCardValue > antagCardValue) {
+                    // remove the targeted resource card,
+                    // from play, and the other 2 resources
+                    // becomes usable by the player
+                    if (afacet == antagCard) {
+                        afacet = "";
+                        updateAFacet();
+                        resources.push(apshared);
+                        resources.push(abshared);
+                    }
+                    else if (apshared == antagCard) {
+                        apshared = "";
+                        updateAPShared();
+                        resources.push(afacet);
+                        resources.push(abshared);
+                    }
+                    else if (abshared == antagCard) {
+                        abshared = "";
+                        updateABShared();
+                        resources.push(afacet);
+                        resources.push(apshared);
+                    }
+                    attackCardPicked = false;
+                    targetCardPicked = false;
+                    antagAttacked = true;
+
+                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                    // antagonist will respond
+                    antagMove();
+
+                    if (protagCardValue > antagCardValue) {
+                        // round over
+                        updateHint("{after attack} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        newRound();
+                    }
+                    else {
+                        updateHint("{after attack} your " + protagCard + " does not beat " + antagCard + "; how do you respond?");
+                        protagCard = "";
+                    }
+
+                }
+                else {
+                    attackCardPicked = false;
+                    targetCardPicked = false;
+                    conditions++;
+                    updateProtagonist();
+                    updateHint("{play from deck} your " + protagCard + " did not beat " + antagCard + "; gain a condition; round " + roundnumber + " ends");
+                    newRound();
+                }
+            }
+        }
+
+        function giveIn() {
+            // gain a condition, but also draw a card
+            conditions++;
+            updateProtagonist();
+            moveCard("","deck","hand");
+            updateHint("{give in} gain a condition and draw 1 card into hand; round " + roundnumber + " ends");
+            newRound();
+        }
+
+        function newRound() {
+            enablePlayerResponseButtons(false);
+            enablePlayerTurnButtons();
+            // clear table
+            discard = discard.concat(table);
+            table = new Array();
+            updateTable();
+            updateDiscard();
+            focus = "";
+            protagMove = "";
+            protagCard = "";
+            antagCard = "";
+
+            if (conditions < conditionMax && goalProgress < goalMax) {
+                // keep counting rounds unless game over
+                roundnumber++;
+                updateHint("[round " + roundnumber + "]");
+            }
+        }
+
+        function responseTurnSetup() {
+            enablePlayerTurnButtons(false);
+            enablePlayerResponseButtons();
+        }
+
+        function antagMove() {
+            var hint = "";
+
+            moveCard("","deck","discard");
+            antagCard = discard[discard.length - 1];
+            antagCardValue = cardValue(antagCard);
+            hint = "{antagonist's move} " + antagCard;
+
+            if (protagMove == "wait" || protagMove == "attack") {
+                hint += "; higher card wins; play from hand or use another option";
+            }
+            else if (protagMove == "pursue" || protagMove == "reverse" ||
+                     protagMove == "sacrifice") {
+                hint += "; lower card wins; play from hand or use another option";
+            }
+
+            updateHint(hint);
+        }
+
+        ////// EVENT LISTENERS /////////////
+
+        function setupListener() {
+            //if all needed elements are decided, offer
+            //option to finish setup
+
+            if (protagonist != "" && beloved != "" && antagonist != "" &&
+                pfacet != "" && bfacet != "" && pbshared != "" &&
+                afacet != "" && apshared != "" && abshared != "") {
+
+                document.getElementById("finishsetup").style.display = "inline";
+            }
+
+            else { // otherwise hide that option
+                document.getElementById("finishsetup").style.display = "none";
+            }
+        }
+
+        function gameOverListener() {
+            var hint_victory = "VICTORY! Use remaining cards in hand to write an epilogue?";
+            var hint_defeat = "DEFEATED! Use remaining cards in hand to write an epilogue?";
+
+            if (conditions >= conditionMax) {
+                updateHint(hint_defeat);
+                end();
+            }
+            else if (goalProgress >= goalMax) {
+                updateHint(hint_victory);
+                end();
+            }
+
+            if (onlyReshuffleCardsRemain()) {
+                updateHint("note: the only cards left in the deck are \"Reshuffle\" cards, game cannot continue");
+                end();
+            }
+        }
+
+        // if user paste in a custom list of cards
+        // reset the game with the new cards instead
+        function inputDeck(deck) {
+            gamedata['cards'] = {};
+            var lines = deck.split('\n');
+            var str = "";
+            var passCheck = true;
+
+            if (lines.length > 0 && lines[0]) {
+
+                for (var i = 0; i < lines.length; i++) {
+                    // check if the card format is correct
+                    lines[i] = lines[i].trim();
+                    if (!cardFormatOK(lines[i])) {
+                      passCheck = false;
+                      break;
+                    }
+                    // reformat card text to make it wrap
+                    str = lines[i];
+                    lines[i] = cardType(str) + ": " +
+                              str.substring(str.indexOf(":")+1).trim();
+                }
+            }
+            else {
+                passCheck = false;
+            }
+
+            if (passCheck) {
+                gamedata['cards'] = list;
+                newSetup();
+                updateTable();
+
+                // hide link and clear textarea
+                $("#notes").html("");
+                $("#notes").attr("placeholder","premise, goals, story");
+            }
+            else {
+                alert("Please double-check if all cards are formatted correctly.");
+            }
+        }
+
+        function cardFormatOK(card) {
+            var c = cardType(card);
+            var result = false;
+
+            if (c == "character" || c == "event" ||
+                c == "item" || c == "place" ||
+                c == "aspect" || c == "detail") {
+                result = true;
+            }
+            return result;
+        }
+
+        $('#deckbox button[type=submit]').click(function(e) {
+            e.preventDefault();
+            var deck = $('#deckboxtext').val();
+            inputDeck(deck);
+            // hide the loadbox
+            $('#deckbox').hide();
+            updateGame();
+        });
+    </script>
+</body>
+</html>
