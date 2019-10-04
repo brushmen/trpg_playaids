@@ -104,7 +104,7 @@
         height: 400px;
     }
 
-    .card {
+    #gameArea .card {
         text-align: center;
         display: inline-block;
         width: 6em;
@@ -112,7 +112,7 @@
         border: 1px solid black;
         font-size: 0.6em;
     }
-    .card:active {
+    #gameArea .card:active {
         background-color: yellow;
     }
     </style>
@@ -124,7 +124,7 @@
         <h5 class="card-header">load JSON content</h5>
         <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
         <textarea id="loadboxjson" placeholder="JSON only"></textarea>
-        <button type="submit" class="btn btn-sm btn-warning btn-block">load</button>
+        <button type="submit" class="btn btn-sm btn-warning">load</button>
     </div>
     <div id="deckbox" style="display: none" class="card shadow">
         <h5 class="card-header">custom deck</h5>
