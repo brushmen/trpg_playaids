@@ -131,7 +131,6 @@ function ucFirstLetter(str) {
 
 function clearFields() {
     $(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
-    $(':textarea').val('');
     $(':checkbox, :radio').prop('checked', false);
 }
 
