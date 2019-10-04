@@ -267,7 +267,7 @@
         var infotext = {};
 
         ////  CARDS FOR THE STORY DECK ///////////
-        gamedata['cards'] = [
+        var default_deck = [
             "character: brother",
             "character: sister",
             "character: father",
@@ -467,6 +467,7 @@
             "detail: medicine"
         ];
 
+        gamedata['cards'] = default_deck;
         var num_of_reshuffle_cards = Math.ceil(gamedata['cards'].length / 18);
 
         var table = new Array();
@@ -616,10 +617,12 @@
         }
 
         function newGame() {
-            if(confirm('Clear all fields?')) {
+            if(confirm('Clear all fields and start a new game?')) {
                 clearFields();
+                gamedata['cards'] = default_deck;
                 newSetup();
                 updateGame();
+                updateTable();
             }
         }
 
