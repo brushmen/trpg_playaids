@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quill</title>
+    <meta name="description" content="a solo tabletop roleplaying game playaid built with Javascript">
+    <meta name="author" content="brushmen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/common.css">
+
+    <!-- custom CSS -->
+    <style>
+    body {
+        background-color: rgb(220, 217, 205);
+        font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    }
+
+    select {
+        background-color: Gainsboro !important;
+    }
+
+    #c1, #c2 {
+        position: relative;
+    }
+
+    #p0, #p1, #p2, #p3, #p4, #p5, #p6 {
+        font-size: 0.8em;
+        line-height: 1em;
+    }
+    #p1, #p2, #p3, #p4, #p5 {
+        height: 110px;
+    }
+    #p0, #p6 {
+        font-size: 1em;
+        height: 80px;
+    }
+
+    #b1, #b2, #b3, #b4, #b5, #b6 {
+        font-size: 0.9em;
+    }
+    #b1 button, #b2 button, #b3 button,
+    #b4 button, #b5 button {
+        font-size: 0.8em;
+    }
+
+    #attributes {
+        font-size: 0.6em;
+    }
+    #bonus, #skill {
+        font-size: 0.5em;
+    }
+    #useskill {
+        font-size: 0.5em;
+    }
+
+    #commonArea {
+        width: 11.1em;
+    }
+
+    #infoArea {
+        font-size: 13pt;
+        margin: 5px -13px;
+        padding-left: 3px;
+        height: 250px;
+        overflow: auto;
+    }
+
+    #inkpot {
+      background-color: #1c2833;
+      color: white;
+      font-size: 1em;
+      height: 400px;
+    }
+
+    #letterbox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 800px;
+        max-height: 720px;
+        overflow: auto;
+    }
+    #letterbox .card-header {
+        font-size: 1em;
+        height: 50px;
+    }
+    #letter {
+        font-size: 1em;
+    }
+    .fullletter {
+      padding: 20px 20px 20px 60px;
+      min-height: 600px;
+      background-color: #F3E2A9;
+      font-style: italic;
+      font-weight: bold;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- hovering panels -->
+    <div id="loadbox" style="display: none" class="card shadow">
+        <h5 class="card-header">load JSON content</h5>
+        <div class="topRightClick" onclick="$('#loadbox').hide();">hide</div>
+        <textarea id="loadboxjson" placeholder="JSON only"></textarea>
+        <button type="submit" class="btn btn-sm btn-warning">load</button>
+    </div>
+    <div id="letterbox" style="display: none" class="card shadow">
+        <h5 class="card-header">your letter</h5>
+        <div class="topRightClick" onclick="$('#letterbox').hide();">hide</div>
+        <div id="letter" class="card-body"></div>
+    </div>
+
+    <!-- right side menu buttons, leave space in between for TogetherJS bar. add/remove buttons as applicable -->
+    <div id="menubuttons" class="btn-group-vertical shadow">
+        <button id="togetherjsbutton" class="btn btn-sm btn-outline-dark" onclick="TogetherJS(this); return false;" title="start TogetherJS to collaborate with friends">👥</button>
+        <button id="loadjsonbutton" class="btn btn-sm btn-outline-dark" onclick="loadJSON(); return false;" title="load a JSON file of the game content">📂</button>
+        <button id="savejsonbutton" class="btn btn-sm btn-outline-dark" onclick="saveJSON(); return false;" title="save current game content to a JSON file to download">💾</button>
+        <button type="button" class="btn btn-sm btn-outline-dark" onclick="fullLetter()" title="full letter">📜</button>
+    </div>
+    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark shadow" onclick="clearAll(); return false;" title="clear fields, start over">🗑</button>
+
+    <!-- main content -->
+    <div class="container-fluid">
+
+        <div id="gameArea">
+            <div class="row full-height">
+                <div class="col justify-content-center align-self-center">
+                    <div class="row">
+
+                        <div id="c1" class="col-9 full-height">
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <select id="attributes" class="form-control form-control-sm">
+                                        <option value="" disabled="disabled">Penmanship, Language, Heart</option>
+                                        <option value="p1l2h3">Penmanship 1, Language 2, Heart 3</option>
+                                        <option value="p1l3h2">Penmanship 1, Language 3, Heart 2</option>
+                                        <option value="p2l1h3">Penmanship 2, Language 1, Heart 3</option>
+                                        <option value="p2l3h1">Penmanship 2, Language 3, Heart 1</option>
+                                        <option value="p3l1h2">Penmanship 3, Language 1, Heart 2</option>
+                                        <option value="p3l2h1">Penmanship 3, Language 2, Heart 1</option>
+                                    </select>
+                                    <div class="input-group">
+                                        <select id="bonus" class="form-control form-control-sm">
+                                            <option value="">No Bonus</option>
+                                            <option value="p">+1 Penmanship</option>
+                                            <option value="l">+1 Language</option>
+                                            <option value="h">+1 Heart</option>
+                                        </select>
+                                        <select id="skill" class="form-control form-control-sm">
+                                          <option value="">No Skill</option>
+                                          <option value="p">+1 Penmanship</option>
+                                          <option value="l">+1 Language</option>
+                                          <option value="h">+1 Heart</option>
+                                        </select>
+                                        <button id="useskill" type="button" class="btn btn-sm btn-info" onclick="useSkill()">use skill</button>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <textarea id="p0" class="form-control form-control-sm" placeholder="Salutation..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="row h-100 justify-content-center align-items-center">
+                                        <div id="b1">
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="test('b1', true)">try FLOURISH</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="test('b1', false)">no flourish</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <textarea id="p1" class="form-control form-control-sm" placeholder="Paragraph 1..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="row h-100 justify-content-center align-items-center">
+                                        <div id="b2">
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="test('b2', true)">try FLOURISH</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="test('b2', false)">no flourish</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <textarea id="p2" class="form-control form-control-sm" placeholder="Paragraph 2..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="row h-100 justify-content-center align-items-center">
+                                        <div id="b3">
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="test('b3', true)">try FLOURISH</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="test('b3', false)">no flourish</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <textarea id="p3" class="form-control form-control-sm" placeholder="Paragraph 3..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="row h-100 justify-content-center align-items-center">
+                                        <div id="b4">
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="test('b4', true)">try FLOURISH</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="test('b4', false)">no flourish</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <textarea id="p4" class="form-control form-control-sm" placeholder="Paragraph 4..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="row h-100 justify-content-center align-items-center">
+                                        <div id="b5">
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="test('b5', true)">try FLOURISH</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="test('b5', false)">no flourish</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <textarea id="p5" class="form-control form-control-sm" placeholder="Paragraph 5..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div id="b6"></div>
+                                </div>
+
+                                <div class="col-8">
+                                    <textarea id="p6" class="form-control form-control-sm" placeholder="Closing..."></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="c2" class="col-3 full-height">
+                            <div id="commonArea">
+                                <div class="row">
+                                    <select id="infolist" name="infolist" class="form-control form-control-sm">
+                                        <option value="" disabled="disabled" selected="selected">Quill</option>
+
+                                    </select>
+                                </div>
+
+                                <div id="infoArea">
+                                    <p>In a game of Quill you will write real letters, with the aim to craft the best, most beautiful missive possible in order to get a favourable response. You will use words from the Ink Pot to inspire your letter - but be warned, should you roll badly you could end up writing a bad letter.</p>
+                                    <p><a href="https://www.drivethrurpg.com/product/170400/Quill-A-LetterWriting-Roleplaying-Game-for-a-Single-Player" target="new">Quill</a> is by Scott Malthouse.</p>
+                                </div>
+
+                                <div class="row">
+                                    <textarea id="inkpot" placeholder="INKPOT:&#10;&#10;(paste in list of words in the below format)&#10;&#10;Inferior/Superior&#10;Inferior/Superior"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap template script includes -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/common.js"></script>
+
+    <!-- TogetherJS config and library -->
+    <script>
+    TogetherJSConfig_autoStart  = false;
+    TogetherJSConfig_siteName = "Quill";
+    TogetherJSConfig_dontShowClicks = true;
+    TogetherJSConfig_suppressJoinConfirmation = true;
+    TogetherJSConfig_suppressInvite = true;
+    //use this in single-page apps where being at the same base URL
+    //doesn’t mean the two people are looking at the same thing.
+    TogetherJSConfig_includeHashInUrl = true;
+    TogetherJSConfig_disableWebRTC = true;
+    </script>
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+
+    <!-- other Javascript code -->
+    <script>
+        var gamehandle = 'quill';
+        var gamedata = {};
+        var infotext = {};
+
+        var p1score = 0;
+        var p2score = 0;
+        var p3score = 0;
+        var p4score = 0;
+        var p5score = 0;
+        var total = 0;
+        var skill = "";
+        var p1scored = false;
+        var p2scored = false;
+        var p3scored = false;
+        var p4scored = false;
+        var p5scored = false;
+        var skillused = false;
+
+        function loadJSON() {
+            $('#loadbox').toggle();
+        }
+
+        function saveJSON() {
+            var filename = gamehandle + getTodayString() + '.json';
+            // generate the file to download locally
+            download(filename, GametoJSON());
+        }
+
+        function clearAll() {
+            if(confirm('Clear all fields?')) {
+                clearFields();
+                initGameData();
+                updateGame();
+            }
+        }
+
+        function initGameData() {
+            gamedata['penmanship'] = null;
+            gamedata['language'] = null;
+            gamedata['heart'] = null;
+            gamedata['skill'] = null;
+            gamedata['bonus'] = null;
+            gamedata['inkpot'] = [];
+            gamedata['salutation'] = null;
+            gamedata['p1'] = null;
+            gamedata['p2'] = null;
+            gamedata['p3'] = null;
+            gamedata['p4'] = null;
+            gamedata['p5'] = null;
+            gamedata['closing'] = null;
+            gamedata['total'] = null;
+        }
+
+        function updateGame() {
+
+        }
+
+        function useSkill() {
+          var s = document.getElementById("skill");
+          skill = s.options[s.selectedIndex].value;
+          s = document.getElementById("useskill");
+          // skill can only be used once, so disable the button after click
+          s.disabled = true;
+        }
+
+        function test(source, flourish) {
+            var html = '';
+            var a = $('#attributes').val();
+            var b = $('#bonus').val();
+            var pdice = 0;
+            var ldice = 0;
+            var hdice = 0;
+
+            switch(a) {
+                case "p1l2h3":
+                    pdice = 1;
+                    ldice = 2;
+                    hdice = 3;
+                    break;
+                case "p1l3h2":
+                    pdice = 1;
+                    ldice = 3;
+                    hdice = 2;
+                    break;
+                case "p2l1h3":
+                    pdice = 2;
+                    ldice = 1;
+                    hdice = 3;
+                    break;
+                case "p2l3h1":
+                    pdice = 2;
+                    ldice = 3;
+                    hdice = 1;
+                    break;
+                case "p3l1h2":
+                    pdice = 3;
+                    ldice = 1;
+                    hdice = 2;
+                    break;
+                case "p3l2h1":
+                    pdice = 3;
+                    ldice = 2;
+                    hdice = 1;
+                    break;
+                default:
+                    pdice = 1;
+                    ldice = 1;
+                    hdice = 1;
+                    break;
+            }
+
+            switch (b) {
+                case "p":
+                    pdice += 1;
+                    break;
+                case "l":
+                    ldice += 1;
+                    break;
+                case "h":
+                    hdice += 1;
+                    break;
+            }
+
+            if ((skill) && (!skillused)) {
+                switch (skill) {
+                    case "p":
+                        pdice += 1;
+                        break;
+                    case "l":
+                        ldice += 1;
+                        break;
+                    case "h":
+                        hdice += 1;
+                        break;
+                }
+                skillused = true;
+            }
+
+            var fbonus = 0;
+            if (flourish) {
+                html += "Flourish ";
+                if (testSuccess(hdice)) {
+                    html += "passes; ";
+                    fbonus = 1;
+                }
+                else {
+                    html += "fails; ";
+                }
+            }
+
+            var score = 0;
+
+            html += "Word choice ";
+            if (testSuccess(ldice)) {
+                html += "superior; ";
+                score += 1;
+                score += fbonus;
+            }
+            else {
+                html += "inferior; ";
+                score -= fbonus;
+            }
+
+            html += "Penmanship ";
+            if (testSuccess(pdice)) {
+                html += "passes. ";
+                score += 1;
+            }
+            else {
+                html += "fails. ";
+            }
+            $('#'+ source).addClass('row');
+            $('#'+ source).addClass('text-center');
+            $('#'+ source).html(html);
+
+            // calculate paragraph's score
+            switch (source) {
+                case "b1":
+                    p1score = score;
+                    p1scored = true;
+                    break;
+                case "b2":
+                    p2score = score;
+                    p2scored = true;
+                    break;
+                case "b3":
+                    p3score = score;
+                    p3scored = true;
+                    break;
+                case "b4":
+                    p4score = score;
+                    p4scored = true;
+                    break;
+                case "b5":
+                    p5score = score;
+                    p5scored = true;
+                    break;
+            }
+
+            // check if all paragraph has score, total up if yes
+            if ((p1scored) && (p2scored) && (p3scored) && (p4scored) && (p5scored)) {
+                total = p1score + p2score + p3score + p4score + p5score;
+
+                // update score section
+                html = "Total Score: " + total + " - ";
+                if (total < 5) html += "The letter is poorly received.";
+                else if (total < 8) html += "The letter has a tepid reception.";
+                else if (total < 11) html += "The letter is well received.";
+                else html += "The letter has an excellent reception.";
+
+                $('#b6').addClass('text-center');
+                $('#b6').html(html);
+            }
+        }
+
+        function testSuccess(numdice) {
+            var result = false;
+
+            while (numdice > 0) {
+                if (rollDie() > 4) {
+                    result = true;
+                    break;
+                }
+                numdice--;
+            }
+
+            return result;
+        }
+
+        function rollDie(sides) {
+          if(!sides) sides = 6;
+          with(Math) return 1 + floor(random() * sides);
+        }
+
+        function fullLetter() {
+            var p6 = $('#p6').val().replace(/\n/g, "<br>");
+            var html = '<div class="fullletter"><p>' + $('#p0').val() +
+                        '</p><p class="indented">' + $('#p1').val() +
+                        '</p><p class="indented">' + $('#p2').val() +
+                        '</p><p class="indented">' + $('#p3').val() +
+                        '</p><p class="indented">' + $('#p4').val() +
+                        '</p><p class="indented">' + $('#p5').val() +
+                        '</p><p>' + p6 + "</p></div>";
+
+            $('#letter').html(html);
+            $('#letterbox').toggle();
+        }
+
+    </script>
+</body>
+</html>
