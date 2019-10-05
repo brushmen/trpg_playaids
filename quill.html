@@ -254,7 +254,11 @@
                                 <div class="row">
                                     <select id="infolist" name="infolist" class="form-control form-control-sm">
                                         <option value="" disabled="disabled" selected="selected">Quill</option>
-
+                                        <option value="attributes">character attributes</option>
+                                        <option value="skills">skills</option>
+                                        <option value="playingthegame">playing the game</option>
+                                        <option value="scoring">scoring</option>
+                                        <option value="rulessummary">rules summary</option>
                                     </select>
                                 </div>
 
@@ -302,7 +306,18 @@
     <script>
         var gamehandle = 'quill';
         var gamedata = {};
-        var infotext = {};
+        var infotext = {
+            'attributes':
+                '<p><strong>Penmanship</strong> determines the aesthetic style of your writing, how your quill marks flow and the ability to leave a parchment free of ink blotches. Good penmanship can make a letter look pleasing to the eye of the recipient - the best penmanship will make a letter into a piece of art.</p><p><strong>Language</strong> determines how eloquent you are, showing how broad your vocabulary is. Having a high language score shows that you have a fine grasp of your native lexicon.</p><p><strong>Heart</strong> determines the sheer emotion and effort you imbue in your letters. The higher your heart, the more of your soul you can pour into your writing and the more persuasive your writing becomes.</p>',
+            'skills':
+                '<p><strong>Skills can be used once per scenario</strong>, potentially giving you an advantage when writing your letter. There are three skills in the game:</p><h6>Inspiration</h6><p>You are a born leader, with the ability to use powerful language to inspire others in your letters. <strong>Gain +1 dice to a Language Test</strong></p><h6>Illumination</h6>You have studied the art of calligraphy and manuscript illumination, able to conjure incredible works for art from the tip of your pen. <strong>Gain +1 dice to a Penmanship Test</strong></p><h6>Augmentation</h6><p>You are an emotive writer with the ability to describe a scene in such a way to transport the reader with your language. <strong>Gain +1 dice to a Heart Test</strong></p>',
+            'playingthegame':
+                '<p>A game of Quill begins with a scenario. The scenario sets out who you are writing to and why you are writing to them (<strong>the Profile</strong>), any special rules that apply to that specific scenario (<strong>Rules of Correspondence</strong>), and the words that you will be using as part of your letter (<strong>The Ink Pot</strong>).</p><p>In Quill your aim is to write a letter using the words in The Ink Pot and get the highest score at the end of the scenario. You have five paragraphs to achieve this and in each paragraph <strong>you must use just one of the words from The Ink Pot</strong>.</p><p>You can augment words with <strong>Flourishes</strong> to gain extra points and after every paragraph you must make a <strong>Penmanship test</strong> to find out how well presented your letter is.</p><p>It is entirely up to you what you want to write in each paragraph, as long as you are following the story presented in the Profile and using the words in the Ink Pot. Because the Ink Pot contains more than five words you can play the same scenario again and write an entirely different letter.</p><h6>The Profile</h6><p>The Profile is the first thing you will need to read. The Profile details the recipient of your letter and a short explanation of why you are writing to them. You should refer back to the Profile when writing your letter.</p><h6>Rules of Correspondence</h6><p>The Rules of Correspondence details any special rules that the scenario contains. Such rules will usually affect the rolls that you make during play. For example, one scenario may have a rule that because of the superior parchment that you are using you may roll one extra die when testing for Penmanship.</p><h6>The Ink Pot</h6><p>The Ink Pot contains all the words that you can use to structure you letter in order to score points. Words are presented as such: Wood/Emerald Forest. The first word is called the <strong>Inferior Word</strong> and the second is called the <strong>Superior Word</strong>. The aim is to fill your letter with Superior Words, as these score points. Inferior Words do not. Note that sometimes a Superior or Inferior Word may consist of multiple words or a phrase.</p><h6>The Flow of Play</h6><p>In Quill you must write <strong>five paragraphs</strong>, each containing only one word from the Ink Pot.</p><p>When you want to add a word, you must <strong>roll your Language dice</strong> – also called a Language Test. <strong>Any 5 or 6 is a success</strong> – you can add a Superior Word to your paragraph and gain 1 point. Anything lower and you must add an Inferior Word and <strong>score no points</strong>.</p><p>You may add any word you want, but once it has been used you cannot use it again.</p><h6>Flourishes</h6><p>Flourishes add an adverb or adjective (i.e. a descriptive word) to enhance the word you choose. For example, \'stallion\' could be augmented to \'white stallion\'. To augment a word you must make a Heart Test <strong>before</strong> you roll your Language dice to draw from the Ink Pot. To do this, roll your Heart dice. Rolling a 5 or 6 on any dice is a success, meaning that you can add a Flourish to the word. Flourishes are entirely optional.</p><p>If the word you have augmented turns out to be a Superior Word, you score 2 points for your augmentation. If the word is an Inferior Word, you do not score any points and must reduce your total score by 1, representing a clunky writing style.</p><h6>Penmanship Tests</h6><p>Every time you finish a paragraph, you <strong>must</strong> make a Penmanship Test. To do this, roll your Penmanship dice, any 5 or 6 is a success and you gain 1 point. Note that you can only score a single point per test, no matter how many 5s or 6s you roll.</p>',
+            'scoring':
+                '<p>There are three ways to score points in the game:</p><ul><li>Use Superior Words from the Ink Pot. A Superior Word is worth 1 point.</li><li>Be successful in a Penmanship test when you have finished a paragraph. A successful Penmanship test is worth 1 point.</li><li>Flourish words with adjectives or adverbs using Heart tests. A Flourished Superior Word is worth 2 points. However, a Flourished Inferior Word reduces your final points total by 1.</li></ul></p><p>When you have finished your letter, total up your Letter Score. Each scenario will have its own consequences section when it comes to scoring, showing how the recipient responds to your letter. Each consequence will be different depending on the scenario, but the scoring is always the same:</p><p><strong>Less than 5 points</strong>: The letter is received unsuccessfully. There will be negative consequences.</p><p><strong>5 to 7 points</strong>: The letter has a tepid reception. There will be negative and positive consequences.</p><p><strong>8 to 10 points</strong>: The letter has a favourable reception. There will be positive consequences.</p><p><strong>11+ points</strong>: The letter has an excellent reception. There will be very positive consequences.</p>',
+            'rulessummary':
+                '<ul><li>Select a character, skill and scenario</li><li>Read the Profile and note any Rules of Correspondence</li><li>Write your letter using one Ink Pot word per paragraph, making a Language test to determine if the word is Superior or Inferior. 5 or 6 succeeds.</li><li>Use Flourishes to augment words with a Heart test. 5 or 6 succeeds</li><li>Make a Penmanship test after every paragraph. 5 or 6 succeeds</li><li>Use a skill once per scenario</li><li>End the letter after the fifth paragraph</li><li>Total up your points and refer to the consequences table to determine the reaction to your letter</li></ul>'
+        };
 
         var p1score = 0;
         var p2score = 0;
@@ -317,6 +332,13 @@
         var p4scored = false;
         var p5scored = false;
         var skillused = false;
+
+        $('#infolist').on('change', function() {
+            // only update locally
+            var $infolist = $('#infolist');
+            var $infoArea = $('#infoArea');
+            $infoArea.html(infotext[$infolist.val()]);
+        });
 
         function loadJSON() {
             $('#loadbox').toggle();
