@@ -149,15 +149,15 @@
                                     <div class="input-group">
                                         <select id="bonus" class="form-control form-control-sm">
                                             <option value="">No Bonus</option>
-                                            <option value="p">+1 Penmanship</option>
-                                            <option value="l">+1 Language</option>
-                                            <option value="h">+1 Heart</option>
+                                            <option value="penmanship">+1 Penmanship</option>
+                                            <option value="language">+1 Language</option>
+                                            <option value="heart">+1 Heart</option>
                                         </select>
                                         <select id="skill" class="form-control form-control-sm">
                                           <option value="">No Skill</option>
-                                          <option value="p">+1 Penmanship</option>
-                                          <option value="l">+1 Language</option>
-                                          <option value="h">+1 Heart</option>
+                                          <option value="penmanship">+1 Penmanship</option>
+                                          <option value="language">+1 Language</option>
+                                          <option value="heart">+1 Heart</option>
                                         </select>
                                         <button id="useskill" type="button" class="btn btn-sm btn-info" onclick="useSkill()">use skill</button>
                                     </div>
@@ -322,10 +322,48 @@
             $('#loadbox').toggle();
         }
 
+        $('#loadbox button[type=submit]').click(function(e) {
+            e.preventDefault();
+            var json = $('#loadboxjson').val();
+            JSONtoGame(JSON.parse(json));
+            // hide the loadbox
+            $('#loadbox').hide();
+            updateGame();
+        });
+
         function saveJSON() {
             var filename = gamehandle + getTodayString() + '.json';
             // generate the file to download locally
             download(filename, GametoJSON());
+        }
+
+        function JSONtoGame(obj) {
+            if (obj) {
+                gamedata = obj[gamehandle];
+            }
+        }
+
+        function GametoJSON() {
+            var a = $('#attributes').val();
+            gamedata['penmanship'] = parseInt(a.substring(1, 2));
+            gamedata['language'] = parseInt(a.substring(3, 4));
+            gamedata['heart'] = parseInt(a.substring(5, 6));
+            gamedata['bonus'] = $('#bonus').val();
+            gamedata['skill'] = $('#skill').val();
+            gamedata['inkpot'] = $('#inkpot').val();
+            gamedata['salutation'] = $('#p0').val();
+            gamedata['p1'] = $('#p1').val();
+            gamedata['p2'] = $('#p2').val();
+            gamedata['p3'] = $('#p3').val();
+            gamedata['p4'] = $('#p4').val();
+            gamedata['p5'] = $('#p5').val();
+            gamedata['closing'] = $('#p6').val();
+            var gameJSON = {};
+            if (gamedata) {
+                gameJSON[gamehandle] = gamedata;
+                gameJSON = JSON.stringify(gameJSON, null, "\t");
+            }
+            return gameJSON;
         }
 
         function clearAll() {
@@ -354,7 +392,20 @@
         }
 
         function updateGame() {
-
+            var a = 'p' + gamedata['penmanship'] +
+                    'l' + gamedata['language'] +
+                    'h' + gamedata['heart'];
+            $('#attributes').val(a);
+            $('#bonus').val(gamedata['bonus']);
+            $('#skill').val(gamedata['skill']);
+            $('#inkpot').val(gamedata['inkpot']);
+            $('#p0').val(gamedata['salutation']);
+            $('#p1').val(gamedata['p1']);
+            $('#p2').val(gamedata['p2']);
+            $('#p3').val(gamedata['p3']);
+            $('#p4').val(gamedata['p4']);
+            $('#p5').val(gamedata['p5']);
+            $('#p6').val(gamedata['closing']);
         }
 
         function useSkill() {
@@ -412,26 +463,26 @@
             }
 
             switch (b) {
-                case "p":
+                case "penmanship":
                     pdice += 1;
                     break;
-                case "l":
+                case "language":
                     ldice += 1;
                     break;
-                case "h":
+                case "heart":
                     hdice += 1;
                     break;
             }
 
             if ((skill) && (!skillused)) {
                 switch (skill) {
-                    case "p":
+                    case "penmanship":
                         pdice += 1;
                         break;
-                    case "l":
+                    case "language":
                         ldice += 1;
                         break;
-                    case "h":
+                    case "heart":
                         hdice += 1;
                         break;
                 }
@@ -502,6 +553,7 @@
             // check if all paragraph has score, total up if yes
             if ((p1scored) && (p2scored) && (p3scored) && (p4scored) && (p5scored)) {
                 total = p1score + p2score + p3score + p4score + p5score;
+                gamedata['total'] = total;
 
                 // update score section
                 html = "Total Score: " + total + " - ";
