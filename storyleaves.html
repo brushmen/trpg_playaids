@@ -169,7 +169,7 @@
         <button id="imagebutton" class="btn btn-sm btn-outline-dark" onclick="$('#imageviewbox').toggle(); return false;" title="show an image of character or object">🖼</button>
 
     </div>
-    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark shadow" onclick="newGame(); return false;" title="clear fields, start over">🗑</button>
+    <button id="clearfieldsbutton" class="btn btn-sm btn-outline-dark shadow" onclick="newGame(); return false;" title="start over">🗑</button>
 
     <!-- main content -->
     <div class="container-fluid">
@@ -663,12 +663,8 @@
         }
 
         function newGame() {
-            if(confirm('Clear all fields and start a new game?')) {
-                clearFields();
-                gamedata['cards'] = default_deck;
-                newSetup();
-                updateGame();
-                updateTable();
+            if(confirm('Start a new game?')) {
+                window.location.reload();
             }
         }
 
