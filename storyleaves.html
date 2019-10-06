@@ -726,8 +726,8 @@
                 }
 
                 html += '<div class="card" style="color: ' + color + '" onclick="pickCard(\'' + card + '\')">' + card + '</div>';
-                $('#table').html(html);
             }
+            $('#table').html(html);
         }
 
         function updateDeck() {
@@ -738,7 +738,7 @@
         function updateHand() {
             var html = 'hand: ';
             for (var i = 0; i < hand.length; i++) {
-                html += '<div class="card" onclick=\"pickCard(\"' + hand[i] + '\")">' + hand[i] + '</div>';
+                html += '<div class="card" onclick="pickCard(\'' + hand[i] + '\')">' + hand[i] + '</div>';
             }
             $('#hand').html(html);
         }
@@ -756,7 +756,7 @@
             var html = '<span class="text-primary">protagonist</span>';
             if (phase == "setup") {
                 if (protagonist) {
-                    html += '<div class="card" onclick="pickCard(\"' + protagonist + '\")">' + protagonist + '</div>';
+                    html += '<div class="card" onclick="pickCard(\'' + protagonist + '\')">' + protagonist + '</div>';
                 }
             }
             else if (phase == "play") {
@@ -772,7 +772,7 @@
 
             if (phase == "setup") {
                 if (beloved) {
-                    html += '<div class="card" onclick="pickCard(\"' + beloved + '\")">' + beloved + '</div>';
+                    html += '<div class="card" onclick="pickCard(\'' + beloved + '\')">' + beloved + '</div>';
                 }
             }
             else if (phase == "play") {
@@ -789,7 +789,7 @@
 
             if (phase == "setup") {
                 if (antagonist) {
-                    html += '<div class="card" onclick="pickCard(\"' + antagonist + '\")">' + antagonist + '</div>';
+                    html += '<div class="card" onclick="pickCard(\'' + antagonist + '\')">' + antagonist + '</div>';
                 }
             }
             else if (phase == "play") {
@@ -802,7 +802,7 @@
         function updatePFacet() {
             var html = '<span class="text-primary">protagonist facet</span>';
             if (pfacet) {
-                html += '<div class="card" onclick="pickCard(\"' + pfacet + '\")">' + pfacet + '</div>';
+                html += '<div class="card" onclick="pickCard(\'' + pfacet + '\')">' + pfacet + '</div>';
             }
             $('#pfacet').html(html);
         }
@@ -810,7 +810,7 @@
         function updateBFacet() {
             var html = '<span class="text-primary">beloved facet</span>';
             if (bfacet) {
-                html += '<div class="card" onclick="pickCard(\"' + bfacet + '\")">' + bfacet + '</div>';
+                html += '<div class="card" onclick="pickCard(\'' + bfacet + '\')">' + bfacet + '</div>';
             }
             $('#bfacet').html(html);
         }
@@ -818,7 +818,7 @@
         function updatePBShared() {
             var html = '<span class="text-primary">shared between P/B</span>';
             if (pbshared) {
-                html += '<div class="card" onclick="pickCard(\"' + pbshared + '\")">' + pbshared + '</div>';
+                html += '<div class="card" onclick="pickCard(\'' + pbshared + '\')">' + pbshared + '</div>';
             }
             $('#pbshared').html(html);
         }
@@ -826,7 +826,7 @@
         function updateAFacet() {
             var html = '<span class="text-primary">antgonist facet</span>';
             if (afacet) {
-                html += '<div class="card" onclick="pickCard(\"' + afacet + '\")">' + afacet + '</div>';
+                html += '<div class="card" onclick="pickCard(\'' + afacet + '\')">' + afacet + '</div>';
             }
             $('#afacet').html(html);
         }
@@ -834,7 +834,7 @@
         function updateAPShared() {
             var html = '<span class="text-primary">shared between A/P</span>';
             if (apshared) {
-                html += '<div class="card" onclick="pickCard(\"' + apshared + '\")">' + apshared + '</div>';
+                html += '<div class="card" onclick="pickCard(\'' + apshared + '\')">' + apshared + '</div>';
             }
             $('#apshared').html(html);
         }
@@ -842,7 +842,7 @@
         function updateABShared() {
             var html = '<span class="text-primary">shared between A/B</span>';
             if (abshared) {
-                html += '<div class="card" onclick="pickCard(\"' + abshared + '\")">' + abshared + '</div>';
+                html += '<div class="card" onclick="pickCard(\'' + abshared + '\')">' + abshared + '</div>';
             }
             $('#abshared').html(html);
         }
@@ -1252,7 +1252,7 @@
 
                         // higher card wins
                         if (protagCardValue > antagCardValue) {
-                            updateHint("{after wait-and-see} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                            updateHint("{after wait-and-see} your " + protagCard + " beats " + antagCard + "; round " + roundnumber + " ends");
                             newRound();
                         }
                         else {
@@ -1283,7 +1283,7 @@
                         if (protagCardValue < antagCardValue) {
                             goalProgress++;
                             updateProtagonist();
-                            updateHint("{pursue goal} your " + protagCard + " beat " + antagCard + "; gain progress; round " + roundnumber + " ends");
+                            updateHint("{pursue goal} " + protagCard + " beats " + antagCard + "; you gain progress; round " + roundnumber + " ends");
                             newRound();
                         }
                         else { // player may respond
@@ -1309,7 +1309,7 @@
 
                         // lower card wins
                         if (protagCardValue < antagCardValue) {
-                            updateHint("{reverse condition} your " + protagCard + " beat " + antagCard + "; reverse one existing condition narratively but not mechanically; round " + roundnumber + " ends");
+                            updateHint("{reverse condition} your " + protagCard + " beats " + antagCard + "; reverse one existing condition narratively but not mechanically; round " + roundnumber + " ends");
                             newRound();
                         }
                         else { // player may respond
@@ -1364,7 +1364,7 @@
                         }
                         // lower card wins
                         if (protagCardValue < antagCardValue) {
-                            updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                            updateHint("{after sacrifice} your " + protagCard + " beats " + antagCard + "; round " + roundnumber + " ends");
                             newRound();
                         }
                         else {
@@ -1385,7 +1385,7 @@
 
                     // lower card wins
                     if (protagCardValue < antagCardValue) {
-                        updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        updateHint("{after sacrifice} your " + protagCard + " beats " + antagCard + "; round " + roundnumber + " ends");
                         newRound();
                     }
                     else {
@@ -1398,12 +1398,12 @@
                             protagCardValue = cardValue(card);
 
                             if (protagCardValue < antagCardValue) {
-                                updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                                updateHint("{after sacrifice} your " + protagCard + " beats " + antagCard + "; antagonist responds");
 
                                 antagMove();
 
                                 if (protagCardValue < antagCardValue) {
-                                    updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                                    updateHint("{after sacrifice} your " + protagCard + " beats " + antagCard + "; round " + roundnumber + " ends");
 
                                     newRound();
                                 }
@@ -1466,7 +1466,7 @@
                             attackCardPicked = false;
                             targetCardPicked = false;
                             antagAttacked = true;
-                            updateHint("{attack antagonist} your " + protagCard + " beat " + antagCard + "; you gain antagonist's remaining 2 resources; round " + roundnumber + " ends");
+                            updateHint("{attack antagonist} your " + protagCard + " beats " + antagCard + "; you gain antagonist's remaining 2 resources; round " + roundnumber + " ends");
                             newRound();
                         }
                         else {
@@ -1910,14 +1910,14 @@
                 // higher card wins
 
                 if (protagCardValue > antagCardValue) {
-                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                    updateHint("{play from deck} your " + protagCard + " beats " + antagCard + "; antagonist responds");
 
                     // antagonist will respond
                     antagMove();
 
                     if (protagCardValue > antagCardValue) {
                         // round over
-                        updateHint("{after wait-and-see} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        updateHint("{after wait-and-see} your " + protagCard + " beats " + antagCard + "; round " + roundnumber + " ends");
                         newRound();
                     }
                     else {
@@ -1935,14 +1935,14 @@
             else if (protagMove == "pursue") {
                 // lower card wins
                 if (protagCardValue < antagCardValue) {
-                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                    updateHint("{play from deck} your " + protagCard + " beats " + antagCard + "; antagonist responds");
 
                     // antagonist will respond
                     antagMove();
 
                     if (protagCardValue < antagCardValue) {
                         // round over
-                        updateHint("{after pursue goal} your " + protagCard + " beat " + antagCard + "; gain progress; round " + roundnumber + " ends");
+                        updateHint("{after pursue goal} your " + protagCard + " beats " + antagCard + "; gain progress; round " + roundnumber + " ends");
                         goalProgress++;
                         updateProtagonist();
                         newRound();
@@ -1963,14 +1963,14 @@
             else if (protagMove == "reverse") {
                 // lower card wins
                 if (protagCardValue < antagCardValue) {
-                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                    updateHint("{play from deck} your " + protagCard + " beats " + antagCard + "; antagonist responds");
 
                     // antagonist will respond
                     antagMove();
 
                     if (protagCardValue < antagCardValue) {
                         // round over
-                        updateHint("{after reverse condition} your " + protagCard + " beat " + antagCard + "; reverse one condition narratively but not mechanically; round " + roundnumber + " ends");
+                        updateHint("{after reverse condition} your " + protagCard + " beats " + antagCard + "; reverse one condition narratively but not mechanically; round " + roundnumber + " ends");
                         newRound();
                     }
                     else {
@@ -1989,13 +1989,13 @@
             else if (protagMove == "sacrifice") {
                 // lower card wins
                 if (protagCardValue < antagCardValue) {
-                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                    updateHint("{play from deck} your " + protagCard + " beats " + antagCard + "; antagonist responds");
                     // antagonist will respond
                     antagMove();
 
                     if (protagCardValue < antagCardValue) {
                         // round over
-                        updateHint("{after sacrifice} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        updateHint("{after sacrifice} your " + protagCard + " beats " + antagCard + "; round " + roundnumber + " ends");
                         newRound();
                     }
                     else {
@@ -2038,13 +2038,13 @@
                     targetCardPicked = false;
                     antagAttacked = true;
 
-                    updateHint("{play from deck} your " + protagCard + " beat " + antagCard + "; antagonist responds");
+                    updateHint("{play from deck} your " + protagCard + " beats " + antagCard + "; antagonist responds");
                     // antagonist will respond
                     antagMove();
 
                     if (protagCardValue > antagCardValue) {
                         // round over
-                        updateHint("{after attack} your " + protagCard + " beat " + antagCard + "; round " + roundnumber + " ends");
+                        updateHint("{after attack} your " + protagCard + " beats " + antagCard + "; round " + roundnumber + " ends");
                         newRound();
                     }
                     else {
@@ -2122,14 +2122,12 @@
         function setupListener() {
             //if all needed elements are decided, offer
             //option to finish setup
-
             if (protagonist != "" && beloved != "" && antagonist != "" &&
                 pfacet != "" && bfacet != "" && pbshared != "" &&
                 afacet != "" && apshared != "" && abshared != "") {
 
                 document.getElementById("finishsetup").style.display = "inline";
             }
-
             else { // otherwise hide that option
                 document.getElementById("finishsetup").style.display = "none";
             }
