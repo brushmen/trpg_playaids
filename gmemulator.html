@@ -1541,10 +1541,10 @@
 
         sAction = determineadverb();
         sSubject = determineadjective();
-        sEvent = "Description: " + sAction + " " + sSubject;
+        sEvent = sAction + " " + sSubject;
 
         $("#description").html(sEvent);
-        updateLog(sEvent);
+        updateLog("Description: " + sEvent);
     }
 
     function updateLog(text) {
