@@ -109,19 +109,12 @@
                             </div>
 
                             <div class="flex-container">
-                              <div style="padding-right: 0.5em"><b><button class="btn btn-sm btn-info" onclick="scenesetup();">Scene</button></b></div>
+                              <div style="padding-right: 0.5em"><b><button class="btn btn-sm btn-info" onclick="scenesetup();">Scene is...</button></b></div>
                               <div id="scene_setup" class="boxed"></div>
                             </div>
-                              <div class="flex-container">
-                                <div style="padding-right: 0.3em"><b>🎲</b></div>
-                                <div id="dice_result" class="boxed">?</div>
 
-                                <div style="padding: 0 0.3em"><b>⮕</b></div>
-                                <div id="answer" class="boxed">?</div>
-                              </div>
-
-                              <b><button class="btn btn-sm btn-info" onclick="randomevent();">Event</button></b>
-                              <div id="event" class="boxed"></div>
+                              <b><button class="btn btn-sm btn-info" onclick="randomevent();">Event (Focus) Meaning</button></b>
+                              <div id="event" class="boAction + Subjectxed"></div>
 
                               <b><button class="btn btn-sm btn-info" onclick="randomdescription();">Description</button></b>
                               <div id="description" class="boxed"></div>
@@ -158,8 +151,14 @@
                                         </select>
                                     </form>
                                 </div>
-                                <div class="row-fluid text-center" style="margin-top: 1em">
-                                    <strong>Odds</strong>
+                                <div style="margin: 0.3em 0">
+                                    <div class="flex-container" style="font-size: 0.7em; justify-content: center;">
+                                      <div style="padding-right: 0.3em;"><b>🎲</b></div>
+                                      <div id="dice_result">?</div>
+
+                                      <div style="padding: 0 0.3em"><b>⮕</b></div>
+                                      <div id="answer">?</div>
+                                    </div>
                                 </div>
                                 <div class="row-fluid text-center">
                                     <div class="btn-group-vertical">
@@ -1520,7 +1519,7 @@
         sFocus = determinefocus();
         sAction = determineaction();
         sSubject = determinesubject();
-        sEvent = "(" + sFocus + ") " + sAction + " " + sSubject;
+        sEvent = "(Focus: " + sFocus + ") " + sAction + " " + sSubject;
 
         $("#event").html(sEvent);
         updateLog("Event: " + sEvent);
@@ -1555,7 +1554,7 @@
 
         if(iSetupRoll <= document.chaos.chaosfactor.selectedIndex+1) {
             if (iSetupRoll % 2 == 0) {
-                sSetup = "Interrupt";
+                sSetup = "Interrupted";
             }
             else {
                 sSetup = "Altered";
@@ -1567,7 +1566,7 @@
 
         $("#scene_setup").html(sSetup);
 
-        updateLog("Scene: " + sSetup);
+        updateLog("Scene is... " + sSetup);
     }
 
     function updateFields() {
