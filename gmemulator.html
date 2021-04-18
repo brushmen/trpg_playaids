@@ -29,6 +29,19 @@
         font-size: 1em;
     }
 
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .flex-item-left {
+        flex: 50%;
+    }
+
+    .flex-item-right {
+        flex: 50%;
+    }
+
     #c1, #c2, #c3 {
         position: relative;
     }
@@ -50,7 +63,7 @@
 
     #logarea {
         font-size: 0.5em;
-        min-height: 8em !important;
+        min-height: 20em !important;
     }
 
     #questionarea {
@@ -99,14 +112,21 @@
                     <div class="row">
 
                         <div id="c1" class="col-3 full-height">
-                            <b><button class="btn btn-sm btn-info" onclick="scenesetup();">Scene Setup</button></b>
+                            <div>
+                                <a style="font-size: 0.7em" href="https://www.drivethrurpg.com/product/20798/Mythic-Game-Master-Emulator" target="_new">Word Mill's <i>Mythic GM Emulator</i></a>
+                            </div>
+
+                            <div class="flex-container">
+                              <div style="padding-right: 0.5em"><b><button class="btn btn-sm btn-info" onclick="scenesetup();">Scene Setup</button></b></div>
                               <div id="scene_setup" class="boxed"></div>
+                            </div>
+                              <div class="flex-container">
+                                <div style="padding-right: 0.3em"><b>🎲</b></div>
+                                <div id="dice_result" class="boxed">?</div>
 
-                              <b>Dice Result</b>
-                              <div id="dice_result" class="boxed"></div>
-
-                              <b>Answer</b>
-                              <div id="answer" class="boxed"></div>
+                                <div style="padding: 0 0.3em"><b>⮕</b></div>
+                                <div id="answer" class="boxed">?</div>
+                              </div>
 
                               <b><button class="btn btn-sm btn-info" onclick="randomevent();">Event</button></b>
                               <div id="event" class="boxed"></div>
@@ -117,9 +137,6 @@
                               <div><b>Session Log:</b></div>
                               <textarea id="logarea" class="form-control form-control-sm"></textarea>
 
-                              <div style="position: absolute; bottom: 0; left: 10px">
-                                  <a style="font-size: 0.7em" href="https://www.drivethrurpg.com/product/20798/Mythic-Game-Master-Emulator" target="_new">Word Mill's <i>Mythic GM Emulator</i></a>
-                              </div>
                         </div>
 
                         <div id="c2" class="col-6 full-height">
@@ -1546,19 +1563,19 @@
 
         if(iSetupRoll <= document.chaos.chaosfactor.selectedIndex+1) {
             if (iSetupRoll % 2 == 0) {
-                sSetup = "Interrupt Scene";
+                sSetup = "Interrupt";
             }
             else {
-                sSetup = "Altered Scene";
+                sSetup = "Altered";
             }
         }
         else {
-            sSetup = "Scene Unaltered";
+            sSetup = "Unaltered";
         }
 
         $("#scene_setup").html(sSetup);
 
-        updateLog(sSetup);
+        updateLog("Scene: " + sSetup);
     }
 
     function updateFields() {
